@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.SlidingPaneLayout
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/sliding_pane"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <fragment android:name="com.frca.vsexam.Neco"
+              android:id="@+id/fragment_pane_left"
+              android:layout_width="280dp"
+              android:layout_height="match_parent"
+              android:layout_gravity="start" />
+
+    <fragment android:name="com.frca.vsexam.Neco"
+              android:id="@+id/fragment_pane_right"
+              android:layout_width="600dp"
+              android:layout_weigth="1"
+              android:layout_height="match_parent" />
+
+</android.support.v4.widget.SlidingPaneLayout>
