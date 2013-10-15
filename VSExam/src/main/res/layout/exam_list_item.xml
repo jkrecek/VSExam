@@ -2,28 +2,53 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
+              android:orientation="horizontal"
+              android:id="@+id/layout"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="60dp" >
 
-    <TextView android:id="@+id/text_title"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              tools:text="Title of the text"
+    <TextView android:id="@+id/text1"
+              android:layout_width="65dp"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:textColor="@color/dark_text"
+              android:paddingLeft="2dp"
+              android:paddingRight="2dp"
+              tools:text="CODE"
         />
 
-    <LinearLayout android:id="@+id/layout_inner"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+    <TextView android:id="@+id/text2"
+              android:layout_width="135dp"
+              android:textColor="@color/dark_text"
+              android:layout_height="match_parent"
               android:gravity="center_vertical"
-              tools:text="Title of the text"
+              android:paddingLeft="2dp"
+              android:paddingRight="2dp"
+              tools:text="Course Name"
+        />
+
+    <LinearLayout android:layout_width="80dp"
+              android:layout_height="match_parent"
               android:orientation="vertical"
-              android:visibility="gone"
-              tools:visibility="visible"
-              android:paddingLeft="10dp"
-              android:paddingRight="10dp"
+              android:paddingRight="2dp"
+              android:gravity="center_vertical"
         >
+
+        <TextView android:id="@+id/text3"
+                  android:layout_width="match_parent"
+                  android:textColor="@color/dark_text"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  tools:text="Date"
+            />
+
+        <TextView android:id="@+id/text4"
+                  android:layout_width="match_parent"
+                  android:textColor="@color/dark_text"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  tools:text="Time"
+            />
 
     </LinearLayout>
 </LinearLayout>

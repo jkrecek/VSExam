@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark">#333333</color>
+    <color name="dark_lighter">#646464</color>
+    <color name="almost_white">#f2f2f2</color>
+    <color name="standard_grey">#ededed</color>
+    <color name="dark_text">#585858</color>
+    <color name="divider_light">#cccccc</color>
+</resources>
+
+

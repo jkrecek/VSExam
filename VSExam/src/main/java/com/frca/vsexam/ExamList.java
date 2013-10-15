@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class ExamList extends ArrayList<Exam> {
 
-    public List<String> getCourseName() {
+    public List<String> getCourseNames() {
         return Helper.extractObjectValues(this, "courseName");
     }
 }

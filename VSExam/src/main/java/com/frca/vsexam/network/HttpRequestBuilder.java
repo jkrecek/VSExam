@@ -1,9 +1,10 @@
-package com.frca.vsexam;
+package com.frca.vsexam.network;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
+
+import com.frca.vsexam.MainActivity;
+import com.frca.vsexam.NoAuthException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,7 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

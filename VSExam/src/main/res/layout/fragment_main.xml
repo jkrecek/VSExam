@@ -4,18 +4,29 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/sliding_pane"
               android:layout_width="match_parent"
+              android:background="@color/standard_grey"
               android:layout_height="match_parent">
 
-    <fragment android:name="com.frca.vsexam.Neco"
-              android:id="@+id/fragment_pane_left"
+    <ListView android:id="@+id/left_pane"
               android:layout_width="280dp"
               android:layout_height="match_parent"
+              android:divider="@color/divider_light"
+              android:dividerHeight="1dp"
               android:layout_gravity="start" />
 
-    <fragment android:name="com.frca.vsexam.Neco"
-              android:id="@+id/fragment_pane_right"
-              android:layout_width="600dp"
-              android:layout_weigth="1"
-              android:layout_height="match_parent" />
+    <ScrollView
+        android:layout_width="600dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        >
+
+        <TextView android:id="@+id/content_text"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="@string/sliding_pane_layout_summary" />
+
+    </ScrollView>
 
 </android.support.v4.widget.SlidingPaneLayout>

@@ -1,4 +1,4 @@
-package com.frca.vsexam;
+package com.frca.vsexam.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,19 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by KillerFrca on 11.10.13.
+ * Created by KillerFrca on 14.10.13.
  */
-public class DetailFragment extends Fragment {
-
-    public DetailFragment() {
-    }
+public class MainActivityFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.exam_list_details, container, false);
 
-
-        return rootView;
+        return new View(getActivity());
     }
 }
