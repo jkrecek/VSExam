@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<dimen name="exam_list_item_height">60dp</dimen>-->
+    <!--<dimen name="exam_list_item_date_width">150dp</dimen>-->
+    <dimen name="sliding_pane_width">400dp</dimen>
+</resources>

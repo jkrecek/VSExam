@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.frca.vsexam.Exam;
-import com.frca.vsexam.ExamList;
 import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.NoAuthException;
 import com.frca.vsexam.R;
+import com.frca.vsexam.entities.Exam;
+import com.frca.vsexam.entities.ExamList;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.NetworkTask;
 import com.frca.vsexam.network.Response;
@@ -23,9 +23,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoadingFragment extends Fragment {
 
@@ -92,14 +89,12 @@ public class LoadingFragment extends Fragment {
 
                     Document doc = Jsoup.parse(response.http);
                     Elements elements = doc.body().select("table[id] tr");
-                    List<String> spinnerStrings = new ArrayList<String>();
 
                     ExamList exams = new ExamList();
                     int group = 0;
                     for (Element element : elements) {
                         if (element.className().equals("zahlavi")) {
                             ++group;
-                            spinnerStrings.add(String.valueOf(group));
                             continue;
                         }
 
@@ -113,7 +108,7 @@ public class LoadingFragment extends Fragment {
                     getMainActivity().setFragment(new BrowserPaneFragment(exams));
 
                 }
-            }).execute(new HttpRequestBuilder(getMainActivity().data, "student/terminy_seznam.pl").build());
+            }).execute(new HttpRequestBuilder(getActivity(), "student/terminy_seznam.pl").build());
 
         } catch (NoAuthException e) {
             e.printStackTrace();

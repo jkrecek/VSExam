@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.Date;
+import com.frca.vsexam.entities.Exam;
+import com.frca.vsexam.entities.ExamList;
+import com.frca.vsexam.helper.Helper;
 
 /**
  * Created by KillerFrca on 5.10.13.
@@ -48,10 +50,8 @@ public class ExamAdapter extends ArrayAdapter<String> {
 
         text1.setText(exam.courseCode);
         text2.setText(exam.courseName);
-
-        Date examDate = new Date(exam.examDate*1000L);
-        text3.setText(Exam.DATE_FORMAT.format(examDate));
-        text4.setText(Exam.TIME_FORMAT.format(examDate));
+        text3.setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.DATE));
+        text4.setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.TIME));
 
         return view;
     }

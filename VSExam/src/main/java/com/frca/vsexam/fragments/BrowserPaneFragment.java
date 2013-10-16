@@ -1,29 +1,22 @@
 package com.frca.vsexam.fragments;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.frca.vsexam.Exam;
 import com.frca.vsexam.ExamAdapter;
-import com.frca.vsexam.ExamList;
-import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.R;
-import com.frca.vsexam.helper.LogoDownloaderTask;
-
-import java.lang.reflect.Field;
-import java.util.Date;
+import com.frca.vsexam.entities.Exam;
+import com.frca.vsexam.entities.ExamList;
 
 /**
  * Created by KillerFrca on 11.10.13.
@@ -90,34 +83,35 @@ public class BrowserPaneFragment extends MainActivityFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Exam exam = exams.get(position);
-            String str = "";
-            for (Field field : exam.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                String name = field.getName();
-                Object value = null;
-                try {
-                    value = field.get(exam);
-                    if (value instanceof Integer) {
-                        if ((Integer)value > 1000000000)
-                            value = new Date(((Integer)value)*1000L);
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                str += name + ": " + value + "\n";
-            }
 
-            //mContent.setText(str);
-            ((TextView)mContent.findViewById(R.id.text_courseCode)).setText(exam.courseCode);
-            ((TextView)mContent.findViewById(R.id.text_courseName)).setText(exam.courseName);
-            ((TextView)mContent.findViewById(R.id.text_authorName)).setText(exam.authorName);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, new DetailFragment(exam));
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-            new LogoDownloaderTask(exam.authorId, new SparseArray<Bitmap>(), ((MainActivity)getActivity()).data, (ImageView)mContent.findViewById(R.id.logo_author).findViewById(R.id.image)).execute();
             if (mSlidingLayout.isSlideable()) {
                 mActionBar.setTitle(exam.courseCode);
                 mActionBar.setDisplayHomeAsUpEnabled(true);
                 mSlidingLayout.closePane();
             }
         }
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        SlidingPaneLayout slidingPaneLayout = getSlidingLayout();
+        if (!slidingPaneLayout.isOpen()) {
+            slidingPaneLayout.openPane();
+            return true;
+        } else if (!slidingPaneLayout.isSlideable()) {
+            FragmentManager manager = getChildFragmentManager();
+
+            if (manager.getBackStackEntryCount() > 0) {
+                manager.popBackStack();
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package com.frca.vsexam.helper;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.R;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
@@ -21,16 +21,19 @@ import java.io.InputStream;
 public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     private ImageView imageView;
     private Callback callback;
-    private MainActivity.Data data;
+    private Context context;
 
-    public ImageDownloaderTask(ImageView imageView, MainActivity.Data data) {
-        this.imageView = imageView;
-        this.data = data;
+    public ImageDownloaderTask(Context context, View imageView) {
+        if (imageView instanceof ImageView)
+            this.imageView = (ImageView) imageView;
+        else
+            this.imageView = (ImageView)imageView.findViewById(R.id.image);
+        this.context = context;
     }
 
-    public ImageDownloaderTask(Callback callback, MainActivity.Data data) {
+    public ImageDownloaderTask(Context context, Callback callback) {
         this.callback = callback;
-        this.data = data;
+        this.context = context;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -42,7 +45,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         url = HttpRequestBuilder.completeURLString(url);
         Bitmap mIcon11 = null;
         try {
-            HttpResponse httpResponse = new HttpRequestBuilder(data, url).build().execute();
+            HttpResponse httpResponse = new HttpRequestBuilder(context, url).build().execute();
             InputStream in = httpResponse.getEntity().getContent();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
@@ -57,7 +60,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         if (imageView != null) {
             imageView.setImageBitmap(result);
-            Log.e("dl done", "dl");
+
             View parent = (View)imageView.getParent();
             if (parent != null) {
                 View hide = parent.findViewById(R.id.hide);
@@ -72,6 +75,28 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
     public static interface Callback {
         void call(Bitmap result);
+    }
+
+    public static String getLogoUrl(int userId) {
+        return "lide/foto.pl?id=" + String.valueOf(userId);
+    }
+
+    public void loadLogo(final int userId) {
+        final DataHolder dateHolder = DataHolder.getInstance(context);
+        Bitmap bitmap = dateHolder.getBitmapContainer().get(userId);
+        if (bitmap != null) {
+            onPostExecute(bitmap);
+        } else {
+            callback = new Callback() {
+                @Override
+                public void call(Bitmap result) {
+                    if (dateHolder.getBitmapContainer().get(userId) == null)
+                        dateHolder.getBitmapContainer().put(userId, result);
+                }
+            };
+
+            execute(getLogoUrl(userId));
+        }
     }
 }
 

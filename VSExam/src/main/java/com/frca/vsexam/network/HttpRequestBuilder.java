@@ -1,10 +1,11 @@
 package com.frca.vsexam.network;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.NoAuthException;
+import com.frca.vsexam.helper.DataHolder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,7 +35,7 @@ public class HttpRequestBuilder {
 
     private final static int TIMEOUT_MS = 15000;
 
-    private MainActivity.Data contextData;
+    private final DataHolder dataHolder;
 
     private Class<? extends HttpRequestBase> requestType = HttpGet.class;
 
@@ -54,8 +55,8 @@ public class HttpRequestBuilder {
     }
 
 
-    public HttpRequestBuilder(MainActivity.Data contextData,  String partialUrl) {
-        this.contextData = contextData;
+    public HttpRequestBuilder(Context context,  String partialUrl) {
+        this.dataHolder = DataHolder.getInstance(context);
         this.partialUrl = partialUrl;
     }
 
@@ -77,7 +78,7 @@ public class HttpRequestBuilder {
         //request.setHeader("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
         request.setHeader("Host", getHost());
         request.setHeader("Authorization", getB64Auth());
-        request.setHeader("Accept-Language", contextData.configuration.locale.getLanguage() + ",en;q=0.8");
+        request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
         //List <NameValuePair> nvps = new ArrayList <NameValuePair>();
         //nvps.add(new BasicNameValuePair("data[body]", "test"));
         //AbstractHttpEntity ent=new UrlEncodedFormEntity(nvps, HTTP.UTF_8);
@@ -108,8 +109,8 @@ public class HttpRequestBuilder {
     }
 
     private String getB64Auth () throws NoAuthException {
-        String login = contextData.preferences.getString(KEY_LOGIN, null);
-        String password = contextData.preferences.getString(KEY_PASSWORD, null);
+        String login = dataHolder.getPreferences().getString(KEY_LOGIN, null);
+        String password = dataHolder.getPreferences().getString(KEY_PASSWORD, null);
 
         if (TextUtils.isEmpty(login) || TextUtils.isEmpty(password))
             throw new NoAuthException();

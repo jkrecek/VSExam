@@ -48,4 +48,8 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
+    <style name="ResponsiveLayout.Doubling">
+        <item name="android:layout_width">85dp</item>
+    </style>
+
 </resources>

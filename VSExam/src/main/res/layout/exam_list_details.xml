@@ -48,7 +48,7 @@
                   android:background="@color/white"
                   android:layout_marginLeft="6dp"
                   android:layout_marginRight="6dp"
-                  tools:layout_height="200dp">
+                  tools:minHeight="200dp">
 
         <LinearLayout style="@style/ResponsiveLayoutItem" >
 
@@ -88,17 +88,32 @@
                     android:layout_height="match_parent"/>
 
             </LinearLayout>
-            <TextView style="@style/DataHeader" android:text="PŘEDMĚT"/>
-            <TextView style="@style/DataContent" android:text="Státní zkouška z něčeho"/>
 
-            <TextView style="@style/DataHeader" android:text="PŘEDMĚT"/>
-            <TextView style="@style/DataContent" android:text="Státní zkouška z něčeho"/>
+            <TextView style="@style/DataHeader" android:text="DRUH (forma)"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_type" tools:text="zkouška (ústní)"/>
+
+            <TextView style="@style/DataHeader" android:text="STAV"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_isRegistered" android:text="Přihlášen"/>
+
+            <TextView style="@style/DataHeader" android:text="KAPACITA"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_capacity" android:text="12/12"/>
 
 
         </LinearLayout>
 
         <LinearLayout style="@style/ResponsiveLayoutItem" >
 
+            <TextView style="@style/DataHeader" android:text="DATUM TERMÍNU"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_examDate" tools:text="11. 12. 2013 09:00"/>
+
+            <TextView style="@style/DataHeader" android:text="PŘIHLAŠOVÁNÍ OD"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_registerStart" android:text="04. 09. 2013 08:00"/>
+
+            <TextView style="@style/DataHeader" android:text="PŘIHLAŠOVÁNÍ DO"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_registerEnd" android:text="04. 12. 2013 09:00"/>
+
+            <TextView style="@style/DataHeader" android:text="ODHLAŠOVÁNÍ OD"/>
+            <TextView style="@style/DataContent" android:id="@+id/text_unregisterEnd" android:text="04. 12. 2013 08:00"/>
         </LinearLayout>
 
     </LinearLayout>

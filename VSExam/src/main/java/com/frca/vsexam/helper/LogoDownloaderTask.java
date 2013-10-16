@@ -1,32 +1,32 @@
 package com.frca.vsexam.helper;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
-import android.widget.ImageView;
-
-import com.frca.vsexam.MainActivity;
+import android.view.View;
 
 /**
  * Created by KillerFrca on 15.10.13.
  */
+@Deprecated
 public class LogoDownloaderTask extends ImageDownloaderTask {
 
     private int userId;
 
     private SparseArray<Bitmap> bitmapSparseArray;
 
-    public LogoDownloaderTask(int userId, SparseArray<Bitmap> bitmapSparseArray, MainActivity.Data data, ImageView imageView) {
-        super(imageView, data);
+    public LogoDownloaderTask(Context context, int userId, View imageView) {
+        super(context, imageView);
 
         this.userId = userId;
-        this.bitmapSparseArray = bitmapSparseArray;
+        this.bitmapSparseArray = DataHolder.getInstance(context).getBitmapContainer();
     }
 
-    public LogoDownloaderTask(int userId, SparseArray<Bitmap> bitmapSparseArray, MainActivity.Data data, Callback callback) {
-        super(callback, data);
+    public LogoDownloaderTask(Context context, int userId, Callback callback) {
+        super(context, callback);
 
         this.userId = userId;
-        this.bitmapSparseArray = bitmapSparseArray;
+        this.bitmapSparseArray = DataHolder.getInstance(context).getBitmapContainer();
     }
 
     @Override

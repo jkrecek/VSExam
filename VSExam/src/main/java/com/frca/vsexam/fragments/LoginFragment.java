@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.R;
+import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
 /**
@@ -50,7 +51,7 @@ public class LoginFragment extends MainActivityFragment {
                     viewPassword.requestFocus();
                 else {
                     if (getActivity() instanceof MainActivity) {
-                        SharedPreferences preferences = ((MainActivity) getActivity()).data.preferences;
+                        SharedPreferences preferences = DataHolder.getInstance(getActivity()).getPreferences();
 
                         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(viewPassword.getWindowToken(), 0);
@@ -61,7 +62,7 @@ public class LoginFragment extends MainActivityFragment {
                             .putString(HttpRequestBuilder.KEY_PASSWORD, loginPassword)
                             .commit();
 
-                        ((MainActivity)getActivity()).setFragment(new LoginFragment());
+                        ((MainActivity)getActivity()).setFragment(new LoadingFragment(null));
                     }
                 }
             }

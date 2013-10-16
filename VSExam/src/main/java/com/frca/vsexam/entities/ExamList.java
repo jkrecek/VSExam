@@ -1,4 +1,4 @@
-package com.frca.vsexam;
+package com.frca.vsexam.entities;
 
 
 import com.frca.vsexam.helper.Helper;

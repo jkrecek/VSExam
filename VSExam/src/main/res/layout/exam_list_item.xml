@@ -5,7 +5,8 @@
               android:orientation="horizontal"
               android:id="@+id/layout"
               android:layout_width="match_parent"
-              android:layout_height="60dp" >
+              android:layout_height="@dimen/exam_list_item_height"
+              android:minHeight="@dimen/exam_list_item_height" >
 
     <TextView android:id="@+id/text1"
               android:layout_width="65dp"
@@ -14,41 +15,41 @@
               android:textColor="@color/dark_text"
               android:paddingLeft="2dp"
               android:paddingRight="2dp"
-              tools:text="CODE"
-        />
+              tools:text="CODE"  />
 
     <TextView android:id="@+id/text2"
-              android:layout_width="130dp"
+              android:layout_width="0dp"
+              android:layout_weight="1"
               android:textColor="@color/dark_text"
               android:layout_height="match_parent"
               android:gravity="center_vertical"
               android:paddingLeft="2dp"
               android:paddingRight="2dp"
-              tools:text="Course Name"
-        />
+              tools:text="Course Name" />
 
-    <LinearLayout android:layout_width="85dp"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingRight="5dp"
-              android:gravity="center_vertical"
-        >
+    <LinearLayout style="@style/ResponsiveLayout"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:paddingRight="5dp"
+                  android:gravity="center" >
 
         <TextView android:id="@+id/text3"
-                  android:layout_width="match_parent"
                   android:textColor="@color/dark_text"
+                  android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
+                  android:paddingLeft="5dp"
+                  android:paddingRight="5dp"
                   android:gravity="center"
-                  tools:text="Date"
-            />
+                  tools:text="Date" />
 
         <TextView android:id="@+id/text4"
-                  android:layout_width="match_parent"
                   android:textColor="@color/dark_text"
+                  android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
+                  android:paddingLeft="5dp"
+                  android:paddingRight="5dp"
                   android:gravity="center"
-                  tools:text="Time"
-            />
+                  tools:text="Time" />
 
     </LinearLayout>
 </LinearLayout>

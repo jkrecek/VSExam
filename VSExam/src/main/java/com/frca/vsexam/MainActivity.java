@@ -1,7 +1,6 @@
 package com.frca.vsexam;
 
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -12,11 +11,11 @@ import android.view.MenuItem;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
+import com.frca.vsexam.fragments.MainActivityFragment;
+import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
 public class MainActivity extends ActionBarActivity {
-
-    public Data data;
 
     private Fragment currentFragment;
 
@@ -25,11 +24,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        data = new Data();
-        data.preferences = getPreferences(MODE_PRIVATE);
-        data.configuration = getResources().getConfiguration();
-
-        if (data.preferences.contains(HttpRequestBuilder.KEY_LOGIN) && data.preferences.contains(HttpRequestBuilder.KEY_PASSWORD)) {
+        SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
+        if (preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD)) {
             setFragment(new LoadingFragment("Preparing"));
         } else {
             setFragment(new LoginFragment());
@@ -37,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.view, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_base, fragment).commit();
         currentFragment = fragment;
     }
 
@@ -64,20 +60,11 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class Data {
-        public SharedPreferences preferences;
-        public Configuration configuration;
-    }
-
     @Override
     public void onBackPressed() {
-        if (currentFragment instanceof BrowserPaneFragment) {
-            SlidingPaneLayout slidingPaneLayout = ((BrowserPaneFragment) currentFragment).getSlidingLayout();
-            if (!slidingPaneLayout.isOpen()) {
-                slidingPaneLayout.openPane();
+        if (currentFragment instanceof MainActivityFragment)
+            if (((MainActivityFragment)currentFragment).onBackPressed())
                 return;
-            }
-        }
 
         super.onBackPressed();
     }
