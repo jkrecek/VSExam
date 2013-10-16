@@ -14,18 +14,17 @@
               android:dividerHeight="1dp"
               android:layout_gravity="start" />
 
+
     <ScrollView
         android:layout_width="600dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="10dp"
+        android:scrollbarStyle="outsideOverlay"
         >
 
-        <TextView android:id="@+id/content_text"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="@string/sliding_pane_layout_summary" />
+        <include layout="@layout/exam_list_details" />
 
     </ScrollView>
 

@@ -1,4 +1,4 @@
-package com.frca.vsexam;
+package com.frca.vsexam.helper;
 
 import android.util.Log;
 

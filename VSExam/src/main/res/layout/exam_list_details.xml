@@ -4,20 +4,103 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="match_parent"
+              android:id="@+id/layout_details"
+              tools:background="@color/standard_grey" >
 
-    <TextView android:id="@+id/text_deeper"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              tools:text="Example"
-        />
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:paddingTop="10dp"
+                  android:paddingBottom="10dp"
+                  android:minHeight="80dp"
+                  android:orientation="horizontal"
+                  android:background="@color/white"
+                  android:gravity="center_vertical"
+                  android:layout_marginBottom="20dp">
 
-    <Button android:id="@+id/text2"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="More"
-        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/text_courseCode"
+                  android:textAppearance="?android:textAppearanceLarge"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginRight="7dp"
+                  android:textStyle="bold"
+                  tools:text="PHM"/>
+
+        <View android:layout_width="1dp"
+              android:layout_height="match_parent"
+              android:background="@color/divider_light" />
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/text_courseName"
+                  android:textAppearance="?android:textAppearanceLarge"
+                  android:layout_marginLeft="7dp"
+                  android:textStyle="bold"
+                  tools:text="Státní zkouška ze studijního oboru"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  style="@style/ResponsiveLayout"
+                  android:background="@color/white"
+                  android:layout_marginLeft="6dp"
+                  android:layout_marginRight="6dp"
+                  tools:layout_height="200dp">
+
+        <LinearLayout style="@style/ResponsiveLayoutItem" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <include layout="@layout/logo"
+                         android:id="@+id/logo_author"
+                         style="@style/LogoView.Large"/>
+
+                <LinearLayout android:orientation="vertical"
+                              android:layout_width="wrap_content"
+                              android:minWidth="200dp"
+                              android:layout_height="match_parent"
+                              android:gravity="center_vertical">
+
+                    <TextView style="@style/DataHeader"
+                              android:layout_marginTop="0dp"
+                              android:text="VYPSAL"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_authorName"
+                              tools:text="Nějaká pinda"/>
+
+                </LinearLayout>
+
+                <ImageButton android:id="@+id/button_author"
+                    android:src="@android:drawable/ic_menu_send"
+                    android:background="@null"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+            <TextView style="@style/DataHeader" android:text="PŘEDMĚT"/>
+            <TextView style="@style/DataContent" android:text="Státní zkouška z něčeho"/>
+
+            <TextView style="@style/DataHeader" android:text="PŘEDMĚT"/>
+            <TextView style="@style/DataContent" android:text="Státní zkouška z něčeho"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/ResponsiveLayoutItem" >
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,20 +1,26 @@
 package com.frca.vsexam.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frca.vsexam.Exam;
 import com.frca.vsexam.ExamAdapter;
 import com.frca.vsexam.ExamList;
+import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.R;
+import com.frca.vsexam.helper.LogoDownloaderTask;
 
 import java.lang.reflect.Field;
 import java.util.Date;
@@ -30,7 +36,7 @@ public class BrowserPaneFragment extends MainActivityFragment {
 
     private ListView mList;
 
-    private TextView mContent;
+    private LinearLayout mContent;
 
     private ActionBar mActionBar;
 
@@ -45,7 +51,7 @@ public class BrowserPaneFragment extends MainActivityFragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mSlidingLayout = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane);
         mList = (ListView) rootView.findViewById(R.id.left_pane);
-        mContent = (TextView) rootView.findViewById(R.id.content_text);
+        mContent = (LinearLayout) rootView.findViewById(R.id.layout_details);
         mActionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
 
         mSlidingLayout.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
@@ -101,10 +107,17 @@ public class BrowserPaneFragment extends MainActivityFragment {
                 str += name + ": " + value + "\n";
             }
 
-            mContent.setText(str);
-            mActionBar.setTitle(exam.courseCode);
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-            mSlidingLayout.closePane();
+            //mContent.setText(str);
+            ((TextView)mContent.findViewById(R.id.text_courseCode)).setText(exam.courseCode);
+            ((TextView)mContent.findViewById(R.id.text_courseName)).setText(exam.courseName);
+            ((TextView)mContent.findViewById(R.id.text_authorName)).setText(exam.authorName);
+
+            new LogoDownloaderTask(exam.authorId, new SparseArray<Bitmap>(), ((MainActivity)getActivity()).data, (ImageView)mContent.findViewById(R.id.logo_author).findViewById(R.id.image)).execute();
+            if (mSlidingLayout.isSlideable()) {
+                mActionBar.setTitle(exam.courseCode);
+                mActionBar.setDisplayHomeAsUpEnabled(true);
+                mSlidingLayout.closePane();
+            }
         }
     }
 }

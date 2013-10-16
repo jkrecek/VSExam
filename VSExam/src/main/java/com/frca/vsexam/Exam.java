@@ -36,6 +36,8 @@ public class Exam {
     public final int registerEnd;
     public final int unregisterEnd;
     public final boolean isRegistered;
+    public final int currentCapacity;
+    public final int maxCapacity;
 
     private Elements tempColumns;
     private int tempGroup;
@@ -65,6 +67,10 @@ public class Exam {
         authorId = extractParameterFromLink(author, "id");
         authorName = author.text().trim();
 
+        String capacityString = getColumnContent(8, true);
+        String[] capacityParts = capacityString.split("/");
+        currentCapacity = Integer.parseInt(capacityParts[0]);
+        maxCapacity = Integer.parseInt(capacityParts[1]);
 
         String registrationDates = getColumnContent(10, false);
         String[] registrationParts = registrationDates.split("<br />");

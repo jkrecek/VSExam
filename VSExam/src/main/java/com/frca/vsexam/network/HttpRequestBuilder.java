@@ -30,7 +30,7 @@ public class HttpRequestBuilder {
 
     public final static String KEY_PASSWORD = "key_password";
 
-    private final static String BASE_URL = "http://isis.vse.cz/auth/";
+    public final static String BASE_URL = "https://isis.vse.cz/auth/";
 
     private final static int TIMEOUT_MS = 15000;
 
@@ -62,7 +62,7 @@ public class HttpRequestBuilder {
     public HttpRequestBuilder build() throws NoAuthException {
 
         try {
-            request = requestType.getDeclaredConstructor(String.class).newInstance(BASE_URL + "/" + partialUrl);
+            request = requestType.getDeclaredConstructor(String.class).newInstance(completeURLString(partialUrl));
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -121,10 +121,29 @@ public class HttpRequestBuilder {
 
     private String getHost() {
         String host = BASE_URL;
-        if (host.startsWith("http://"))
+        if (host.startsWith("https://"))
             host = host.substring(7);
 
         host = host.substring(0, host.indexOf("/"));
         return host;
+    }
+
+    public static String completeURLString(String url) {
+        if (url.startsWith("https://"))
+            return url;
+
+        boolean slashPartial = (int)url.charAt(0) == 0x2f;
+        if (isBaseUrlSlashEnding() && slashPartial)
+            url = BASE_URL + url.substring(1);
+        else if (isBaseUrlSlashEnding() || slashPartial)
+            url = BASE_URL + url;
+        else
+            url = BASE_URL + "/" + url;
+
+        return url;
+    }
+
+    public static boolean isBaseUrlSlashEnding() {
+        return (int)BASE_URL.charAt(BASE_URL.length()-1) == 0x2f;
     }
 }

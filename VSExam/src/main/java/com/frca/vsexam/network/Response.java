@@ -46,5 +46,4 @@ public class Response {
         http = sb.toString();
         statusCode = response.getStatusLine().getStatusCode();
     }
-
 }

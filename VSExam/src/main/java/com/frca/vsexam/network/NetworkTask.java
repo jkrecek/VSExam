@@ -23,7 +23,6 @@ public class NetworkTask extends AsyncTask<HttpRequestBuilder, Void, Response> {
 
     protected void onPostExecute(Response result) {
         callback.call(result);
-
     }
 
     public static interface ResponseCallback {

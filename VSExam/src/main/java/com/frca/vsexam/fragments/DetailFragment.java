@@ -16,9 +16,6 @@ public class DetailFragment extends Fragment {
 
     private Exam exam;
 
-    public DetailFragment() {
-    }
-
     public DetailFragment(Exam exam) {
         this.exam = exam;
     }
@@ -26,8 +23,7 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (exam == null)
-            return new View(getActivity());
+
         View rootView = inflater.inflate(R.layout.exam_list_details, container, false);
         return rootView;
     }

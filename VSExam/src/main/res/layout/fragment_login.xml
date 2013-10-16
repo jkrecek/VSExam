@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-
-
-</LinearLayout>-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 tools:context=".LoginActivity"
@@ -60,19 +51,5 @@
                 android:text="Login" />
         </LinearLayout>
     </ScrollView>
-
-    <!-- Image -->
-
-    <!--<ImageView
-        android:id="@+id/logo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="Logo"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/login_form"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:padding="10dp"
-        android:src="@drawable/ic_launcher" /> -->
 
 </RelativeLayout>

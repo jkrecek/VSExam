@@ -61,7 +61,7 @@ public class LoginFragment extends MainActivityFragment {
                             .putString(HttpRequestBuilder.KEY_PASSWORD, loginPassword)
                             .commit();
 
-                        ((MainActivity)getActivity()).loadExams();
+                        ((MainActivity)getActivity()).setFragment(new LoginFragment());
                     }
                 }
             }
