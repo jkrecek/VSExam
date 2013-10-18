@@ -99,12 +99,12 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void call(Response response) {
-                if (response.statusCode == 401) {
+                if (response.getStatusCode() == 401) {
                     Toast.makeText(getActivity(), "Access denied", Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                Document doc = Jsoup.parse(response.http);
+                Document doc = Jsoup.parse(response.getText());
                 Elements elements = doc.body().select("table#studenti tbody tr");
 
                 ClassmateList classmates = new ClassmateList();
@@ -124,7 +124,6 @@ public class DetailFragment extends Fragment {
     }
 
     private void onClassmatesLoaded(ClassmateList classmates) {
-        // TODO
         ClassmateAdapter classmateAdapter = new ClassmateAdapter(getActivity(), classmates);
         View classmateProgress = getView().findViewById(R.id.classmates_progress);
         classmateProgress.setVisibility(View.GONE);

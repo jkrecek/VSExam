@@ -1,6 +1,7 @@
 package com.frca.vsexam.network;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.util.Log;
 import com.frca.vsexam.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -19,9 +21,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 
 /**
  * Created by KillerFrca on 3.10.13.
@@ -93,12 +98,33 @@ public class HttpRequestBuilder {
         return this;
     }
 
-    public HttpResponse execute() {
-        try {
-            return client.execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+    public Response execute(Response.Type type) {
+        synchronized (client) {
+            Log.d("Currently Processing", request.getURI().toString());
+            Response response = null;
+
+            HttpResponse httpResponse;
+            try {
+                httpResponse = client.execute(request);
+                HttpEntity entity = httpResponse.getEntity();
+                InputStream is = entity.getContent();
+                int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+                if (type == Response.Type.TEXT) {
+                    Charset charset = Charset.forName(EntityUtils.getContentCharSet(httpResponse.getEntity()));
+                    String text = Response.parseText(is, charset);
+                    response = new Response(text, statusCode);
+                } else if (type == Response.Type.BITMAP) {
+                    Bitmap bitmap = Response.parseBitmap(is);
+                    response = new Response(bitmap, statusCode);
+                }
+                httpResponse.getEntity().consumeContent();
+            } catch (IOException e) {
+                Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`");
+                e.printStackTrace();
+            }
+
+            return response;
         }
     }
 

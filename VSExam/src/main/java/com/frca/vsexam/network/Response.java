@@ -1,44 +1,47 @@
 package com.frca.vsexam.network;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * Created by KillerFrca on 14.10.13.
  */
 public class Response {
-    public String http;
-    public int statusCode;
 
-    public Response(HttpResponse response) {
+    private final int statusCode;
+    private final String text;
+    private final Bitmap bitmap;
 
-        InputStream stream;
-        try {
-            stream = response.getEntity().getContent();
-        } catch (IOException e) {
-            Log.e(getClass().getName(), "Unexpected IO Exception in response `" + response.getLastHeader("Location").getValue() + "`");
-            e.printStackTrace();
-            return;
-        } catch(NullPointerException e) {
-            Log.e(getClass().getName(), "Unexpected Null Pointer in response `" + response.getLastHeader("Location").getValue() + "`");
-            return;
-        }
+    private final Type type;
 
+    public enum Type{
+        TEXT,
+        BITMAP
+    }
 
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(stream, EntityUtils.getContentCharSet(response.getEntity())), 8);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    public Response(String text, int statusCode) {
+        this.text = text;
+        this.bitmap = null;
+        this.statusCode = statusCode;
+        this.type = Type.TEXT;
+    }
+
+    public Response(Bitmap bitmap, int statusCode) {
+        this.text = null;
+        this.bitmap = bitmap;
+        this.statusCode = statusCode;
+        this.type = Type.BITMAP;
+    }
+
+    public static String parseText(InputStream is, Charset charset) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset), 8);
         StringBuilder sb = new StringBuilder();
         String line;
         try {
@@ -48,7 +51,27 @@ public class Response {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
 
-        http = sb.toString();
-        statusCode = response.getStatusLine().getStatusCode();
+        return sb.toString();
+
+    }
+
+    public static Bitmap parseBitmap(InputStream is) {
+        return BitmapFactory.decodeStream(is);
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 }

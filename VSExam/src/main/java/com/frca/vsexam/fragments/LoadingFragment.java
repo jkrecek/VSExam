@@ -79,7 +79,7 @@ public class LoadingFragment extends Fragment {
 
                 @Override
                 public void call(Response response) {
-                    if (response.statusCode == 401) {
+                    if (response.getStatusCode() == 401) {
                         getMainActivity().setFragment(new LoginFragment());
                         Toast.makeText(getActivity(), "Invalid access", Toast.LENGTH_LONG).show();
                         return;
@@ -87,7 +87,7 @@ public class LoadingFragment extends Fragment {
 
                     setMessage("Processing data");
 
-                    Document doc = Jsoup.parse(response.http);
+                    Document doc = Jsoup.parse(response.getText());
                     Elements elements = doc.body().select("table[id] tr");
 
                     ExamList exams = new ExamList();

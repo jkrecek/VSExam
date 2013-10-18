@@ -1,7 +1,6 @@
 package com.frca.vsexam.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +11,8 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
-import com.frca.vsexam.entities.Exam;
-import com.frca.vsexam.entities.ExamList;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.helper.ImageDownloaderTask;
-
-import java.util.List;
 
 /**
  * Created by KillerFrca on 5.10.13.

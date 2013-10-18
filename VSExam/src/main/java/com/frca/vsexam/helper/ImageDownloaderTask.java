@@ -2,7 +2,6 @@ package com.frca.vsexam.helper;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -10,15 +9,9 @@ import android.widget.ImageView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.network.HttpRequestBuilder;
+import com.frca.vsexam.network.Response;
 
-import org.apache.http.HttpResponse;
-
-import java.io.InputStream;
-
-/**
- * Created by KillerFrca on 15.10.13.
- */
-public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
+public class ImageDownloaderTask extends AsyncTask<String, Void, Response> {
     private ImageView imageView;
     private Callback callback;
     private Context context;
@@ -28,6 +21,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
             this.imageView = (ImageView) imageView;
         else
             this.imageView = (ImageView)imageView.findViewById(R.id.image);
+
         this.context = context;
     }
 
@@ -36,30 +30,40 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         this.context = context;
     }
 
-    protected Bitmap doInBackground(String... urls) {
-        return get(urls[0]);
+    protected Response doInBackground(String... urls) {
+        Response bitmap = get(urls[0]);
+        return bitmap;
     }
 
-    protected Bitmap get(String url) {
+    protected Response get(String url) {
 
         url = HttpRequestBuilder.completeURLString(url);
-        Bitmap mIcon11 = null;
+        Response response = null;
         try {
-            HttpResponse httpResponse = new HttpRequestBuilder(context, url).build().execute();
-            InputStream in = httpResponse.getEntity().getContent();
-            mIcon11 = BitmapFactory.decodeStream(in);
+            HttpRequestBuilder httpResponse = new HttpRequestBuilder(context, url).build();
+            response = httpResponse.execute(Response.Type.BITMAP);
         } catch (Exception e) {
             Log.e("Error", e.getClass().getName());
             e.printStackTrace();
         }
 
 
-        return mIcon11;
+        return response;
     }
 
-    protected void onPostExecute(Bitmap result) {
+    protected void onPostExecute(Response result) {
+        if (result == null)
+            return;
+
+        setImage(result.getBitmap());
+
+        if (callback != null)
+            callback.call(result);
+    }
+
+    private void setImage(Bitmap bitmap) {
         if (imageView != null) {
-            imageView.setImageBitmap(result);
+            imageView.setImageBitmap(bitmap);
 
             View parent = (View)imageView.getParent();
             if (parent != null) {
@@ -68,13 +72,10 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
                     hide.setVisibility(View.GONE);
             }
         }
-
-        if (callback != null)
-            callback.call(result);
     }
 
     public static interface Callback {
-        void call(Bitmap result);
+        void call(Response result);
     }
 
     public static String getLogoUrl(int userId) {
@@ -85,13 +86,13 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         final DataHolder dateHolder = DataHolder.getInstance(context);
         Bitmap bitmap = dateHolder.getBitmapContainer().get(userId);
         if (bitmap != null) {
-            onPostExecute(bitmap);
+            setImage(bitmap);
         } else {
             callback = new Callback() {
                 @Override
-                public void call(Bitmap result) {
+                public void call(Response result) {
                     if (dateHolder.getBitmapContainer().get(userId) == null)
-                        dateHolder.getBitmapContainer().put(userId, result);
+                        dateHolder.getBitmapContainer().put(userId, result.getBitmap());
                 }
             };
 
