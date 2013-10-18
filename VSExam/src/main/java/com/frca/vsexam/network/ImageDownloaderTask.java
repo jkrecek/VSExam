@@ -1,4 +1,4 @@
-package com.frca.vsexam.helper;
+package com.frca.vsexam.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.Response;
 

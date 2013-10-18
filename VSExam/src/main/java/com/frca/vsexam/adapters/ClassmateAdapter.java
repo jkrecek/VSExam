@@ -12,7 +12,7 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
 import com.frca.vsexam.helper.Helper;
-import com.frca.vsexam.helper.ImageDownloaderTask;
+import com.frca.vsexam.network.ImageDownloaderTask;
 
 /**
  * Created by KillerFrca on 5.10.13.
