@@ -52,4 +52,11 @@
         <item name="android:layout_width">85dp</item>
     </style>
 
+    <style name="ResponsiveLayoutItem.Details" parent="ResponsiveLayoutItem">
+        <item name="android:background">@color/white</item>
+        <item name="android:layout_margin">7dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:padding">@dimen/details_inner_padding</item>
+    </style>
+
 </resources>

@@ -7,11 +7,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frca.vsexam.NoAuthException;
 import com.frca.vsexam.R;
+import com.frca.vsexam.adapters.ClassmateAdapter;
 import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
 import com.frca.vsexam.entities.Exam;
@@ -72,45 +75,64 @@ public class DetailFragment extends Fragment {
 
             new LogoDownloaderTask(exam.authorId, new SparseArray<Bitmap>(), ((MainActivity)getActivity()).data, (ImageView)mContent.findViewById(R.id.logo_author).findViewById(R.id.image)).execute();*/
 
+        getClassmates();
+
         return rootView;
     }
 
     private void getClassmates() {
+
+        if (Helper.isValid(exam.getClassmates())) {
+            onClassmatesLoaded(exam.getClassmates());
+            return;
+        }
+
+        HttpRequestBuilder builder;
         try {
-
-            HttpRequestBuilder builder = new HttpRequestBuilder(getActivity(), "student/terminy_info.pl?termin="+exam.id+";spoluzaci=1;studium="+exam.studyId+";obdobi="+exam.periodId).build();
-            new NetworkTask(new NetworkTask.ResponseCallback() {
-
-                @Override
-                public void call(Response response) {
-                    if (response.statusCode == 401) {
-                        Toast.makeText(getActivity(), "Access denied", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    Document doc = Jsoup.parse(response.http);
-                    Elements elements = doc.body().select("table#studenti tbody tr");
-
-                    ClassmateList classmates = new ClassmateList();
-
-                    for (Element element : elements) {
-                        Elements columns = element.select("td");
-                        if (columns.size() <= 1)
-                            continue;
-
-                        classmates.add(Classmate.get(columns));
-                    }
-
-                    onClassmatesLoaded(classmates);
-                }
-            }).execute(builder);
-
+            builder = new HttpRequestBuilder(getActivity(), "student/terminy_info.pl?termin="+exam.id+";spoluzaci=1;studium="+exam.studyId+";obdobi="+exam.periodId).build();
         } catch (NoAuthException e) {
             e.printStackTrace();
+            return;
         }
+
+        new NetworkTask(new NetworkTask.ResponseCallback() {
+
+            @Override
+            public void call(Response response) {
+                if (response.statusCode == 401) {
+                    Toast.makeText(getActivity(), "Access denied", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Document doc = Jsoup.parse(response.http);
+                Elements elements = doc.body().select("table#studenti tbody tr");
+
+                ClassmateList classmates = new ClassmateList();
+
+                for (Element element : elements) {
+                    Elements columns = element.select("td");
+                    if (columns.size() <= 1)
+                        continue;
+
+                    classmates.add(Classmate.get(columns));
+                }
+
+                exam.setClassmates(classmates);
+                onClassmatesLoaded(classmates);
+            }
+        }).execute(builder);
     }
 
     private void onClassmatesLoaded(ClassmateList classmates) {
         // TODO
+        ClassmateAdapter classmateAdapter = new ClassmateAdapter(getActivity(), classmates);
+        View classmateProgress = getView().findViewById(R.id.classmates_progress);
+        classmateProgress.setVisibility(View.GONE);
+
+        LinearLayout classmateLayout = (LinearLayout) getView().findViewById(R.id.layout_classmates);
+        classmateLayout.setVisibility(View.VISIBLE);
+
+        ListView classmateList = (ListView)classmateLayout.findViewById(R.id.list_classmates);
+        classmateList.setAdapter(classmateAdapter);
     }
 }

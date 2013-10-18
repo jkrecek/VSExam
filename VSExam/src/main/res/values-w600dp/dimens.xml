@@ -3,4 +3,6 @@
     <!--<dimen name="exam_list_item_height">60dp</dimen>-->
     <!--<dimen name="exam_list_item_date_width">150dp</dimen>-->
     <dimen name="sliding_pane_width">400dp</dimen>
+    <dimen name="details_inner_padding">7dp</dimen>
+    <dimen name="details_side_margin">50dp</dimen>
 </resources>

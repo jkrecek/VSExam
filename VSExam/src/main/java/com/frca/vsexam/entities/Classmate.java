@@ -26,12 +26,12 @@ public class Classmate extends ParentEntity {
     private Classmate(Elements columns) throws EntityParsingException {
         super.init(columns);
 
-        Element profile = getLinkFromColumn(3);
+        Element profile = getLinkFromColumn(2);
         id = extractParameterFromLink(profile, "id");
         name = profile.text().trim();
 
-        registered = parseDate(getColumnContent(4, true));
-        identification = getColumnContent(5, true);
+        registered = parseDate(getColumnContent(3, true));
+        identification = getColumnContent(4, true);
 
         super.initDone();
     }

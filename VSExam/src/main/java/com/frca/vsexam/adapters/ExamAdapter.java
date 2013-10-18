@@ -1,4 +1,4 @@
-package com.frca.vsexam;
+package com.frca.vsexam.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Exam;
 import com.frca.vsexam.entities.ExamList;
 import com.frca.vsexam.helper.Helper;

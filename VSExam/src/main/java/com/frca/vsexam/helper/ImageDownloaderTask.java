@@ -49,7 +49,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
             InputStream in = httpResponse.getEntity().getContent();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            Log.e("Error", e.getClass().getName());
             e.printStackTrace();
         }
 

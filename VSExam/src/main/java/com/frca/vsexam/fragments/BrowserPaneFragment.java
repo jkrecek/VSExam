@@ -13,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.frca.vsexam.ExamAdapter;
+import com.frca.vsexam.adapters.ExamAdapter;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Exam;
 import com.frca.vsexam.entities.ExamList;

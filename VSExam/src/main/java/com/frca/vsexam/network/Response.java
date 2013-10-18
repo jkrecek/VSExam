@@ -24,9 +24,14 @@ public class Response {
         try {
             stream = response.getEntity().getContent();
         } catch (IOException e) {
+            Log.e(getClass().getName(), "Unexpected IO Exception in response `" + response.getLastHeader("Location").getValue() + "`");
             e.printStackTrace();
             return;
+        } catch(NullPointerException e) {
+            Log.e(getClass().getName(), "Unexpected Null Pointer in response `" + response.getLastHeader("Location").getValue() + "`");
+            return;
         }
+
 
         BufferedReader reader = null;
         try {

@@ -16,7 +16,7 @@
                   android:orientation="horizontal"
                   android:background="@color/white"
                   android:gravity="center_vertical"
-                  android:layout_marginBottom="20dp">
+                  android:layout_marginBottom="10dp">
 
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -45,12 +45,12 @@
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   style="@style/ResponsiveLayout"
-                  android:background="@color/white"
-                  android:layout_marginLeft="6dp"
-                  android:layout_marginRight="6dp"
                   tools:minHeight="200dp">
 
-        <LinearLayout style="@style/ResponsiveLayoutItem" >
+        <LinearLayout style="@style/ResponsiveLayoutItem.Details"
+            android:layout_marginLeft="@dimen/details_side_margin">
+
+            <TextView style="?android:listSeparatorTextViewStyle" android:text="INFORMACE O TERMÍNU" android:layout_marginBottom="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,11 +98,6 @@
             <TextView style="@style/DataHeader" android:text="KAPACITA"/>
             <TextView style="@style/DataContent" android:id="@+id/text_capacity" android:text="12/12"/>
 
-
-        </LinearLayout>
-
-        <LinearLayout style="@style/ResponsiveLayoutItem" >
-
             <TextView style="@style/DataHeader" android:text="DATUM TERMÍNU"/>
             <TextView style="@style/DataContent" android:id="@+id/text_examDate" tools:text="11. 12. 2013 09:00"/>
 
@@ -114,6 +109,37 @@
 
             <TextView style="@style/DataHeader" android:text="ODHLAŠOVÁNÍ OD"/>
             <TextView style="@style/DataContent" android:id="@+id/text_unregisterEnd" android:text="04. 12. 2013 08:00"/>
+        </LinearLayout>
+
+        <LinearLayout style="@style/ResponsiveLayoutItem.Details"
+                      android:layout_marginRight="@dimen/details_side_margin">
+
+
+            <ProgressBar android:id="@+id/classmates_progress"
+                         style="?android:progressBarStyleLarge"
+                         android:layout_width="wrap_content"
+                         android:layout_height="match_parent"
+                         android:layout_gravity="center"
+                         android:visibility="visible"
+                         tools:visibility="gone"/>
+
+            <LinearLayout android:id="@+id/layout_classmates"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:orientation="vertical"
+                          android:visibility="gone"
+                          tools:visibility="visible">
+
+                <TextView style="?android:listSeparatorTextViewStyle" android:text="SPOLUŽÁCI" android:layout_marginBottom="10dp"/>
+
+                <ListView android:id="@+id/list_classmates"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:divider="@color/divider_light"
+                          android:dividerHeight="1dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

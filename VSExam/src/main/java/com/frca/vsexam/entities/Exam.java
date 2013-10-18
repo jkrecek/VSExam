@@ -26,6 +26,8 @@ public class Exam extends ParentEntity {
     public final Date unregisterEnd;
     public final boolean isRegistered;
 
+    private ClassmateList classmates;
+
     private int tempGroup;
 
     public static Exam get(Elements columns, int group) {
@@ -79,5 +81,13 @@ public class Exam extends ParentEntity {
             ++column;
 
         return super.getElement(column, select);
+    }
+
+    public ClassmateList getClassmates() {
+        return classmates;
+    }
+
+    public void setClassmates(ClassmateList classmates) {
+        this.classmates = classmates;
     }
 }

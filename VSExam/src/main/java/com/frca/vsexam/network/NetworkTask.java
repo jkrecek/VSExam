@@ -13,11 +13,7 @@ public class NetworkTask extends AsyncTask<HttpRequestBuilder, Void, Response> {
         this.callback = callback;
     }
     protected Response doInBackground(HttpRequestBuilder... builders) {
-        int count = builders.length;
-        HttpResponse response = null;
-        for (int i = 0; i < count; i++) {
-            response = builders[i].execute();
-        }
+        HttpResponse response = builders[0].execute();
         return new Response(response);
     }
 

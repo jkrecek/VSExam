@@ -3,6 +3,7 @@ package com.frca.vsexam.network;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.frca.vsexam.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
@@ -86,6 +87,8 @@ public class HttpRequestBuilder {
         //ent.setContentEncoding("UTF-8");
         if (request instanceof HttpEntityEnclosingRequestBase)
             ((HttpPost)request).setEntity(entity);
+
+        Log.d(getClass().getName(), "Http request to url `" + request.getURI() + "`");
 
         return this;
     }

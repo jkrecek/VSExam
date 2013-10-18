@@ -64,4 +64,8 @@ public class Helper {
 
         return format.format(date);
     }
+
+    public static boolean isValid(List list) {
+        return list != null && !list.isEmpty();
+    }
 }
