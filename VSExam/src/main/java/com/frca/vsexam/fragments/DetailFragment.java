@@ -19,8 +19,8 @@ import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
 import com.frca.vsexam.entities.Exam;
 import com.frca.vsexam.helper.Helper;
-import com.frca.vsexam.network.ImageDownloaderTask;
 import com.frca.vsexam.network.HttpRequestBuilder;
+import com.frca.vsexam.network.ImageDownloaderTask;
 import com.frca.vsexam.network.NetworkTask;
 import com.frca.vsexam.network.Response;
 
@@ -66,14 +66,7 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        //new LogoDownloaderTask(getActivity(), exam.authorId, rootView.findViewById(R.id.logo_author)).execute();
-        new ImageDownloaderTask(getActivity(), rootView.findViewById(R.id.logo_author)).loadLogo(exam.authorId);
-
-        /*((TextView)mContent.findViewById(R.id.text_courseCode)).setText(exam.courseCode);
-            ((TextView)mContent.findViewById(R.id.text_courseName)).setText(exam.courseName);
-            ((TextView)mContent.findViewById(R.id.text_authorName)).setText(exam.authorName);
-
-            new LogoDownloaderTask(exam.authorId, new SparseArray<Bitmap>(), ((MainActivity)getActivity()).data, (ImageView)mContent.findViewById(R.id.logo_author).findViewById(R.id.image)).execute();*/
+        ImageDownloaderTask.startUserAvatarTask(getActivity(), rootView.findViewById(R.id.logo_author), exam.authorId);
 
         getClassmates();
 

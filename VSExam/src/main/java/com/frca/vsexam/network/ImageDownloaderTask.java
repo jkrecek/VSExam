@@ -4,31 +4,37 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.network.HttpRequestBuilder;
-import com.frca.vsexam.network.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageDownloaderTask extends AsyncTask<String, Void, Response> {
-    private ImageView imageView;
+    private List<ImageView> imageViews = new ArrayList<ImageView>();
     private Callback callback;
     private Context context;
 
-    public ImageDownloaderTask(Context context, View imageView) {
-        if (imageView instanceof ImageView)
-            this.imageView = (ImageView) imageView;
-        else
-            this.imageView = (ImageView)imageView.findViewById(R.id.image);
 
+    public ImageDownloaderTask(Context context, View imageView) {
+        imageViews.add(getProperImage(imageView));
         this.context = context;
     }
 
     public ImageDownloaderTask(Context context, Callback callback) {
         this.callback = callback;
         this.context = context;
+    }
+
+    private static ImageView getProperImage(View childOrParent) {
+        if (childOrParent instanceof ImageView)
+            return (ImageView) childOrParent;
+        else
+            return (ImageView)childOrParent.findViewById(R.id.image);
     }
 
     protected Response doInBackground(String... urls) {
@@ -53,25 +59,31 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Response> {
     }
 
     protected void onPostExecute(Response result) {
-        if (result == null)
-            return;
+        setImageViews(result.getBitmap());
 
-        setImage(result.getBitmap());
-
-        if (callback != null)
+        if (callback != null && result != null)
             callback.call(result);
     }
 
-    private void setImage(Bitmap bitmap) {
-        if (imageView != null) {
+    private void setImageViews(Bitmap bitmap) {
+        if (!imageViews.isEmpty()) {
+            for (ImageView view : imageViews) {
+                setImage(view, bitmap);
+            }
+        }
+    }
+
+    private static void setImage(ImageView imageView, Bitmap bitmap) {
+        if (bitmap == null)
+            imageView.setImageResource(android.R.drawable.ic_delete);
+        else
             imageView.setImageBitmap(bitmap);
 
-            View parent = (View)imageView.getParent();
-            if (parent != null) {
-                View hide = parent.findViewById(R.id.hide);
-                if (hide != null)
-                    hide.setVisibility(View.GONE);
-            }
+        View parent = (View)imageView.getParent();
+        if (parent != null) {
+            View hide = parent.findViewById(R.id.hide);
+            if (hide != null)
+                hide.setVisibility(View.GONE);
         }
     }
 
@@ -83,21 +95,40 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Response> {
         return "lide/foto.pl?id=" + String.valueOf(userId);
     }
 
-    public void loadLogo(final int userId) {
-        final DataHolder dateHolder = DataHolder.getInstance(context);
-        Bitmap bitmap = dateHolder.getBitmapContainer().get(userId);
-        if (bitmap != null) {
-            setImage(bitmap);
-        } else {
-            callback = new Callback() {
-                @Override
-                public void call(Response result) {
-                    if (dateHolder.getBitmapContainer().get(userId) == null)
-                        dateHolder.getBitmapContainer().put(userId, result.getBitmap());
-                }
-            };
+    private void addImageView(ImageView view) {
+        if (!imageViews.contains(view))
+            imageViews.add(view);
+    }
 
-            execute(getLogoUrl(userId));
+    public static void startUserAvatarTask(Context context, View view, final int userId) {
+        DataHolder dataHolder = DataHolder.getInstance(context);
+        final SparseArray<Bitmap> bitmapContainer = dataHolder.getBitmapContainer();
+        Bitmap bitmap = bitmapContainer.get(userId);
+
+        ImageView properImageView = getProperImage(view);
+        if (bitmap != null)
+            setImage(properImageView, bitmap);
+        else {
+            final SparseArray<ImageDownloaderTask> taskContainer = dataHolder.getDownloadTaskContainer();
+            synchronized (taskContainer) {
+                ImageDownloaderTask task = taskContainer.get(userId);
+                if (task != null) {
+                    task.addImageView(properImageView);
+                } else {
+                    task = new ImageDownloaderTask(context, properImageView);
+                    taskContainer.put(userId, task);
+
+                    task.callback = new Callback() {
+                        @Override
+                        public void call(Response result) {
+                            if (bitmapContainer.get(userId) == null)
+                                bitmapContainer.put(userId, result.getBitmap());
+                        }
+                    };
+
+                    task.execute(getLogoUrl(userId));
+                }
+            }
         }
     }
 }

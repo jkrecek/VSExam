@@ -14,15 +14,13 @@ import com.frca.vsexam.entities.ClassmateList;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.ImageDownloaderTask;
 
-/**
- * Created by KillerFrca on 5.10.13.
- */
 public class ClassmateAdapter extends ArrayAdapter<String> {
 
     private ClassmateList classmates;
 
-    private SparseArray<ImageDownloaderTask> tasks = new SparseArray<ImageDownloaderTask>();
     private static final int resourceLayout = R.layout.classmates_item;
+
+    private SparseArray<View> existingViews = new SparseArray<View>();
 
     public ClassmateAdapter(Context context, ClassmateList classmates) {
         super(context, resourceLayout);
@@ -35,32 +33,28 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
-        Classmate classmate = classmates.get(position);
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+        View view = existingViews.get(position);
+        if (view == null) {
+            Classmate classmate = classmates.get(position);
 
-
-        View view;
-        if (convertView != null)
-            view = convertView;
-        else {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService (Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(resourceLayout, null);
+
+            View imageHolder = view.findViewById(R.id.logo);                // logo
+            TextView text1 = (TextView)view.findViewById(R.id.text1);       // name
+            TextView text2 = (TextView)view.findViewById(R.id.text2);       // date
+            TextView text3 = (TextView)view.findViewById(R.id.text3);       // time
+
+            ImageDownloaderTask.startUserAvatarTask(getContext(), imageHolder, classmate.id);
+            text1.setText(classmate.name);
+            text2.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.DATE));
+            text3.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.TIME));
+
+            view.setTag(classmate);
+
+            existingViews.put(position, view);
         }
-
-        View logo = view.findViewById(R.id.logo);                       // logo
-        TextView text1 = (TextView)view.findViewById(R.id.text1);       // name
-        TextView text2 = (TextView)view.findViewById(R.id.text2);       // date
-        TextView text3 = (TextView)view.findViewById(R.id.text3);       // time
-
-        if (tasks.get(classmate.id) == null) {
-            ImageDownloaderTask task = new ImageDownloaderTask(getContext(), logo);
-            task.loadLogo(classmate.id);
-            tasks.put(classmate.id, task);
-        }
-
-        text1.setText(classmate.name);
-        text2.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.DATE));
-        text3.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.TIME));
 
         return view;
     }

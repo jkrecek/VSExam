@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.util.SparseArray;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.network.ImageDownloaderTask;
 
 /**
  * Created by KillerFrca on 16.10.13.
@@ -20,6 +21,8 @@ public class DataHolder {
     private final Configuration configuration;
 
     private final SparseArray<Bitmap> bitmapContainer = new SparseArray<Bitmap>();
+
+    private final SparseArray<ImageDownloaderTask> downloadTaskContainer = new SparseArray<ImageDownloaderTask>();
 
     private DataHolder(Context context) {
         preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
@@ -43,5 +46,9 @@ public class DataHolder {
 
     public SparseArray<Bitmap> getBitmapContainer() {
         return bitmapContainer;
+    }
+
+    public SparseArray<ImageDownloaderTask> getDownloadTaskContainer() {
+        return downloadTaskContainer;
     }
 }
