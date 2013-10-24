@@ -1,6 +1,10 @@
 package com.frca.vsexam.helper;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -9,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class Helper {
+public abstract class Helper {
     public static <T> List<T> extractObjectValues(List<?> list, String valueName) {
         if (list.isEmpty())
             return null;
@@ -68,4 +72,24 @@ public class Helper {
     public static boolean isValid(List list) {
         return list != null && !list.isEmpty();
     }
+
+    public enum Orientation {
+        VERTICAL,
+        HORIZONTAL
+    }
+
+    public static View getDivider(LayoutInflater inflater, Orientation orientation) {
+        ViewGroup.LayoutParams params;
+        if (orientation == Orientation.VERTICAL)
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+        else
+            params = new ViewGroup.LayoutParams(1, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        View div = new View(inflater.getContext());
+        div.setLayoutParams(params);
+        div.setBackgroundResource(R.color.divider_light);
+
+        return div;
+    }
+
 }

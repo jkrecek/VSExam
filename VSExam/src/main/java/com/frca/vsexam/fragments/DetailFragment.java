@@ -1,5 +1,6 @@
 package com.frca.vsexam.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,16 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.frca.vsexam.NoAuthException;
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ClassmateAdapter;
 import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
 import com.frca.vsexam.entities.Exam;
+import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.ImageDownloaderTask;
@@ -36,28 +36,39 @@ public class DetailFragment extends Fragment {
 
     private final Exam exam;
 
+    private View view;
+
+    private LayoutInflater inflater;
+
     public DetailFragment(Exam exam) {
         this.exam = exam;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceBundle) {
+        super.onCreate(savedInstanceBundle);
+
+        inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.exam_list_details, container, false);
-        ((TextView)rootView.findViewById(R.id.text_courseCode)).setText(exam.courseCode);
-        ((TextView)rootView.findViewById(R.id.text_courseName)).setText(exam.courseName);
-        ((TextView)rootView.findViewById(R.id.text_authorName)).setText(exam.authorName);
-        ((TextView)rootView.findViewById(R.id.text_type)).setText(exam.type);
-        ((TextView)rootView.findViewById(R.id.text_isRegistered)).setText(exam.isRegistered ? "Registrován" : "Neregistrován");
-        ((TextView)rootView.findViewById(R.id.text_capacity)).setText(String.valueOf(exam.currentCapacity)+"/"+String.valueOf(exam.maxCapacity));
-        ((TextView)rootView.findViewById(R.id.text_examDate)).setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.DATE_TIME));
-        ((TextView)rootView.findViewById(R.id.text_registerStart)).setText(Helper.getDateOutput(exam.registerStart, Helper.DateOutputType.DATE_TIME));
-        ((TextView)rootView.findViewById(R.id.text_registerEnd)).setText(Helper.getDateOutput(exam.registerEnd, Helper.DateOutputType.DATE_TIME));
-        ((TextView)rootView.findViewById(R.id.text_unregisterEnd)).setText(Helper.getDateOutput(exam.unregisterEnd, Helper.DateOutputType.DATE_TIME));
+        view = inflater.inflate(R.layout.exam_list_details, container, false);
+        ((TextView)view.findViewById(R.id.text_courseCode)).setText(exam.courseCode);
+        ((TextView)view.findViewById(R.id.text_courseName)).setText(exam.courseName);
+        ((TextView)view.findViewById(R.id.text_authorName)).setText(exam.authorName);
+        ((TextView)view.findViewById(R.id.text_type)).setText(exam.type);
+        ((TextView)view.findViewById(R.id.text_isRegistered)).setText(exam.isRegistered ? "Registrován" : "Neregistrován");
+        ((TextView)view.findViewById(R.id.text_capacity)).setText(String.valueOf(exam.currentCapacity)+"/"+String.valueOf(exam.maxCapacity));
+        ((TextView)view.findViewById(R.id.text_examDate)).setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.DATE_TIME));
+        ((TextView)view.findViewById(R.id.text_registerStart)).setText(Helper.getDateOutput(exam.registerStart, Helper.DateOutputType.DATE_TIME));
+        ((TextView)view.findViewById(R.id.text_registerEnd)).setText(Helper.getDateOutput(exam.registerEnd, Helper.DateOutputType.DATE_TIME));
+        ((TextView)view.findViewById(R.id.text_unregisterEnd)).setText(Helper.getDateOutput(exam.unregisterEnd, Helper.DateOutputType.DATE_TIME));
 
 
-        rootView.findViewById(R.id.button_author).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.button_author).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(exam.authorId));
@@ -66,11 +77,14 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        ImageDownloaderTask.startUserAvatarTask(getActivity(), rootView.findViewById(R.id.logo_author), exam.authorId);
+        ImageDownloaderTask.startUserAvatarTask(getActivity(), view.findViewById(R.id.logo_author), exam.authorId);
 
         getClassmates();
 
-        return rootView;
+        View returnView = view;
+        view = null;
+
+        return returnView;
     }
 
     private void getClassmates() {
@@ -111,7 +125,9 @@ public class DetailFragment extends Fragment {
                 }
 
                 exam.setClassmates(classmates);
-                onClassmatesLoaded(classmates);
+                if (getView() != null)
+                    onClassmatesLoaded(classmates);
+
             }
         }).execute(builder);
     }
@@ -119,12 +135,28 @@ public class DetailFragment extends Fragment {
     private void onClassmatesLoaded(ClassmateList classmates) {
         ClassmateAdapter classmateAdapter = new ClassmateAdapter(getActivity(), classmates);
         View classmateProgress = getView().findViewById(R.id.classmates_progress);
-        classmateProgress.setVisibility(View.GONE);
 
         LinearLayout classmateLayout = (LinearLayout) getView().findViewById(R.id.layout_classmates);
-        classmateLayout.setVisibility(View.VISIBLE);
 
-        ListView classmateList = (ListView)classmateLayout.findViewById(R.id.list_classmates);
-        classmateList.setAdapter(classmateAdapter);
+        // temp solution
+        for (int i = 0; i < classmateAdapter.getCount(); ++i) {
+            View view = classmateAdapter.getView(i, null, null);
+            classmateLayout.addView(view);
+
+            if (i != classmateAdapter.getCount() - 1)
+                classmateLayout.addView(Helper.getDivider(inflater, Helper.Orientation.VERTICAL));
+        }
+
+        classmateProgress.setVisibility(View.GONE);
+        classmateLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public View getView() {
+        if (view != null)
+            return view;
+        else
+            return super.getView();
+
     }
 }

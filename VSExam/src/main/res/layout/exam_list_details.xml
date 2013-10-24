@@ -8,139 +8,198 @@
               android:id="@+id/layout_details"
               tools:background="@color/standard_grey" >
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:paddingTop="10dp"
-                  android:paddingBottom="10dp"
-                  android:minHeight="80dp"
-                  android:orientation="horizontal"
-                  android:background="@color/white"
-                  android:gravity="center_vertical"
-                  android:layout_marginBottom="10dp">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:scrollbarStyle="outsideOverlay" >
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/text_courseCode"
-                  android:textAppearance="?android:textAppearanceLarge"
-                  android:layout_marginLeft="10dp"
-                  android:layout_marginRight="7dp"
-                  android:textStyle="bold"
-                  tools:text="PHM"/>
+        <LinearLayout android:layout_height="wrap_content"
+                      android:layout_width="match_parent"
+                      android:orientation="vertical">
 
-        <View android:layout_width="1dp"
-              android:layout_height="match_parent"
-              android:background="@color/divider_light" />
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:paddingTop="10dp"
+                          android:paddingBottom="10dp"
+                          android:minHeight="80dp"
+                          android:orientation="horizontal"
+                          android:background="@color/white"
+                          android:gravity="center_vertical"
+                          android:layout_marginBottom="10dp">
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:id="@+id/text_courseName"
-                  android:textAppearance="?android:textAppearanceLarge"
-                  android:layout_marginLeft="7dp"
-                  android:textStyle="bold"
-                  tools:text="Státní zkouška ze studijního oboru"/>
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/text_courseCode"
+                          android:textAppearance="?android:textAppearanceLarge"
+                          android:layout_marginLeft="10dp"
+                          android:layout_marginRight="7dp"
+                          android:textStyle="bold"
+                          tools:text="PHM"/>
 
-    </LinearLayout>
+                <View android:layout_width="1dp"
+                      android:layout_height="match_parent"
+                      android:background="@color/divider_light" />
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/text_courseName"
+                          android:textAppearance="?android:textAppearanceLarge"
+                          android:layout_marginLeft="7dp"
+                          android:textStyle="bold"
+                          tools:text="Státní zkouška ze studijního oboru"/>
+
+            </LinearLayout>
 
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  style="@style/ResponsiveLayout"
-                  tools:minHeight="200dp">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          style="@style/ResponsiveLayout"
+                          android:paddingBottom="10dp"
+                          tools:minHeight="200dp">
 
-        <LinearLayout style="@style/ResponsiveLayoutItem.Details"
-            android:layout_marginLeft="@dimen/details_side_margin">
+                <LinearLayout style="@style/ResponsiveLayoutItem.Details"
+                              android:layout_marginLeft="@dimen/details_side_margin">
 
-            <TextView style="?android:listSeparatorTextViewStyle" android:text="INFORMACE O TERMÍNU" android:layout_marginBottom="10dp"/>
+                    <TextView style="?android:listSeparatorTextViewStyle"
+                              android:text="INFORMACE O TERMÍNU"
+                              android:layout_marginBottom="10dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal">
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_marginBottom="5dp"
+                                  android:orientation="horizontal">
 
-                <include layout="@layout/logo"
-                         android:id="@+id/logo_author"
-                         style="@style/LogoView.Large"/>
+                        <include layout="@layout/logo"
+                                 android:id="@+id/logo_author"
+                                 style="@style/LogoView.Large"/>
 
-                <LinearLayout android:orientation="vertical"
-                              android:layout_width="wrap_content"
-                              android:minWidth="200dp"
-                              android:layout_height="match_parent"
-                              android:gravity="center_vertical">
+                        <LinearLayout android:orientation="vertical"
+                                      android:layout_width="0dp"
+                                      android:layout_weight="1"
+                                      android:layout_height="match_parent"
+                                      android:gravity="center_vertical">
+
+                            <TextView style="@style/DataHeader"
+                                      android:layout_marginTop="0dp"
+                                      android:text="VYPSAL"/>
+
+                            <TextView style="@style/DataContent"
+                                      android:id="@+id/text_authorName"
+                                      tools:text="Nějaká pinda"/>
+
+                        </LinearLayout>
+
+                        <ImageButton android:id="@+id/button_author"
+                                     android:src="@android:drawable/ic_menu_send"
+                                     android:background="@null"
+                                     android:paddingLeft="10dp"
+                                     android:paddingRight="10dp"
+                                     android:layout_marginRight="10dp"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="match_parent"/>
+
+                    </LinearLayout>
 
                     <TextView style="@style/DataHeader"
-                              android:layout_marginTop="0dp"
-                              android:text="VYPSAL"/>
+                              android:text="DRUH (forma)"/>
 
                     <TextView style="@style/DataContent"
-                              android:id="@+id/text_authorName"
-                              tools:text="Nějaká pinda"/>
+                              android:id="@+id/text_type"
+                              tools:text="zkouška (ústní)"/>
+
+                    <TextView style="@style/DataHeader"
+                              android:text="STAV"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_isRegistered"
+                              tools:text="Přihlášen"/>
+
+                    <TextView style="@style/DataHeader"
+                              android:text="KAPACITA"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_capacity"
+                              tools:text="12/12"/>
+
+                    <TextView style="@style/DataHeader"
+                              android:text="DATUM TERMÍNU"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_examDate"
+                              tools:text="11. 12. 2013 09:00"/>
+
+                    <TextView style="@style/DataHeader"
+                              android:text="PŘIHLAŠOVÁNÍ OD"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_registerStart"
+                              tools:text="04. 09. 2013 08:00"/>
+
+                    <TextView style="@style/DataHeader"
+                              android:text="PŘIHLAŠOVÁNÍ DO"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_registerEnd"
+                              tools:text="04. 12. 2013 09:00"/>
+
+                    <TextView style="@style/DataHeader"
+                              android:text="ODHLAŠOVÁNÍ OD"/>
+
+                    <TextView style="@style/DataContent"
+                              android:id="@+id/text_unregisterEnd"
+                              tools:text="04. 12. 2013 08:00"/>
 
                 </LinearLayout>
 
-                <ImageButton android:id="@+id/button_author"
-                    android:src="@android:drawable/ic_menu_send"
-                    android:background="@null"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
+                <LinearLayout style="@style/ResponsiveLayoutItem.Details"
+                              android:layout_marginRight="@dimen/details_side_margin">
 
-            </LinearLayout>
+                    <TextView style="?android:listSeparatorTextViewStyle"
+                              android:text="SPOLUŽÁCI"
+                              android:layout_marginBottom="10dp" />
 
-            <TextView style="@style/DataHeader" android:text="DRUH (forma)"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_type" tools:text="zkouška (ústní)"/>
+                    <ProgressBar android:id="@+id/classmates_progress"
+                                 style="?android:progressBarStyleLarge"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="match_parent"
+                                 android:layout_gravity="center"
+                                 android:visibility="visible"
+                                 tools:visibility="gone"/>
 
-            <TextView style="@style/DataHeader" android:text="STAV"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_isRegistered" android:text="Přihlášen"/>
+                    <LinearLayout android:id="@+id/layout_classmates"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:orientation="vertical"
+                                  android:visibility="gone"
+                                  tools:visibility="visible" />
 
-            <TextView style="@style/DataHeader" android:text="KAPACITA"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_capacity" android:text="12/12"/>
-
-            <TextView style="@style/DataHeader" android:text="DATUM TERMÍNU"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_examDate" tools:text="11. 12. 2013 09:00"/>
-
-            <TextView style="@style/DataHeader" android:text="PŘIHLAŠOVÁNÍ OD"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_registerStart" android:text="04. 09. 2013 08:00"/>
-
-            <TextView style="@style/DataHeader" android:text="PŘIHLAŠOVÁNÍ DO"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_registerEnd" android:text="04. 12. 2013 09:00"/>
-
-            <TextView style="@style/DataHeader" android:text="ODHLAŠOVÁNÍ OD"/>
-            <TextView style="@style/DataContent" android:id="@+id/text_unregisterEnd" android:text="04. 12. 2013 08:00"/>
-        </LinearLayout>
-
-        <LinearLayout style="@style/ResponsiveLayoutItem.Details"
-                      android:layout_marginRight="@dimen/details_side_margin">
-
-
-            <ProgressBar android:id="@+id/classmates_progress"
-                         style="?android:progressBarStyleLarge"
-                         android:layout_width="wrap_content"
-                         android:layout_height="match_parent"
-                         android:layout_gravity="center"
-                         android:visibility="visible"
-                         tools:visibility="gone"/>
-
-            <LinearLayout android:id="@+id/layout_classmates"
-                          android:layout_width="match_parent"
-                          android:layout_height="match_parent"
-                          android:orientation="vertical"
-                          android:visibility="gone"
-                          tools:visibility="visible">
-
-                <TextView style="?android:listSeparatorTextViewStyle" android:text="SPOLUŽÁCI" android:layout_marginBottom="10dp"/>
-
-                <ListView android:id="@+id/list_classmates"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:divider="@color/divider_light"
-                          android:dividerHeight="1dp" />
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout style="?buttonBarStyle"
+                  android:background="@color/white"
+                  android:layout_height="wrap_content"
+                  android:divider="@color/standard_grey"
+                  android:dividerPadding="2dp"
+                  android:layout_width="match_parent">
+
+        <Button style="?buttonBarButtonStyle"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Register ASAP" />
+
+        <Button style="?buttonBarButtonStyle"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="Deregister" />
 
     </LinearLayout>
 

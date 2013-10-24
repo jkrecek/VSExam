@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
+import com.frca.vsexam.helper.Dialog;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.ImageDownloaderTask;
 
@@ -22,9 +23,12 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
 
     private SparseArray<View> existingViews = new SparseArray<View>();
 
+    private final LayoutInflater inflater;
+
     public ClassmateAdapter(Context context, ClassmateList classmates) {
         super(context, resourceLayout);
         this.classmates = classmates;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -36,9 +40,8 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
     public View getView(final int position, View convertView, final ViewGroup parent) {
         View view = existingViews.get(position);
         if (view == null) {
-            Classmate classmate = classmates.get(position);
+            final Classmate classmate = classmates.get(position);
 
-            final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService (Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(resourceLayout, null);
 
             View imageHolder = view.findViewById(R.id.logo);                // logo

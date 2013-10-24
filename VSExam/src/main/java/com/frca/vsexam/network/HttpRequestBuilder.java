@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.frca.vsexam.NoAuthException;
+import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 
 import org.apache.http.HttpEntity;

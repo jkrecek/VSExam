@@ -11,10 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frca.vsexam.MainActivity;
-import com.frca.vsexam.NoAuthException;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Exam;
 import com.frca.vsexam.entities.ExamList;
+import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.NetworkTask;
 import com.frca.vsexam.network.Response;
