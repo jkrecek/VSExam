@@ -33,6 +33,8 @@ public class BrowserPaneFragment extends MainActivityFragment {
 
     private ActionBar mActionBar;
 
+    private View lastHighlighted;
+
     public BrowserPaneFragment(ExamList exams) {
         this.exams = exams;
     }
@@ -90,10 +92,18 @@ public class BrowserPaneFragment extends MainActivityFragment {
             transaction.commit();
 
             if (mSlidingLayout.isSlideable()) {
-                mActionBar.setTitle(exam.courseCode);
+                mActionBar.setTitle(exam.courseCode + " | " + exam.courseName);
                 mActionBar.setDisplayHomeAsUpEnabled(true);
                 mSlidingLayout.closePane();
+            } else {
+                if (lastHighlighted != null)
+                    lastHighlighted.setBackgroundResource(R.color.standard_grey);
+
+                view.setBackgroundResource(R.color.white);
+                lastHighlighted = view;
             }
+
+
         }
     }
 
