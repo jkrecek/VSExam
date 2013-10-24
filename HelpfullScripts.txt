@@ -1,0 +1,8 @@
+// listing all Programs
+var code = ""; var res = ""; $("div table:nth-of-type(2) tbody tr").each(function() { var text = $(this).find("td:nth-child(2) small").text(); var theCode = text.substring(2,5).trim(); code += theCode + ", "; res += "<string name=\"p_" + theCode .toLowerCase() + "\">"+ text.substring(5)+"</string>\n"; }); console.log("-- CODES --\n" + code + "\n-- RES --\n"+ res);
+
+// listing all Fields
+var code = ""; var res = ""; $("div table:nth-of-type(2) tbody tr").each(function() { var theCode = $(this).find("td:nth-child(1) small").text().substring(5,8).trim(); code += theCode + ", "; res += "<string name=\"f_" + theCode .toLowerCase() + "\">"+ $(this).find("td:nth-child(2) small").text()+"</string>\n"; }); console.log("-- CODES --\n" + code + "\n-- RES --\n"+ res);
+
+// listing all Specs
+var code = ""; var res = ""; $("div table:nth-of-type(3) tbody tr").each(function() { code += $(this).find("td:first-child small").text().substring(1) + ", "; res += "<string name=\"s_" + $(this).find("td:first-child small").text().toLowerCase() + "\">"+$(this).find("td:nth-child(2) small").text().substring(4)+"</string>\n"; }); console.log("-- CODES --\n" + code + "\n-- RES --\n"+ res);

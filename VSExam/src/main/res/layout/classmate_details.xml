@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:layout_width="270dp">
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="5dp"
+                      android:orientation="horizontal">
+
+            <include layout="@layout/logo"
+                     android:id="@+id/logo"
+                     style="@style/LogoView.VeryLarge"
+                     android:layout_margin="0dp"
+                     android:layout_marginRight="5dp"/>
+
+            <LinearLayout android:orientation="vertical"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="match_parent"
+                          android:gravity="center">
+
+                <TextView style="@style/DataHeader"
+                          android:layout_marginTop="0dp"
+                          android:gravity="center"
+                          android:id="@+id/text_name"
+                          android:text="Jan Křeček"/>
+
+                <TextView style="@style/DataContent"
+                          android:gravity="center"
+                          android:id="@+id/text_faculty"
+                          tools:text="@string/faculty_fph"/>
+
+                <TextView style="@style/DataContent"
+                          android:id="@+id/text_form_type"
+                          android:gravity="center"
+                          tools:text="Bakalářský typ studia, prezenční forma"/>
+
+                <TextView style="@style/DataContent"
+                          android:id="@+id/text_semester"
+                          android:gravity="center"
+                          tools:text="@string/semester_nth"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_height="wrap_content"
+                      android:layout_width="match_parent"
+                      android:gravity="center_vertical">
+
+            <TextView style="@style/DataHeader.Classmate"
+                      android:text="Program"/>
+
+            <TextView style="@style/DataContent.Classmate"
+                      android:id="@+id/text_programme"
+                      android:text="@string/p_em"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout android:layout_height="wrap_content"
+                      android:layout_width="match_parent"
+                      android:gravity="center_vertical">
+
+            <TextView style="@style/DataHeader.Classmate"
+                      android:text="Obor"/>
+
+            <TextView style="@style/DataContent.Classmate"
+                      android:id="@+id/text_field"
+                      tools:text="@string/f_pem"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_height="wrap_content"
+                      android:layout_width="match_parent"
+                      android:gravity="center_vertical">
+
+            <TextView style="@style/DataHeader.Classmate"
+                      android:text="Specializace"/>
+
+            <TextView style="@style/DataContent.Classmate"
+                      android:id="@+id/text_spec"
+                      tools:text="@string/s_3fi"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:layout_height="wrap_content"
+                      android:layout_width="match_parent"
+                      android:orientation="horizontal"
+                      android:gravity="center_vertical">
+
+            <ImageButton android:layout_height="wrap_content"
+                         android:layout_width="0dp"
+                         android:layout_weight="1"
+                         android:id="@+id/button_mail"
+                         android:background="@null"
+                         android:src="@drawable/mail_icon"/>
+
+            <View android:layout_height="match_parent"
+                  android:layout_width="1px"
+                  android:layout_marginTop="5dp"
+                  android:layout_marginBottom="5dp"
+                  android:background="@color/divider_light"/>
+
+            <ImageButton android:layout_height="wrap_content"
+                         android:layout_width="0dp"
+                         android:layout_weight="1"
+                         android:id="@+id/button_goto"
+                         android:background="@null"
+                         android:src="@android:drawable/ic_menu_send"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

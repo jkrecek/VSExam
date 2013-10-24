@@ -1,10 +1,11 @@
 package com.frca.vsexam.helper;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.frca.vsexam.R;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,25 @@ public abstract class Helper {
 
     public static boolean isValid(List list) {
         return list != null && !list.isEmpty();
+    }
+
+    public static boolean reportErrors = true;
+    public static int getResourceValue(Enum value, String prefix) {
+        String fieldName = "";
+        if (prefix != null)
+            fieldName += prefix;
+        fieldName += value.toString().toLowerCase();
+
+        try {
+            return R.string.class.getField(fieldName).getInt(null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            if (reportErrors)
+                Log.e(Helper.class.getName(), "Missing resource for enum `" + value.toString() + "` (" + fieldName + ")");
+        }
+
+        return 0;
     }
 
     public enum Orientation {

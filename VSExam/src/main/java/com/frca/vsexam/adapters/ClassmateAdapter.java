@@ -56,6 +56,13 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
 
             view.setTag(classmate);
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Dialog.ClassmateDetails(getContext(), classmate.id, classmate.name, classmate.identification);
+                }
+            });
+
             existingViews.put(position, view);
         }
 
