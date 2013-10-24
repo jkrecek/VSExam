@@ -66,7 +66,7 @@ public abstract class Dialog {
                     i.putExtra(Intent.EXTRA_EMAIL, new String[]{String.valueOf(userId) + "@vse.com"});
 
                     try {
-                        context.startActivity(Intent.createChooser(i, context.getResources().getString(R.string.send_mail)));
+                        context.startActivity(i);
                     } catch (ActivityNotFoundException e) {
                         Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_LONG).show();
                     }
