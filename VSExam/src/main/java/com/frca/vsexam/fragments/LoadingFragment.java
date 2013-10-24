@@ -1,5 +1,7 @@
 package com.frca.vsexam.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -38,6 +40,20 @@ public class LoadingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
 
+        if (!getMainActivity().isOnline()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setTitle("No internet connection")
+                .setMessage("To be able to use this app properly, you need to connect the device to the internet. Please do so and try this again.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getMainActivity().finish();
+                    }
+                });
+
+            builder.create().show();
+        }
         loadExams();
     }
 
