@@ -5,6 +5,7 @@
               android:orientation="horizontal"
               android:id="@+id/layout"
               android:layout_width="match_parent"
+              android:background="?selectableItemBackground"
               android:layout_height="@dimen/exam_list_item_height"
               android:minHeight="@dimen/exam_list_item_height" >
 
