@@ -1,4 +1,4 @@
-package com.frca.vsexam;
+package com.frca.vsexam.exceptions;
 
 /**
  * Created by KillerFrca on 3.10.13.
