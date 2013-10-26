@@ -21,7 +21,7 @@ import com.frca.vsexam.entities.ExamList;
 /**
  * Created by KillerFrca on 11.10.13.
  */
-public class BrowserPaneFragment extends MainActivityFragment {
+public class BrowserPaneFragment extends BaseFragment {
 
     private ExamList exams;
 

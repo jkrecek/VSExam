@@ -19,7 +19,7 @@ import com.frca.vsexam.network.HttpRequestBuilder;
 /**
  * Created by KillerFrca on 11.10.13.
  */
-public class LoginFragment extends MainActivityFragment {
+public class LoginFragment extends BaseFragment {
     public LoginFragment() {
     }
 

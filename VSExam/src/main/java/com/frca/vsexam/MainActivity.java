@@ -11,10 +11,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.frca.vsexam.fragments.BaseFragment;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
-import com.frca.vsexam.fragments.MainActivityFragment;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
@@ -71,8 +71,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFragment instanceof MainActivityFragment)
-            if (((MainActivityFragment)currentFragment).onBackPressed())
+        if (currentFragment instanceof BaseFragment)
+            if (((BaseFragment)currentFragment).onBackPressed())
                 return;
 
         super.onBackPressed();

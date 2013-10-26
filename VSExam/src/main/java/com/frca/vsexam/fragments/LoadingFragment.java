@@ -3,7 +3,6 @@ package com.frca.vsexam.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class LoadingFragment extends Fragment {
+public class LoadingFragment extends BaseFragment {
 
     private String message;
 
@@ -61,11 +60,6 @@ public class LoadingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (!(getActivity() instanceof MainActivity)) {
-            Log.e(getClass().getName(), "This class must be child of MainActivity");
-            return null;
-        }
-
         View rootView = inflater.inflate(R.layout.layout_loading, container, false);
         messageField = (TextView) rootView.findViewById(R.id.textView);
         if (!TextUtils.isEmpty(message))
@@ -81,10 +75,6 @@ public class LoadingFragment extends Fragment {
         // may be called before view is created
         if (messageField != null)
             messageField.setText(this.message);
-    }
-
-    private MainActivity getMainActivity() {
-        return (MainActivity)getActivity();
     }
 
     private void loadExams() {
