@@ -24,6 +24,7 @@ import com.frca.vsexam.network.ImageDownloaderTask;
 import com.frca.vsexam.network.NetworkTask;
 import com.frca.vsexam.network.Response;
 
+import org.apache.http.client.methods.HttpRequestBase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -94,7 +95,7 @@ public class DetailFragment extends Fragment {
             return;
         }
 
-        HttpRequestBuilder builder;
+        HttpRequestBase builder;
         try {
             builder = new HttpRequestBuilder(getActivity(), "student/terminy_info.pl?termin="+exam.id+";spoluzaci=1;studium="+exam.studyId+";obdobi="+exam.periodId).build();
         } catch (NoAuthException e) {
@@ -102,7 +103,7 @@ public class DetailFragment extends Fragment {
             return;
         }
 
-        new NetworkTask(new NetworkTask.ResponseCallback() {
+        new NetworkTask(getActivity(), new NetworkTask.ResponseCallback() {
 
             @Override
             public void call(Response response) {

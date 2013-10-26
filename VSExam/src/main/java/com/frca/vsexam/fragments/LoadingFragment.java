@@ -91,7 +91,7 @@ public class LoadingFragment extends Fragment {
         setMessage("Downloading exams");
 
         try {
-            new NetworkTask(new NetworkTask.ResponseCallback() {
+            new NetworkTask(getActivity(), new NetworkTask.ResponseCallback() {
 
                 @Override
                 public void call(Response response) {

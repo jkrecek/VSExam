@@ -1,15 +1,24 @@
 package com.frca.vsexam.network;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
-public class NetworkTask extends AsyncTask<HttpRequestBuilder, Void, Response> {
+import com.frca.vsexam.helper.DataHolder;
+
+import org.apache.http.client.methods.HttpRequestBase;
+
+public class NetworkTask extends AsyncTask<HttpRequestBase, Void, Response> {
     private final ResponseCallback callback;
-    public NetworkTask(ResponseCallback callback) {
+    private final NetworkInterface netInt;
+
+    public NetworkTask(Context context, ResponseCallback callback) {
         this.callback = callback;
+        this.netInt = DataHolder.getInstance(context).getNetworkInterface();
     }
-    protected Response doInBackground(HttpRequestBuilder... builders) {
-        HttpRequestBuilder builder = builders[0];
-        return builder.execute(Response.Type.TEXT);
+
+    protected Response doInBackground(HttpRequestBase... request) {
+        HttpRequestBase onlyRequest = request[0];
+        return netInt.execute(onlyRequest, Response.Type.TEXT);
     }
 
     protected void onPostExecute(Response result) {
@@ -18,6 +27,6 @@ public class NetworkTask extends AsyncTask<HttpRequestBuilder, Void, Response> {
     }
 
     public static interface ResponseCallback {
-        void call(Response httpString);
+        abstract void call(Response httpString);
     }
 }

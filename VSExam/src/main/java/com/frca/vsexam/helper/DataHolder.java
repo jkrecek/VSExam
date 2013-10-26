@@ -8,10 +8,8 @@ import android.util.SparseArray;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.network.ImageDownloaderTask;
+import com.frca.vsexam.network.NetworkInterface;
 
-/**
- * Created by KillerFrca on 16.10.13.
- */
 public class DataHolder {
 
     private static DataHolder instance;
@@ -24,9 +22,12 @@ public class DataHolder {
 
     private final SparseArray<ImageDownloaderTask> downloadTaskContainer = new SparseArray<ImageDownloaderTask>();
 
+    private final NetworkInterface networkInterface;
+
     private DataHolder(Context context) {
         preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         configuration = context.getResources().getConfiguration();
+        networkInterface = new NetworkInterface();
     }
 
     public static DataHolder getInstance(Context context) {
@@ -50,5 +51,9 @@ public class DataHolder {
 
     public SparseArray<ImageDownloaderTask> getDownloadTaskContainer() {
         return downloadTaskContainer;
+    }
+
+    public NetworkInterface getNetworkInterface() {
+        return networkInterface;
     }
 }

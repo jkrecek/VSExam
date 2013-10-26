@@ -11,23 +11,24 @@ import android.widget.ImageView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.helper.DataHolder;
 
+import org.apache.http.client.methods.HttpRequestBase;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageDownloaderTask extends AsyncTask<String, Void, Response> {
     private List<ImageView> imageViews = new ArrayList<ImageView>();
     private Callback callback;
-    private Context context;
-
+    private final DataHolder dataHolder;
 
     public ImageDownloaderTask(Context context, View imageView) {
         imageViews.add(getProperImage(imageView));
-        this.context = context;
+        dataHolder = DataHolder.getInstance(context);
     }
 
     public ImageDownloaderTask(Context context, Callback callback) {
         this.callback = callback;
-        this.context = context;
+        dataHolder = DataHolder.getInstance(context);
     }
 
     private static ImageView getProperImage(View childOrParent) {
@@ -43,19 +44,16 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Response> {
     }
 
     protected Response get(String url) {
-
         url = HttpRequestBuilder.completeURLString(url);
-        Response response = null;
+
         try {
-            HttpRequestBuilder httpResponse = new HttpRequestBuilder(context, url).build();
-            response = httpResponse.execute(Response.Type.BITMAP);
+            HttpRequestBase httpRequest = new HttpRequestBuilder(dataHolder, url).build();
+            return dataHolder.getNetworkInterface().execute(httpRequest, Response.Type.BITMAP);
         } catch (Exception e) {
-            Log.e("Error", e.getClass().getName());
-            e.printStackTrace();
+            Log.e("Error", e.getClass().getName() + ": " + e.getMessage());
         }
 
-
-        return response;
+        return null;
     }
 
     protected void onPostExecute(Response result) {

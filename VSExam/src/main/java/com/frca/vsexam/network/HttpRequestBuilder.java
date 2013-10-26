@@ -1,7 +1,6 @@
 package com.frca.vsexam.network;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -9,24 +8,13 @@ import android.util.Log;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.AbstractHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.Charset;
 
 /**
  * Created by KillerFrca on 3.10.13.
@@ -39,8 +27,6 @@ public class HttpRequestBuilder {
 
     public final static String BASE_URL = "https://isis.vse.cz/auth/";
 
-    private final static int TIMEOUT_MS = 15000;
-
     private final DataHolder dataHolder;
 
     private Class<? extends HttpRequestBase> requestType = HttpGet.class;
@@ -51,22 +37,19 @@ public class HttpRequestBuilder {
 
     private HttpRequestBase request = null;
 
-    private static HttpClient client;
-
-    static {
-        HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MS);
-        HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MS);
-        client = new DefaultHttpClient(httpParams);
+    public HttpRequestBuilder(Context context,  String partialUrl) {
+        this(DataHolder.getInstance(context), partialUrl);
     }
 
-
-    public HttpRequestBuilder(Context context,  String partialUrl) {
-        this.dataHolder = DataHolder.getInstance(context);
+    public HttpRequestBuilder(DataHolder dataHolder,  String partialUrl) {
+        this.dataHolder = dataHolder;
         this.partialUrl = partialUrl;
     }
 
-    public HttpRequestBuilder build() throws NoAuthException {
+    public HttpRequestBase build() throws NoAuthException {
+
+        if (request != null)
+            return request;
 
         try {
             request = requestType.getDeclaredConstructor(String.class).newInstance(completeURLString(partialUrl));
@@ -81,51 +64,16 @@ public class HttpRequestBuilder {
         }
 
         request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        //request.setHeader("User-Agent", "Apache-HttpClient/4.1 (java 1.5)");
         request.setHeader("Host", getHost());
         request.setHeader("Authorization", getB64Auth());
         request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
-        //List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-        //nvps.add(new BasicNameValuePair("data[body]", "test"));
-        //AbstractHttpEntity ent=new UrlEncodedFormEntity(nvps, HTTP.UTF_8);
-        //ent.setContentType("application/x-www-form-urlencoded; charset=UTF-8");
-        //ent.setContentEncoding("UTF-8");
+
         if (request instanceof HttpEntityEnclosingRequestBase)
             ((HttpPost)request).setEntity(entity);
 
         Log.d(getClass().getName(), "Http request to url `" + request.getURI() + "`");
 
-        return this;
-    }
-
-    public Response execute(Response.Type type) {
-        synchronized (client) {
-            Log.d("Currently Processing", request.getURI().toString());
-            Response response = null;
-
-            HttpResponse httpResponse;
-            try {
-                httpResponse = client.execute(request);
-                HttpEntity entity = httpResponse.getEntity();
-                InputStream is = entity.getContent();
-                int statusCode = httpResponse.getStatusLine().getStatusCode();
-
-                if (type == Response.Type.TEXT) {
-                    Charset charset = Charset.forName(EntityUtils.getContentCharSet(httpResponse.getEntity()));
-                    String text = Response.parseText(is, charset);
-                    response = new Response(text, statusCode);
-                } else if (type == Response.Type.BITMAP) {
-                    Bitmap bitmap = Response.parseBitmap(is);
-                    response = new Response(bitmap, statusCode);
-                }
-                httpResponse.getEntity().consumeContent();
-            } catch (IOException e) {
-                Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`");
-                e.printStackTrace();
-            }
-
-            return response;
-        }
+        return request;
     }
 
     public void setHttpEntity(Class<? extends HttpRequestBase> requestType, AbstractHttpEntity entity) {
@@ -175,5 +123,9 @@ public class HttpRequestBuilder {
 
     public static boolean isBaseUrlSlashEnding() {
         return (int)BASE_URL.charAt(BASE_URL.length()-1) == 0x2f;
+    }
+
+    public boolean isBuilt() {
+        return request != null;
     }
 }
