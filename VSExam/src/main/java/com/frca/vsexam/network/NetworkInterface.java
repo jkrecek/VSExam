@@ -70,9 +70,11 @@ public class NetworkInterface {
         Log.d("Currently Processing", request.getURI().toString());
 
         NetworkWorker networkWorker = getFreeClient();
-        Response response = networkWorker.execute(request, type);
-        freeClient(networkWorker);
-        return response;
+        try {
+            return networkWorker.execute(request, type);
+        } finally {
+            freeClient(networkWorker);
+        }
     }
 
 }
