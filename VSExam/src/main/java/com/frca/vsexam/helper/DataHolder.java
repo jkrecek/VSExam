@@ -7,8 +7,9 @@ import android.graphics.Bitmap;
 import android.util.SparseArray;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.network.ImageDownloaderTask;
 import com.frca.vsexam.network.NetworkInterface;
+import com.frca.vsexam.network.tasks.ImageNetworkTask;
+import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 public class DataHolder {
 
@@ -20,7 +21,7 @@ public class DataHolder {
 
     private final SparseArray<Bitmap> bitmapContainer = new SparseArray<Bitmap>();
 
-    private final SparseArray<ImageDownloaderTask> downloadTaskContainer = new SparseArray<ImageDownloaderTask>();
+    private final SparseArray<UserImageNetworkTask> downloadTaskContainer = new SparseArray<UserImageNetworkTask>();
 
     private final NetworkInterface networkInterface;
 
@@ -49,7 +50,7 @@ public class DataHolder {
         return bitmapContainer;
     }
 
-    public SparseArray<ImageDownloaderTask> getDownloadTaskContainer() {
+    public SparseArray<UserImageNetworkTask> getDownloadTaskContainer() {
         return downloadTaskContainer;
     }
 

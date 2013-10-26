@@ -4,21 +4,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.frca.vsexam.MainActivity;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.Exam;
 import com.frca.vsexam.entities.ExamList;
 import com.frca.vsexam.exceptions.NoAuthException;
-import com.frca.vsexam.network.HttpRequestBuilder;
-import com.frca.vsexam.network.NetworkTask;
 import com.frca.vsexam.network.Response;
+import com.frca.vsexam.network.tasks.BaseNetworkTask;
+import com.frca.vsexam.network.tasks.TextNetworkTask;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -80,44 +78,52 @@ public class LoadingFragment extends BaseFragment {
     private void loadExams() {
         setMessage("Downloading exams");
 
-        try {
-            new NetworkTask(getActivity(), new NetworkTask.ResponseCallback() {
+        BaseNetworkTask.run(
+            new TextNetworkTask(
+                getActivity(), "student/terminy_seznam.pl",
+                new TextNetworkTask.ResponseCallback() {
 
-                @Override
-                public void call(Response response) {
-                    if (response.getStatusCode() == 401) {
-                        getMainActivity().setFragment(new LoginFragment());
-                        Toast.makeText(getActivity(), "Invalid access", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    setMessage("Processing data");
-
-                    Document doc = Jsoup.parse(response.getText());
-                    Elements elements = doc.body().select("table[id] tr");
-
-                    ExamList exams = new ExamList();
-                    int group = 0;
-                    for (Element element : elements) {
-                        if (element.className().equals("zahlavi")) {
-                            ++group;
-                            continue;
+                    @Override
+                    public void onSuccess(Response response) {
+                        if (response.getStatusCode() == 401) {
+                            getMainActivity().setFragment(new LoginFragment());
+                            Toast.makeText(getActivity(), "Invalid access", Toast.LENGTH_LONG).show();
+                            return;
                         }
 
-                        Elements columns = element.select("td");
-                        if (columns.size() <= 1)
-                            continue;
+                        setMessage("Processing data");
 
-                        exams.add(Exam.get(columns, group));
+                        Document doc = Jsoup.parse(response.getText());
+                        Elements elements = doc.body().select("table[id] tr");
+
+                        ExamList exams = new ExamList();
+                        int group = 0;
+                        for (Element element : elements) {
+                            if (element.className().equals("zahlavi")) {
+                                ++group;
+                                continue;
+                            }
+
+                            Elements columns = element.select("td");
+                            if (columns.size() <= 1)
+                                continue;
+
+                            exams.add(Exam.get(columns, group));
+                        }
+
+                        getMainActivity().setFragment(new BrowserPaneFragment(exams));
                     }
 
-                    getMainActivity().setFragment(new BrowserPaneFragment(exams));
-
+                },
+                new BaseNetworkTask.ExceptionCallback() {
+                    @Override
+                    public void onException(Exception e) {
+                        if (e instanceof NoAuthException) {
+                            Toast.makeText(getActivity(), "No auth data set.", Toast.LENGTH_LONG).show();
+                            getMainActivity().setFragment(new LoginFragment());
+                        }
+                    }
                 }
-            }).execute(new HttpRequestBuilder(getActivity(), "student/terminy_seznam.pl").build());
-
-        } catch (NoAuthException e) {
-            e.printStackTrace();
-        }
+        ));
     }
 }

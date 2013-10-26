@@ -19,11 +19,11 @@ import com.frca.vsexam.entities.Exam;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
-import com.frca.vsexam.network.ImageDownloaderTask;
-import com.frca.vsexam.network.NetworkTask;
 import com.frca.vsexam.network.Response;
+import com.frca.vsexam.network.tasks.BaseNetworkTask;
+import com.frca.vsexam.network.tasks.TextNetworkTask;
+import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
-import org.apache.http.client.methods.HttpRequestBase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -74,7 +74,7 @@ public class DetailFragment extends BaseFragment {
             }
         });
 
-        ImageDownloaderTask.startUserAvatarTask(getActivity(), view.findViewById(R.id.logo_author), exam.authorId);
+        BaseNetworkTask.run(new UserImageNetworkTask(getActivity(), exam.authorId, view.findViewById(R.id.logo_author)));
 
         getClassmates();
 
@@ -91,42 +91,45 @@ public class DetailFragment extends BaseFragment {
             return;
         }
 
-        HttpRequestBase builder;
-        try {
-            builder = new HttpRequestBuilder(getActivity(), "student/terminy_info.pl?termin="+exam.id+";spoluzaci=1;studium="+exam.studyId+";obdobi="+exam.periodId).build();
-        } catch (NoAuthException e) {
-            e.printStackTrace();
-            return;
-        }
+         BaseNetworkTask.run(
+            new TextNetworkTask(
+                getActivity(),"student/terminy_info.pl?termin=" + exam.id + ";spoluzaci=1;studium=" + exam.studyId + ";obdobi=" + exam.periodId,
+                new TextNetworkTask.ResponseCallback() {
 
-        new NetworkTask(getActivity(), new NetworkTask.ResponseCallback() {
+                    @Override
+                    public void onSuccess(Response response) {
+                        if (response.getStatusCode() == 401) {
+                            Toast.makeText(getActivity(), "Access denied", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
-            @Override
-            public void call(Response response) {
-                if (response.getStatusCode() == 401) {
-                    Toast.makeText(getActivity(), "Access denied", Toast.LENGTH_LONG).show();
-                    return;
-                }
+                        Document doc = Jsoup.parse(response.getText());
+                        Elements elements = doc.body().select("table#studenti tbody tr");
 
-                Document doc = Jsoup.parse(response.getText());
-                Elements elements = doc.body().select("table#studenti tbody tr");
+                        ClassmateList classmates = new ClassmateList();
 
-                ClassmateList classmates = new ClassmateList();
+                        for (Element element : elements) {
+                            Elements columns = element.select("td");
+                            if (columns.size() <= 1)
+                                continue;
 
-                for (Element element : elements) {
-                    Elements columns = element.select("td");
-                    if (columns.size() <= 1)
-                        continue;
+                            classmates.add(Classmate.get(columns));
+                        }
 
-                    classmates.add(Classmate.get(columns));
-                }
+                        exam.setClassmates(classmates);
+                        if (getView() != null)
+                            onClassmatesLoaded(classmates);
 
-                exam.setClassmates(classmates);
-                if (getView() != null)
-                    onClassmatesLoaded(classmates);
-
-            }
-        }).execute(builder);
+                    }
+                }, new BaseNetworkTask.ExceptionCallback() {
+                    @Override
+                    public void onException(Exception e) {
+                        if (e instanceof NoAuthException) {
+                            Toast.makeText(getActivity(), "No auth data set.", Toast.LENGTH_LONG).show();
+                            getMainActivity().setFragment(new LoginFragment());
+                        }
+                    }
+            }));
     }
 
     private void onClassmatesLoaded(ClassmateList classmates) {

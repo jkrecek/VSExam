@@ -15,7 +15,8 @@ import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.network.HttpRequestBuilder;
-import com.frca.vsexam.network.ImageDownloaderTask;
+import com.frca.vsexam.network.tasks.BaseNetworkTask;
+import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 import java.text.ParseException;
 
@@ -45,7 +46,8 @@ public abstract class Dialog {
             ImageButton mail        = (ImageButton) view.findViewById(R.id.button_mail);
             ImageButton goTo        = (ImageButton) view.findViewById(R.id.button_goto);
 
-            ImageDownloaderTask.startUserAvatarTask(context, logo, userId);
+            BaseNetworkTask.run(new UserImageNetworkTask(context, userId, logo));
+
             name.setText(username);
             faculty.setText(parser.getFacultyString());
             form_type.setText(parser.getFormTypeString());

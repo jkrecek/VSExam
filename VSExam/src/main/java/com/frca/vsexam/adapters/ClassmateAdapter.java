@@ -13,7 +13,8 @@ import com.frca.vsexam.entities.Classmate;
 import com.frca.vsexam.entities.ClassmateList;
 import com.frca.vsexam.helper.Dialog;
 import com.frca.vsexam.helper.Helper;
-import com.frca.vsexam.network.ImageDownloaderTask;
+import com.frca.vsexam.network.tasks.BaseNetworkTask;
+import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 public class ClassmateAdapter extends ArrayAdapter<String> {
 
@@ -49,7 +50,8 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
             TextView text2 = (TextView)view.findViewById(R.id.text2);       // date
             TextView text3 = (TextView)view.findViewById(R.id.text3);       // time
 
-            ImageDownloaderTask.startUserAvatarTask(getContext(), imageHolder, classmate.id);
+            BaseNetworkTask.run(new UserImageNetworkTask(getContext(), classmate.id, imageHolder));
+
             text1.setText(classmate.name);
             text2.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.DATE));
             text3.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.TIME));
