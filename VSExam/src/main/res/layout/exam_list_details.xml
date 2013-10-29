@@ -12,7 +12,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:fillViewport="true"
-                android:layout_marginBottom="10dp"
                 android:scrollbarStyle="outsideOverlay" >
 
         <LinearLayout android:layout_height="wrap_content"
@@ -148,6 +147,7 @@
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_unregisterEnd"
+                              android:paddingBottom="10dp"
                               tools:text="04. 12. 2013 08:00"/>
 
                 </LinearLayout>
@@ -162,10 +162,10 @@
                     <ProgressBar android:id="@+id/classmates_progress"
                                  style="?android:progressBarStyleLarge"
                                  android:layout_width="wrap_content"
-                                 android:layout_height="300dp"
+                                 android:layout_height="@dimen/classmates_progress_height"
                                  android:layout_gravity="center"
                                  android:visibility="visible"
-                                 tools:visibility="gone"/>
+                                 tools:visibility="visible"/>
 
                     <LinearLayout android:id="@+id/layout_classmates"
                                   android:layout_width="match_parent"

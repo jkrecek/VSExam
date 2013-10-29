@@ -8,7 +8,6 @@ import android.util.SparseArray;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.network.NetworkInterface;
-import com.frca.vsexam.network.tasks.ImageNetworkTask;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 public class DataHolder {

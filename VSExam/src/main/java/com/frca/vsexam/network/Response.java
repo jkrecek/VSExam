@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by KillerFrca on 14.10.13.
@@ -21,7 +24,12 @@ public class Response {
 
     private final Type type;
 
-    public enum Type{
+    private Date serverTime;
+    private Date localTime;
+
+    public  static SimpleDateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+
+    public enum Type {
         TEXT,
         BITMAP
     }
@@ -59,6 +67,10 @@ public class Response {
         return BitmapFactory.decodeStream(is);
     }
 
+    public void setServerTime(String serverTime) throws ParseException {
+        this.serverTime = HEADER_DATE_FORMAT.parse(serverTime);
+    }
+
     public Type getType() {
         return type;
     }
@@ -74,4 +86,21 @@ public class Response {
     public Bitmap getBitmap() {
         return bitmap;
     }
+
+    public Date getServerTime() {
+        return serverTime;
+    }
+
+    public Date getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(Date localTime) {
+        this.localTime = localTime;
+    }
+
+    public long getServerLocalTimeDiff() {
+        return serverTime.getTime() - localTime.getTime();
+    }
 }
+

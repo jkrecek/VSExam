@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.Classmate;
-import com.frca.vsexam.entities.ClassmateList;
+import com.frca.vsexam.entities.base.Classmate;
+import com.frca.vsexam.entities.lists.ClassmateList;
 import com.frca.vsexam.helper.Dialog;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -50,18 +50,18 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
             TextView text2 = (TextView)view.findViewById(R.id.text2);       // date
             TextView text3 = (TextView)view.findViewById(R.id.text3);       // time
 
-            BaseNetworkTask.run(new UserImageNetworkTask(getContext(), classmate.id, imageHolder));
+            BaseNetworkTask.run(new UserImageNetworkTask(getContext(), classmate.getId(), imageHolder));
 
-            text1.setText(classmate.name);
-            text2.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.DATE));
-            text3.setText(Helper.getDateOutput(classmate.registered, Helper.DateOutputType.TIME));
+            text1.setText(classmate.getName());
+            text2.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.DATE));
+            text3.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.TIME));
 
             view.setTag(classmate);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Dialog.ClassmateDetails(getContext(), classmate.id, classmate.name, classmate.identification);
+                    Dialog.ClassmateDetails(getContext(), classmate.getId(), classmate.getName(), classmate.getIdentification());
                 }
             });
 

@@ -26,9 +26,13 @@ public class NetworkInterface {
 
     private NetworkWorker[] networkWorkers = new NetworkWorker[CLIENT_COUNT];
 
+    private long lastServerLocalTimeDiff;
+
     public NetworkInterface() {
         for (int i = 0; i < networkWorkers.length; ++i)
             networkWorkers[i] = new NetworkWorker();
+
+        lastServerLocalTimeDiff = 0;
     }
 
     public NetworkWorker getFreeClient() {
@@ -71,10 +75,16 @@ public class NetworkInterface {
 
         NetworkWorker networkWorker = getFreeClient();
         try {
-            return networkWorker.execute(request, type);
+            Response response = networkWorker.execute(request, type);
+            lastServerLocalTimeDiff = response.getServerLocalTimeDiff();
+            return response;
         } finally {
             freeClient(networkWorker);
         }
+    }
+
+    public long getCurrentServerTime() {
+        return System.currentTimeMillis() + lastServerLocalTimeDiff;
     }
 
 }

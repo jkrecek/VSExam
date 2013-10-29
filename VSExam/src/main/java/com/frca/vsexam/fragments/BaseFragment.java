@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.frca.vsexam.MainActivity;
+import com.frca.vsexam.context.MainActivity;
 
 /**
  * Created by KillerFrca on 14.10.13.

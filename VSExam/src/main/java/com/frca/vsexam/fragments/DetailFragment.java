@@ -13,9 +13,8 @@ import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ClassmateAdapter;
-import com.frca.vsexam.entities.Classmate;
-import com.frca.vsexam.entities.ClassmateList;
-import com.frca.vsexam.entities.Exam;
+import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.entities.lists.ClassmateList;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
@@ -26,7 +25,6 @@ import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class DetailFragment extends BaseFragment {
@@ -53,28 +51,41 @@ public class DetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.exam_list_details, container, false);
-        ((TextView)view.findViewById(R.id.text_courseCode)).setText(exam.courseCode);
-        ((TextView)view.findViewById(R.id.text_courseName)).setText(exam.courseName);
-        ((TextView)view.findViewById(R.id.text_authorName)).setText(exam.authorName);
-        ((TextView)view.findViewById(R.id.text_type)).setText(exam.type);
-        ((TextView)view.findViewById(R.id.text_isRegistered)).setText(exam.isRegistered ? "Registrován" : "Neregistrován");
-        ((TextView)view.findViewById(R.id.text_capacity)).setText(String.valueOf(exam.currentCapacity)+"/"+String.valueOf(exam.maxCapacity));
-        ((TextView)view.findViewById(R.id.text_examDate)).setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.DATE_TIME));
-        ((TextView)view.findViewById(R.id.text_registerStart)).setText(Helper.getDateOutput(exam.registerStart, Helper.DateOutputType.DATE_TIME));
-        ((TextView)view.findViewById(R.id.text_registerEnd)).setText(Helper.getDateOutput(exam.registerEnd, Helper.DateOutputType.DATE_TIME));
-        ((TextView)view.findViewById(R.id.text_unregisterEnd)).setText(Helper.getDateOutput(exam.unregisterEnd, Helper.DateOutputType.DATE_TIME));
 
+        TextView text_courseCode = ((TextView)view.findViewById(R.id.text_courseCode));
+        TextView text_courseName = ((TextView)view.findViewById(R.id.text_courseName));
+        TextView text_authorName = ((TextView)view.findViewById(R.id.text_authorName));
+        TextView text_type = ((TextView)view.findViewById(R.id.text_type));
+        TextView text_isRegistered = ((TextView)view.findViewById(R.id.text_isRegistered));
+        TextView text_capacity = ((TextView)view.findViewById(R.id.text_capacity));
+        TextView text_examDate = ((TextView)view.findViewById(R.id.text_examDate));
+        TextView text_registerStart = ((TextView)view.findViewById(R.id.text_registerStart));
+        TextView text_registerEnd = ((TextView)view.findViewById(R.id.text_registerEnd));
+        TextView text_unregisterEnd = ((TextView)view.findViewById(R.id.text_unregisterEnd));
+        View button_author = view.findViewById(R.id.button_author);
+        View logo_author = view.findViewById(R.id.logo_author);
 
-        view.findViewById(R.id.button_author).setOnClickListener(new View.OnClickListener() {
+        text_courseCode.setText(exam.getCourseCode());
+        text_courseName.setText(exam.getCourseName());
+        text_authorName.setText(exam.getAuthorName());
+        text_type.setText(exam.getType());
+        text_isRegistered.setText(exam.isRegistered() ? R.string.registered : R.string.unregistered);
+        text_capacity.setText(String.valueOf(exam.getCurrentCapacity()) + "/" + String.valueOf(exam.getMaxCapacity()));
+        text_examDate.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE_TIME));
+        text_registerStart.setText(Helper.getDateOutput(exam.getRegisterStart(), Helper.DateOutputType.DATE_TIME));
+        text_registerEnd.setText(Helper.getDateOutput(exam.getRegisterEnd(), Helper.DateOutputType.DATE_TIME));
+        text_unregisterEnd.setText(Helper.getDateOutput(exam.getUnregisterEnd(), Helper.DateOutputType.DATE_TIME));
+
+        button_author.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(exam.authorId));
+                String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(exam.getAuthorId()));
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorUrl));
                 startActivity(browserIntent);
             }
         });
 
-        BaseNetworkTask.run(new UserImageNetworkTask(getActivity(), exam.authorId, view.findViewById(R.id.logo_author)));
+        BaseNetworkTask.run(new UserImageNetworkTask(getActivity(), exam.getAuthorId(), logo_author));
 
         getClassmates();
 
@@ -93,7 +104,7 @@ public class DetailFragment extends BaseFragment {
 
          BaseNetworkTask.run(
             new TextNetworkTask(
-                getActivity(),"student/terminy_info.pl?termin=" + exam.id + ";spoluzaci=1;studium=" + exam.studyId + ";obdobi=" + exam.periodId,
+                getActivity(), "student/terminy_info.pl?termin=" + exam.getId() + ";spoluzaci=1;studium=" + exam.getStudyId() + ";obdobi=" + exam.getPeriodId(),
                 new TextNetworkTask.ResponseCallback() {
 
                     @Override
@@ -106,15 +117,9 @@ public class DetailFragment extends BaseFragment {
                         Document doc = Jsoup.parse(response.getText());
                         Elements elements = doc.body().select("table#studenti tbody tr");
 
-                        ClassmateList classmates = new ClassmateList();
+                        ClassmateList classmates = new ClassmateList(elements);
 
-                        for (Element element : elements) {
-                            Elements columns = element.select("td");
-                            if (columns.size() <= 1)
-                                continue;
 
-                            classmates.add(Classmate.get(columns));
-                        }
 
                         exam.setClassmates(classmates);
                         if (getView() != null)

@@ -1,4 +1,4 @@
-package com.frca.vsexam;
+package com.frca.vsexam.context;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.frca.vsexam.R;
 import com.frca.vsexam.fragments.BaseFragment;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;

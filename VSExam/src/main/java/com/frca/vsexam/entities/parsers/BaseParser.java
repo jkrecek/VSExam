@@ -1,6 +1,8 @@
-package com.frca.vsexam.entities;
+package com.frca.vsexam.entities.parsers;
 
 import android.text.TextUtils;
+
+import com.frca.vsexam.entities.base.ParentEntity;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,10 +15,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by KillerFrca on 16.10.13.
- */
-public class ParentEntity {
+public abstract class BaseParser {
+
     public final static TimeZone TIME_ZONE = TimeZone.getTimeZone("Europe/Prague");
 
     protected static final SimpleDateFormat PARSING_FORMAT = new SimpleDateFormat("dd. MM. yyyy HH:mm", Locale.ENGLISH);
@@ -29,14 +29,29 @@ public class ParentEntity {
     protected int currentColumn;
 
     protected void init(Elements tempColumns) {
-        this.tempColumns = tempColumns;
-        currentColumn = 0;
+
     }
 
     protected  void initDone() {
-        this.tempColumns = null;
-        currentColumn = 0;
+
     }
+
+    public ParentEntity parse(Elements columns) {
+        this.tempColumns = columns;
+        currentColumn = 0;
+
+        try {
+            return doParse();
+        } catch (EntityParsingException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            this.tempColumns = null;
+            currentColumn = 0;
+        }
+    }
+
+    protected abstract ParentEntity doParse() throws EntityParsingException;
 
     protected String getColumnContent(int column, boolean stripHtml) throws EntityParsingException {
         currentColumn = column;

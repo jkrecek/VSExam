@@ -11,8 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.Exam;
-import com.frca.vsexam.entities.ExamList;
+import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.entities.lists.ExamList;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -20,7 +20,6 @@ import com.frca.vsexam.network.tasks.TextNetworkTask;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class LoadingFragment extends BaseFragment {
@@ -96,20 +95,10 @@ public class LoadingFragment extends BaseFragment {
                         Document doc = Jsoup.parse(response.getText());
                         Elements elements = doc.body().select("table[id] tr");
 
-                        ExamList exams = new ExamList();
-                        int group = 0;
-                        for (Element element : elements) {
-                            if (element.className().equals("zahlavi")) {
-                                ++group;
-                                continue;
-                            }
+                        ExamList exams = new ExamList(elements);
 
-                            Elements columns = element.select("td");
-                            if (columns.size() <= 1)
-                                continue;
-
-                            exams.add(Exam.get(columns, group));
-                        }
+                        for (Exam exam : exams.getCombined())
+                            exam.saveToFile(getActivity());
 
                         getMainActivity().setFragment(new BrowserPaneFragment(exams));
                     }

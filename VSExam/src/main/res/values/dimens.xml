@@ -5,4 +5,5 @@
     <dimen name="sliding_pane_width">280dp</dimen>
     <dimen name="details_inner_padding">3dp</dimen>
     <dimen name="details_side_margin">7dp</dimen>
+    <dimen name="classmates_progress_height">250dp</dimen>
 </resources>

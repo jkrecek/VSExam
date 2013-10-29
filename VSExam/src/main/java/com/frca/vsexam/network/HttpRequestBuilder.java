@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 
@@ -13,7 +14,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.AbstractHttpEntity;
+import org.apache.http.entity.StringEntity;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -127,5 +130,41 @@ public class HttpRequestBuilder {
 
     public boolean isBuilt() {
         return request != null;
+    }
+
+    public static HttpRequestBase getRegisterRequest(DataHolder holder, Exam exam, boolean apply) {
+        HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_seznam.pl");
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append("termin=" + String.valueOf(exam.getId()) + "&");
+            sb.append("predmet=" + "" + "&");
+            sb.append("studium=" + String.valueOf(exam.getStudyId()) + "&");
+            sb.append("obdobi=" + String.valueOf(exam.getPeriodId()) + "&");
+            if (apply) {
+                if (exam.getRegisteredOnId() != 0) {
+                    sb.append("odhlas_termin=" + String.valueOf(exam.getRegisteredOnId()) + "&");
+                    sb.append("odhlasit_prihlasit=" + "Přihlásit na termín");
+                    //sb.append("odhlasit_prihlasit=" + "P%F8ihl%E1sit+na+term%EDn");
+                } else {
+                    sb.append("prihlasit=" + "Přihlásit na termín");
+                    //sb.append("prihlasit=" + "P%F8ihl%E1sit+na+term%EDn");
+                }
+            } else {
+                sb.append("odhlasit=" + "Odhlásit z termínu");
+                //sb.append("odhlasit=" + "Odhl%E1sit+z+term%EDnu");
+            }
+
+            StringEntity entity = new StringEntity(sb.toString());
+            entity.setContentType("application/x-www-form-urlencoded");
+            builder.setHttpEntity(HttpPost.class, entity);
+            return builder.build();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (NoAuthException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

@@ -15,8 +15,8 @@ import android.widget.ListView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ExamAdapter;
-import com.frca.vsexam.entities.Exam;
-import com.frca.vsexam.entities.ExamList;
+import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.entities.lists.ExamList;
 
 /**
  * Created by KillerFrca on 11.10.13.
@@ -34,6 +34,8 @@ public class BrowserPaneFragment extends BaseFragment {
     private ActionBar mActionBar;
 
     private View lastHighlighted;
+
+    private ExamAdapter adapter;
 
     public BrowserPaneFragment(ExamList exams) {
         this.exams = exams;
@@ -71,7 +73,8 @@ public class BrowserPaneFragment extends BaseFragment {
         mSlidingLayout.setSliderFadeColor(0x66cccccc);
         mSlidingLayout.setShadowResource(R.drawable.border_right);
 
-        mList.setAdapter(new ExamAdapter(getActivity(), exams));
+        adapter = new ExamAdapter(getActivity(), exams);
+        mList.setAdapter(adapter);
         mList.setOnItemClickListener(new ListItemClickListener());
 
         return rootView;
@@ -84,7 +87,7 @@ public class BrowserPaneFragment extends BaseFragment {
     private class ListItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Exam exam = exams.get(position);
+            Exam exam = adapter.getExam(position);
 
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.container, new DetailFragment(exam));
@@ -92,7 +95,7 @@ public class BrowserPaneFragment extends BaseFragment {
             transaction.commit();
 
             if (mSlidingLayout.isSlideable()) {
-                mActionBar.setTitle(exam.courseCode + " | " + exam.courseName);
+                mActionBar.setTitle(exam.getCourseCode() + " | " + exam.getCourseName());
                 mActionBar.setDisplayHomeAsUpEnabled(true);
                 mSlidingLayout.closePane();
             } else {

@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * Created by KillerFrca on 26.10.13.
@@ -33,24 +35,33 @@ public class NetworkWorker {
 
     public Response execute(HttpRequestBase request, Response.Type type) {
         try {
+            Date startTime = new Date();
             httpResponse = client.execute(request);
             HttpEntity entity = httpResponse.getEntity();
             InputStream is = entity.getContent();
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
+            Response response;
             if (type == Response.Type.TEXT) {
                 Charset charset = Charset.forName(EntityUtils.getContentCharSet(entity));
                 String text = Response.parseText(is, charset);
-                return new Response(text, statusCode);
+                response = new Response(text, statusCode);
             } else if (type == Response.Type.BITMAP) {
                 Bitmap bitmap = Response.parseBitmap(is);
-                return new Response(bitmap, statusCode);
-            }
+                response = new Response(bitmap, statusCode);
+            } else
+                return null;
+
+            response.setLocalTime(startTime);
+            response.setServerTime(httpResponse.getFirstHeader("Date").getValue());
+
         } catch (IOException e) {
             Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`" +
                 (TextUtils.isEmpty(e.getMessage()) ? "." : ", error: `" + e.getMessage() + "`"));
         } catch (IllegalCharsetNameException e) {
             Log.e(getClass().getName(), "Unknown charset sent `" + e.getMessage() + "`");
+        } catch (ParseException e) {
+            Log.e(getClass().getName(), "Unable to parse Http Date Header, `" + e.getMessage() + "`");
         }
 
         return null;

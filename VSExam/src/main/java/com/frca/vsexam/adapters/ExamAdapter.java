@@ -8,23 +8,25 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.Exam;
-import com.frca.vsexam.entities.ExamList;
+import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.entities.lists.ExamList;
 import com.frca.vsexam.helper.Helper;
+
+import java.util.List;
 
 /**
  * Created by KillerFrca on 5.10.13.
  */
 public class ExamAdapter extends ArrayAdapter<String> {
 
-    private ExamList exams;
+    private List<Exam> exams;
 
     private static final int resourceLayout = R.layout.exam_list_item;
     private static final int displayField = R.id.layout;
 
     public ExamAdapter(Context context, ExamList exams) {
         super(context, resourceLayout);
-        this.exams = exams;
+        this.exams = exams.getCombined();
     }
 
     @Override
@@ -49,11 +51,16 @@ public class ExamAdapter extends ArrayAdapter<String> {
         TextView text3 = (TextView)view.findViewById(R.id.text3);       // date
         TextView text4 = (TextView)view.findViewById(R.id.text4);       // time
 
-        text1.setText(exam.courseCode);
-        text2.setText(exam.courseName);
-        text3.setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.DATE));
-        text4.setText(Helper.getDateOutput(exam.examDate, Helper.DateOutputType.TIME));
+        text1.setText(exam.getCourseCode());
+        text2.setText(exam.getCourseName());
+        text3.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE));
+        text4.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.TIME));
 
         return view;
+    }
+
+    public Exam getExam(final int position) {
+        return exams.get(position);
+
     }
 }
