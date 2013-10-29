@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -17,7 +18,9 @@ import com.frca.vsexam.network.tasks.TextNetworkTask;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class RegisteringService extends Service implements BaseNetworkTask.ResponseCallback {
@@ -32,6 +35,8 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
     private HttpRequestBase registerRequest;
 
     private Thread thread;
+
+    private List<TextNetworkTask> tasks = new ArrayList<TextNetworkTask>();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -84,7 +89,9 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
 
         // now spam registering
         while(!exam.isRegistered()) {
-            BaseNetworkTask.run(new TextNetworkTask(this, registerRequest, this));
+            TextNetworkTask task = new TextNetworkTask(this, registerRequest, this);
+            tasks.add(task);
+            BaseNetworkTask.run(task);
             Thread.sleep(REQUEST_TIME_DIFF_MS);
         }
 
@@ -92,6 +99,10 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
 
     private void onRegistered() {
         exam.setRegistered();
+        for (TextNetworkTask task : tasks) {
+            if (task.getStatus() != AsyncTask.Status.FINISHED)
+                task.cancel(true);
+        }
 
     }
 
