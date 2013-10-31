@@ -104,6 +104,7 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
                 task.cancel(true);
         }
 
+        stopSelf();
     }
 
     @Override
