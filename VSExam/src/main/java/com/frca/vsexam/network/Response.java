@@ -4,13 +4,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import org.apache.http.impl.cookie.DateParseException;
+import org.apache.http.impl.cookie.DateUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -26,8 +28,6 @@ public class Response {
 
     private Date serverTime;
     private Date localTime;
-
-    public  static SimpleDateFormat HEADER_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
 
     public enum Type {
         TEXT,
@@ -67,8 +67,8 @@ public class Response {
         return BitmapFactory.decodeStream(is);
     }
 
-    public void setServerTime(String serverTime) throws ParseException {
-        this.serverTime = HEADER_DATE_FORMAT.parse(serverTime);
+    public void setServerTime(String serverTime) throws ParseException, DateParseException {
+        this.serverTime = DateUtils.parseDate(serverTime);
     }
 
     public Type getType() {

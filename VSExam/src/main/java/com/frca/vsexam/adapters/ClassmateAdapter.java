@@ -20,7 +20,7 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
 
     private ClassmateList classmates;
 
-    private static final int resourceLayout = R.layout.classmates_item;
+    private static final int resourceLayout = R.layout.classmate_item;
 
     private SparseArray<View> existingViews = new SparseArray<View>();
 

@@ -52,10 +52,6 @@ public class Exam extends ParentEntity {
     private ClassmateList classmates;
     private boolean registerOnTime;
 
-    static {
-        fieldNamesToIgnore = new String[] { "classmates" } ;
-    }
-
     public Exam() {
         registerOnTime = false;
         registeredOnId = 0;
@@ -90,6 +86,11 @@ public class Exam extends ParentEntity {
         }
 
         this.registerOnTime = registerOnTime;
+    }
+
+    @Override
+    protected void removeUnsavedValues() {
+        classmates = null;
     }
 
     public int getId() {

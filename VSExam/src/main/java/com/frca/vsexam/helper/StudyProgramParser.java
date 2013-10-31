@@ -18,9 +18,6 @@ public class StudyProgramParser {
 
     private static final Pattern pattern = Pattern.compile("([A-Z]{3}) ([A-Z])-([A-Z]*)-([A-Z]*)(?:-([0-9][A-Z]*))? ([a-z]*) \\[[a-z]* ([0-9]{1,2}), ([A-Z]*)\\]");
 
-    private String programString;
-    private Resources resources;
-
     private static final String EMPTY_STRING = "";
 
     public enum Faculty {
@@ -137,18 +134,23 @@ public class StudyProgramParser {
     private int semester;
     private String unknownField;
 
+    private String programString;
+
     private Context context;
 
     public StudyProgramParser(Context context, String programString) throws ParseException {
         this.programString = programString;
-        this.resources = context.getResources();
         this.context = context;
 
         parse();
     }
 
     public StudyProgramParser(Context context){
-        this.resources = context.getResources();
+        this.context = context;
+    }
+
+    private Resources getResources() {
+        return context.getResources();
     }
 
     private void parse() throws ParseException {
@@ -175,34 +177,34 @@ public class StudyProgramParser {
 
     public String getFacultyString() {
         try {
-            return resources.getString(faculty.resourceId);
+            return getResources().getString(faculty.resourceId);
         } catch (Resources.NotFoundException e) {
             return EMPTY_STRING;
         }
     }
 
     public String getProgrammeString() {
-        return resources.getString(programme.getResource());
+        return getResources().getString(programme.getResource());
     }
 
     public String getFieldString() {
-        return resources.getString(field.getResource());
+        return getResources().getString(field.getResource());
     }
 
     public String getSpecializationString() {
-        return spec == null ? null : resources.getString(spec.getResource(faculty));
+        return spec == null ? null : getResources().getString(spec.getResource(faculty));
     }
 
     public String getFormTypeString() {
         try {
-            return resources.getString(form.resourceId) + ", " + resources.getString(type.resourceId);
+            return getResources().getString(form.resourceId) + ", " + getResources().getString(type.resourceId);
         } catch (Resources.NotFoundException e) {
             return EMPTY_STRING;
         }
     }
 
     public String getSemesterString() {
-        String semesterFormatter = resources.getString(R.string.semester_nth);
+        String semesterFormatter = getResources().getString(R.string.semester_nth);
         return String.format(semesterFormatter, semester);
     }
 
@@ -231,7 +233,7 @@ public class StudyProgramParser {
         }
 
         for (Programme e : Programme.values()) {
-            if (TextUtils.isEmpty(resources.getString(e.getResource())))
+            if (TextUtils.isEmpty(getResources().getString(e.getResource())))
                 errors.add("No resource for Programme enum `" + e.toString() + "`");
         }
 
@@ -244,7 +246,7 @@ public class StudyProgramParser {
         }
 
         for (StudyField f : StudyField.values()) {
-            if (TextUtils.isEmpty(resources.getString(f.getResource())))
+            if (TextUtils.isEmpty(getResources().getString(f.getResource())))
                 errors.add("No resource for StudyField enum `" + f.toString() + "`");
         }
 
@@ -260,7 +262,7 @@ public class StudyProgramParser {
             boolean found = false;
             for (int i = 1; i <= Faculty.values().length; ++i) {
                 int id = s.getResource(Faculty.fromInt(i));
-                if (id != 0 && !TextUtils.isEmpty(resources.getString(id))) {
+                if (id != 0 && !TextUtils.isEmpty(getResources().getString(id))) {
                     found = true;
                     break;
                 }

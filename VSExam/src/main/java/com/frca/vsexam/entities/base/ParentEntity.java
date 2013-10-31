@@ -1,6 +1,7 @@
 package com.frca.vsexam.entities.base;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,55 +10,37 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 
 /**
  * Created by KillerFrca on 16.10.13.
  */
-public class ParentEntity implements Serializable {
+public class ParentEntity implements Serializable, Cloneable {
 
     protected int id;
 
-    protected static String[] fieldNamesToIgnore = null;
+    protected void removeUnsavedValues() { }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public static File getDir(Context context, String type) {
-        return context.getDir(type, Context.MODE_PRIVATE);
-    }
-
-    protected static String getFileName(Context context, String type, int id) {
-        return getDir(context, type).getName() + '/' + String.valueOf(id) + ".data";
+    protected static String getFileName(Context context, Class<? extends ParentEntity> entityClass, int id) {
+        return entityClass.getSimpleName() + "_" + String.valueOf(id) + ".data";
     }
 
     public boolean saveToFile(Context context) {
-        String filename = getFileName(context, getClass().getName(), id);
+        String filename = getFileName(context, getClass(), id);
 
         FileOutputStream fos  = null;
         ObjectOutputStream oos  = null;
         boolean keep = true;
-        Object object;
+        ParentEntity object;
 
         try {
-            object = clone();
-            if (fieldNamesToIgnore != null) {
-                for (String fieldName : fieldNamesToIgnore) {
-                    Field field = object.getClass().getField(fieldName);
-                    field.set(object, null);
-                }
-            }
-
+            object = (ParentEntity) clone();
+            object.removeUnsavedValues();
             fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
             oos = new ObjectOutputStream(fos);
             oos.writeObject(object);
         } catch (Exception e) {
             keep = false;
+            Log.e(getClass().getName(), "Error in saveToFile()");
             e.printStackTrace();
         } finally {
             try {
@@ -75,14 +58,13 @@ public class ParentEntity implements Serializable {
         return keep;
     }
 
-
     public void deleteFile(Context context) {
-        String filename = getFileName(context, getClass().getName(), id);
+        String filename = getFileName(context, getClass(), id);
         context.deleteFile(filename);
     }
 
     public static ParentEntity getFromFile(Class<? extends ParentEntity> requestedClass, Context context, int id) {
-        String filename = getFileName(context, requestedClass.getName(), id);
+        String filename = getFileName(context, requestedClass, id);
 
         ParentEntity object = null;
 
@@ -90,6 +72,7 @@ public class ParentEntity implements Serializable {
             object = getFromFile(context.openFileInput(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            Log.e(ParentEntity.class.getName(), "Error in getFromFile(...)");
         }
 
         return object;
@@ -102,6 +85,7 @@ public class ParentEntity implements Serializable {
             object = getFromFile(new FileInputStream(file));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            Log.e(ParentEntity.class.getName(), "Error in getFromFile(File)");
         }
 
         return object;
@@ -129,5 +113,13 @@ public class ParentEntity implements Serializable {
         }
 
         return object;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

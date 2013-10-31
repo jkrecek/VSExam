@@ -10,7 +10,12 @@ import java.util.ArrayList;
 
 public class ClassmateList extends ArrayList<Classmate> {
 
+    public ClassmateList() {
+        super();
+    }
     public ClassmateList(Elements elements) {
+        super();
+
         for (Element element : elements) {
             Elements columns = element.select("td");
             if (columns.size() <= 1)

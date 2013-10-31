@@ -1,6 +1,8 @@
 package com.frca.vsexam.context;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,14 +12,17 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.fragments.BaseFragment;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
+import com.google.gson.Gson;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -64,6 +69,24 @@ public class MainActivity extends ActionBarActivity {
                         return true;
                     }
                 }
+                break;
+            }
+            case R.id.action_settings: {
+                Exam[] exams = OnStartReceiver.getSavedExams(this);
+                Toast.makeText(this, String.valueOf(exams.length), Toast.LENGTH_LONG).show();
+                Gson gson = new Gson();
+                String total = "";
+                for (Exam exam : exams) {
+                    total += gson.toJson(exam) + "\n\n";
+                }
+
+                new AlertDialog.Builder(this).setTitle("Jsons").setMessage(total).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).create().show();
+
                 break;
             }
         }

@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -55,6 +56,7 @@ public class NetworkWorker {
             response.setLocalTime(startTime);
             response.setServerTime(httpResponse.getFirstHeader("Date").getValue());
 
+            return response;
         } catch (IOException e) {
             Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`" +
                 (TextUtils.isEmpty(e.getMessage()) ? "." : ", error: `" + e.getMessage() + "`"));
@@ -62,6 +64,8 @@ public class NetworkWorker {
             Log.e(getClass().getName(), "Unknown charset sent `" + e.getMessage() + "`");
         } catch (ParseException e) {
             Log.e(getClass().getName(), "Unable to parse Http Date Header, `" + e.getMessage() + "`");
+        } catch (DateParseException e) {
+            Log.e(getClass().getName(), "Unable to parse Date, `" + e.getMessage() + "`");
         }
 
         return null;
