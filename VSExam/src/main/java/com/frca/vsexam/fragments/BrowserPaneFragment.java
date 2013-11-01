@@ -105,8 +105,6 @@ public class BrowserPaneFragment extends BaseFragment {
                 view.setBackgroundResource(R.color.white);
                 lastHighlighted = view;
             }
-
-
         }
     }
 

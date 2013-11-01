@@ -7,6 +7,13 @@ import android.view.ViewGroup;
 
 import com.frca.vsexam.R;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,6 +117,35 @@ public abstract class Helper {
         div.setBackgroundResource(R.color.divider_light);
 
         return div;
+    }
+
+    public static void dumpRequest(HttpRequest request) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Dumping http request\n");
+        sb.append(request.getRequestLine().getMethod() + " " + request.getRequestLine().getUri() + " " + request.getRequestLine().getProtocolVersion().toString() + "\n");
+
+        for (Header header : request.getAllHeaders())
+            sb.append(header.getName() + ": " + header.getValue() + "\n");
+
+        if (request instanceof HttpEntityEnclosingRequest) {
+            HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+            if (entity.getContentEncoding() != null)
+                sb.append(entity.getContentEncoding().getName() + ": " + entity.getContentEncoding().getValue() + "\n");
+            if (entity.getContentLength() != 0L)
+                sb.append("Content-Length: " + String.valueOf(entity.getContentLength()) + "\n");
+            if (entity.getContentType() != null)
+                sb.append(entity.getContentType().getName() + ": " + entity.getContentType().getValue() + "\n");
+
+            try {
+                sb.append("Content: " + EntityUtils.toString(entity) + "\n");
+            } catch (IOException e) {
+                Log.e("ERROR_DUMPING", "Error:" + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        Log.d("REQUEST_DUMP", sb.toString());
     }
 
 }

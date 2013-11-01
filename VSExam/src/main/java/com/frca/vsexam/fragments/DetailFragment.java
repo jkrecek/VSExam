@@ -16,6 +16,7 @@ import com.frca.vsexam.adapters.ClassmateAdapter;
 import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.entities.lists.ClassmateList;
 import com.frca.vsexam.exceptions.NoAuthException;
+import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.Response;
@@ -23,6 +24,7 @@ import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.frca.vsexam.network.tasks.TextNetworkTask;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
+import org.apache.http.client.methods.HttpRequestBase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -64,6 +66,8 @@ public class DetailFragment extends BaseFragment {
         TextView text_unregisterEnd = ((TextView)view.findViewById(R.id.text_unregisterEnd));
         View button_author = view.findViewById(R.id.button_author);
         View logo_author = view.findViewById(R.id.logo_author);
+        View button_left = view.findViewById(R.id.button_left);
+        View button_right = view.findViewById(R.id.button_right);
 
         text_courseCode.setText(exam.getCourseCode());
         text_courseName.setText(exam.getCourseName());
@@ -86,6 +90,9 @@ public class DetailFragment extends BaseFragment {
         });
 
         BaseNetworkTask.run(new UserImageNetworkTask(getActivity(), exam.getAuthorId(), logo_author));
+
+        button_left.setOnClickListener(new OnRegisterOnTimeClick());
+        button_right.setOnClickListener(new OnRegisterClick());
 
         getClassmates();
 
@@ -163,5 +170,45 @@ public class DetailFragment extends BaseFragment {
         else
             return super.getView();
 
+    }
+
+    private class OnRegisterClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
+                @Override
+                public void onSuccess(Response response) {
+                    Toast.makeText(getActivity(), "Registrace! " + String.valueOf(response.getStatusCode()), Toast.LENGTH_LONG).show();
+                }
+            }));
+
+
+
+        }
+    }
+
+    private class OnDeRegisterClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
+                @Override
+                public void onSuccess(Response response) {
+                    Toast.makeText(getActivity(), "Unregistrace! " + String.valueOf(response.getStatusCode()), Toast.LENGTH_LONG).show();
+                }
+            }));
+
+        }
+    }
+
+    private class OnRegisterOnTimeClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            exam.setRegisterOnTime(getActivity(), true);
+        }
     }
 }

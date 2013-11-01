@@ -9,15 +9,19 @@ import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.AbstractHttpEntity;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by KillerFrca on 3.10.13.
@@ -67,9 +71,13 @@ public class HttpRequestBuilder {
         }
 
         request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        request.setHeader("Host", getHost());
+        request.setHeader("Host", "isis.vse.cz");
         request.setHeader("Authorization", getB64Auth());
+        request.setHeader("Accept-Encoding", "gzip,deflate,sdch");
         request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
+        request.setHeader("Connection", "keep-alive");
+        request.setHeader("Origin", "https://isis.vse.cz");
+        request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36");
 
         if (request instanceof HttpEntityEnclosingRequestBase)
             ((HttpPost)request).setEntity(entity);
@@ -133,35 +141,33 @@ public class HttpRequestBuilder {
     }
 
     public static HttpRequestBase getRegisterRequest(DataHolder holder, Exam exam, boolean apply) {
-        HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_seznam.pl");
+        HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_prihlaseni.pl");
 
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("termin=" + String.valueOf(exam.getId()) + "&");
-            sb.append("predmet=" + "" + "&");
-            sb.append("studium=" + String.valueOf(exam.getStudyId()) + "&");
-            sb.append("obdobi=" + String.valueOf(exam.getPeriodId()) + "&");
+            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+            urlParameters.add(new BasicNameValuePair("termin", String.valueOf(exam.getId())));
+            urlParameters.add(new BasicNameValuePair("predmet", ""));
+            urlParameters.add(new BasicNameValuePair("studium", String.valueOf(exam.getStudyId())));
+            urlParameters.add(new BasicNameValuePair("obdobi", String.valueOf(exam.getPeriodId())));
             if (apply) {
                 if (exam.getRegisteredOnId() != 0) {
-                    sb.append("odhlas_termin=" + String.valueOf(exam.getRegisteredOnId()) + "&");
-                    sb.append("odhlasit_prihlasit=" + "Přihlásit na termín");
-                    //sb.append("odhlasit_prihlasit=" + "P%F8ihl%E1sit+na+term%EDn");
+                    urlParameters.add(new BasicNameValuePair("odhlas_termin", String.valueOf(exam.getRegisteredOnId())));
+                    urlParameters.add(new BasicNameValuePair("odhlasit_prihlasit", "Přihlásit na termín"));
                 } else {
-                    sb.append("prihlasit=" + "Přihlásit na termín");
-                    //sb.append("prihlasit=" + "P%F8ihl%E1sit+na+term%EDn");
+                    urlParameters.add(new BasicNameValuePair("prihlasit", "Přihlásit na termín"));
                 }
             } else {
-                sb.append("odhlasit=" + "Odhlásit z termínu");
-                //sb.append("odhlasit=" + "Odhl%E1sit+z+term%EDnu");
+                urlParameters.add(new BasicNameValuePair("odhlasit", "Odhlásit z termínu"));
             }
 
-            StringEntity entity = new StringEntity(sb.toString());
-            entity.setContentType("application/x-www-form-urlencoded");
-            builder.setHttpEntity(HttpPost.class, entity);
-            return builder.build();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            builder.setHttpEntity(HttpPost.class, new UrlEncodedFormEntity(urlParameters, "iso-8859-2"));
+            HttpPost post = (HttpPost) builder.build();
+            post.setHeader("Referer", "https://isis.vse.cz/auth/student/terminy_prihlaseni.pl");
+            return post;
+
         } catch (NoAuthException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 

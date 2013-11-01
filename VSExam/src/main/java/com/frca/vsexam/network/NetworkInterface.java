@@ -3,6 +3,8 @@ package com.frca.vsexam.network;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.frca.vsexam.helper.Helper;
+
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -72,6 +74,8 @@ public class NetworkInterface {
 
     public Response execute(HttpRequestBase request, Response.Type type) {
         Log.d("Currently Processing", request.getURI().toString());
+        if (type == Response.Type.TEXT)
+            Helper.dumpRequest(request);
 
         NetworkWorker networkWorker = getFreeClient();
         try {
