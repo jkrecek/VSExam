@@ -65,6 +65,9 @@ public abstract class Helper {
     }
 
     public static String getDateOutput(Date date, DateOutputType outputType) {
+        if (date == null)
+            return "";
+
         SimpleDateFormat format;
         switch (outputType) {
             case DATE: format = DATE_FORMAT; break;

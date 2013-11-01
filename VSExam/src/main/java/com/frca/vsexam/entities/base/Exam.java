@@ -2,6 +2,7 @@ package com.frca.vsexam.entities.base;
 
 import android.content.Context;
 
+import com.frca.vsexam.R;
 import com.frca.vsexam.entities.lists.ClassmateList;
 import com.frca.vsexam.helper.RegisteringService;
 
@@ -10,15 +11,20 @@ import java.util.Date;
 public class Exam extends ParentEntity {
 
     public enum Group {
-        IS_REGISTERED(0),
-        CAN_REGISTER(1),
-        CAN_NOT_REGISTER(2);
+        IS_REGISTERED(0, R.string.group_title_is_registered),
+        CAN_REGISTER(1, R.string.group_title_can_register),
+        CAN_NOT_REGISTER(2, R.string.group_title_can_not_register);
 
         private int id;
-        private Group(int id) {
+        private int titleRes;
+        private Group(int id, int titleRes) {
             this.id = id;
+            this.titleRes = titleRes;
         }
 
+        public int getTitleRes() {
+            return titleRes;
+        }
         public int toInt() {
             return id;
         }
@@ -30,6 +36,7 @@ public class Exam extends ParentEntity {
 
             return null;
         }
+
     }
 
     private int registeredOnId;
@@ -66,8 +73,11 @@ public class Exam extends ParentEntity {
         this.classmates = classmates;
     }
 
-    public void setRegistered() {
-        group = Group.IS_REGISTERED;
+    public void setRegistered(boolean apply) {
+        if (apply)
+            group = Group.IS_REGISTERED;
+        else
+            group = Group.CAN_REGISTER;
     }
 
     public boolean isRegistered() {

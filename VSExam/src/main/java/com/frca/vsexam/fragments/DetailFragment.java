@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,11 @@ public class DetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
+
+        if (!(getParentFragment() instanceof BrowserPaneFragment)) {
+            Log.e(getClass().getName(), "This class must be child of BrowserPaneFramgnet");
+            getActivity().finish();
+        }
 
         inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -176,16 +182,18 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
+            //BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
+            //browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
             HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
                     Toast.makeText(getActivity(), "Registrace! " + String.valueOf(response.getStatusCode()), Toast.LENGTH_LONG).show();
+                    BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
+                    if (true)
+                        browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
                 }
             }));
-
-
-
         }
     }
 
@@ -198,9 +206,11 @@ public class DetailFragment extends BaseFragment {
                 @Override
                 public void onSuccess(Response response) {
                     Toast.makeText(getActivity(), "Unregistrace! " + String.valueOf(response.getStatusCode()), Toast.LENGTH_LONG).show();
+                    BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
+                    if (true)
+                        browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
                 }
             }));
-
         }
     }
 

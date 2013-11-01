@@ -97,7 +97,7 @@ public class LoadingFragment extends BaseFragment {
 
                         ExamList exams = new ExamList(elements);
 
-                        for (Exam exam : exams.getCombined())
+                        for (Exam exam : exams)
                             exam.saveToFile(getActivity());
 
                         getMainActivity().setFragment(new BrowserPaneFragment(exams));

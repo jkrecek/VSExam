@@ -1,7 +1,7 @@
 package com.frca.vsexam.entities.lists;
 
 
-import android.util.SparseArray;
+import android.widget.ArrayAdapter;
 
 import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.entities.parsers.ExamParser;
@@ -11,23 +11,20 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by KillerFrca on 5.10.13.
  */
-public class ExamList extends SparseArray<ArrayList<Exam>> {
+public class ExamList extends ArrayList<Exam> {
 
-    private List<Exam> combined = new ArrayList<Exam>();
+    private int[] groupCounts;
 
     public ExamList(Elements elements) {
-
-        for (int i = 0; i < 3; ++i)
-            put(i, new ArrayList<Exam>());
 
         ExamParser parser = new ExamParser();
         for (Element element : elements) {
@@ -45,43 +42,143 @@ public class ExamList extends SparseArray<ArrayList<Exam>> {
             if (columns.size() <= 1)
                 continue;
 
-            List<Exam> currentList = get(parser.currentGroup.toInt());
-            currentList.add((Exam)parser.parse(columns));
+            add((Exam)parser.parse(columns));
         }
 
-        for (Exam mainExam : get(0)) {
-            for (int i = 1; i < 3; ++i) {
-                for (Exam exam : get(i)) {
-                    if (exam.getId() != mainExam.getId() && exam.getCourseCode().equals(mainExam.getCourseCode()) && exam.getType().equals(mainExam.getType())) {
-                        exam.setRegisteredOnId(mainExam.getId());
-                    }
+        /*Random random = new Random();
+        int times[] = new int[] {1383325200, 1383328800, 1383332400, 1383321600, 1383318000 };
+        for (int time : times) {
+            Exam exam = new Exam();
+            Exam.Group group = Exam.Group.fromInt(random.nextInt(2));
+            exam.setGroup(group);
+            exam.setCourseName("Státní zkouška ze studijního oboru");
+            exam.setCourseCode("PHM");
+            exam.setType("zkouška (ústní)");
+            exam.setExamDate(new Date(time*1000L));
+            add(exam);
+        }*/
+
+
+        sort();
+
+        groupCounts = new int[Exam.Group.values().length];
+        for (Exam exam : this) {
+            ++groupCounts[exam.getGroup().toInt()];
+        }
+
+        if (groupCounts[0] != 0 && groupCounts[1] + groupCounts[2] != 0) {
+            for (int i = 0; i < groupCounts[0]; ++i) {
+                Exam exam = get(i);
+                if (!exam.isRegistered())
+                    continue;
+
+                for (int altPos = groupCounts[0]; altPos < size(); ++altPos) {
+                    Exam altExam = get(altPos);
+                    if (altExam.isRegistered())
+                        continue;
+
+                    altExam.setRegisteredOnId(exam.getId());
                 }
             }
         }
-    }
-
-
-    public List<Exam> getCombined() {
-        if (combined.isEmpty()) {
-            for (int i = 0; i < size(); ++i)
-                combined.addAll(get(i));
-        }
-        return combined;
+        sort();
     }
 
     public List<String> getCourseNames() {
-        return Helper.extractObjectValues(getCombined(), "courseName");
+        return Helper.extractObjectValues(this, "courseName");
     }
 
     public void sort() {
-        Collections.sort(combined, new Comparator<Exam>() {
+        Collections.sort(this, new Comparator<Exam>() {
             @Override
             public int compare(Exam exam, Exam exam2) {
                 if (exam.getGroup() != exam2.getGroup())
                     return exam.getGroup().toInt() - exam2.getGroup().toInt();
 
-                return (int) (exam.getExamDate().getTime() - exam2.getExamDate().getTime());
+                long diff = exam.getExamDate().getTime() - exam2.getExamDate().getTime();
+                return (int) (diff / 1000L);
             }
         });
     }
+
+    public Object getExamOrVoid(int position) {
+        if (position >= getAdapterSize())
+            return null;
+
+        int counter = -1;
+        for (int i = 0; i < Exam.Group.values().length; ++i) {
+            if (groupCounts[i] > 0) {
+                if (++counter >= position)
+                    return Exam.Group.fromInt(i);
+
+                counter += groupCounts[i];
+                if (counter >= position)
+                    return get(position - i - 1);
+            }
+
+        }
+
+        return null;
+    }
+
+    public int getAdapterSize() {
+        return size() + getGroupsFilled();
+    }
+
+    public int getGroupsFilled() {
+        int count = 0;
+        for (int c : groupCounts)
+            if (c > 0)
+                ++count;
+
+        return count;
+    }
+
+    public Exam getExamById(int id) {
+        for (Exam exam : this)
+            if (exam.getId() == id)
+                return exam;
+
+        return null;
+    }
+
+    public void setExamRegister(Exam exam, boolean apply, ArrayAdapter adapter) {
+        exam.setRegistered(apply);
+
+        // update this
+        if (apply) {
+            if (exam.getRegisteredOnId() != 0) {
+                Exam registeredOn = getExamById(exam.getRegisteredOnId());
+                registeredOn.setRegistered(false);
+            }
+        }
+
+        // update others
+        List<Exam> courseExams = getSameCourseExams(exam, false);
+        int otherCouseRegisterOnId = apply ? exam.getId() : 0;
+        for (Exam courseExam : courseExams)
+            courseExam.setRegisteredOnId(otherCouseRegisterOnId);
+
+        sort();
+
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
+    }
+
+    private List<Exam> getSameCourseExams(Exam compareExam, boolean include) {
+        List<Exam> list = new ArrayList<Exam>();
+        for (Exam exam : this) {
+            if (exam == compareExam) {
+                if (include)
+                    list.add(exam);
+                continue;
+            }
+
+            if (exam.getCourseCode().equals(compareExam.getCourseCode()) && exam.getType().equals(compareExam.getType()))
+                list.add(exam);
+        }
+
+        return list;
+    }
+
 }

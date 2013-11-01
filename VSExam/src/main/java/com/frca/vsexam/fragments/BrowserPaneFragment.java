@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -88,6 +89,8 @@ public class BrowserPaneFragment extends BaseFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Exam exam = adapter.getExam(position);
+            if (exam == null)
+                return;
 
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.container, new DetailFragment(exam));
@@ -124,5 +127,13 @@ public class BrowserPaneFragment extends BaseFragment {
         }
 
         return false;
+    }
+
+    public ExamList getExams() {
+        return exams;
+    }
+
+    public ArrayAdapter getAdapter() {
+        return (ArrayAdapter) mList.getAdapter();
     }
 }

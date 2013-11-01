@@ -98,7 +98,7 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
     }
 
     private void onRegistered() {
-        exam.setRegistered();
+        exam.setRegistered(true);
         for (TextNetworkTask task : tasks) {
             if (task.getStatus() != AsyncTask.Status.FINISHED)
                 task.cancel(true);

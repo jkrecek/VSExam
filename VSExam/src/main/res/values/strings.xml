@@ -10,6 +10,10 @@
     <string name="registered">Registrován</string>
     <string name="unregistered">Neregistrován</string>
 
+    <string name="group_title_is_registered">Jste přihlášen</string>
+    <string name="group_title_can_register">Můžete se registrovat</string>
+    <string name="group_title_can_not_register">Nemůžete se registrovat</string>
+
     <!-- study fields -->
     <!-- 1. faculty -->
     <string name="p_fu">Finance a účetnictví</string>
