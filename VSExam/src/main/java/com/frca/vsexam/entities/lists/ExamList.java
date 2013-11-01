@@ -11,6 +11,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,5 +71,17 @@ public class ExamList extends SparseArray<ArrayList<Exam>> {
 
     public List<String> getCourseNames() {
         return Helper.extractObjectValues(getCombined(), "courseName");
+    }
+
+    public void sort() {
+        Collections.sort(combined, new Comparator<Exam>() {
+            @Override
+            public int compare(Exam exam, Exam exam2) {
+                if (exam.getGroup() != exam2.getGroup())
+                    return exam.getGroup().toInt() - exam2.getGroup().toInt();
+
+                return (int) (exam.getExamDate().getTime() - exam2.getExamDate().getTime());
+            }
+        });
     }
 }
