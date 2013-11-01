@@ -28,9 +28,14 @@ public class MainActivity extends ActionBarActivity {
 
     private Fragment currentFragment;
 
+    private boolean paused = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        paused = false;
+
         setContentView(R.layout.activity_main);
 
         SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
@@ -41,9 +46,29 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        paused = false;
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_base);
+        if (!fragment.equals(currentFragment))
+            setFragment(currentFragment);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        paused = true;
+    }
+
     public void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_base, fragment).commit();
         currentFragment = fragment;
+        if (!paused)
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_base, fragment).commit();
+
     }
 
     @Override
