@@ -1,6 +1,7 @@
 package com.frca.vsexam.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -13,11 +14,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ExamAdapter;
 import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.entities.lists.ExamList;
+import com.frca.vsexam.helper.AppSparseArray;
 
 /**
  * Created by KillerFrca on 11.10.13.
@@ -38,13 +41,14 @@ public class BrowserPaneFragment extends BaseFragment {
 
     private ExamAdapter adapter;
 
+    private AppSparseArray<String> adapterData;
+
     public BrowserPaneFragment(ExamList exams) {
         this.exams = exams;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mSlidingLayout = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane);
@@ -61,7 +65,7 @@ public class BrowserPaneFragment extends BaseFragment {
             @Override
             public void onPanelOpened(View view) {
                 mActionBar.setTitle("Exams");
-                mActionBar.setDisplayHomeAsUpEnabled(false);
+                getMainActivity().setActionBarAdapter(exams.getCourseNames());
             }
 
             @Override
@@ -74,9 +78,7 @@ public class BrowserPaneFragment extends BaseFragment {
         mSlidingLayout.setSliderFadeColor(0x66cccccc);
         mSlidingLayout.setShadowResource(R.drawable.border_right);
 
-        adapter = new ExamAdapter(getActivity(), exams);
-        mList.setAdapter(adapter);
-        mList.setOnItemClickListener(new ListItemClickListener());
+        setAdapter();
 
         return rootView;
     }
@@ -99,13 +101,23 @@ public class BrowserPaneFragment extends BaseFragment {
 
             if (mSlidingLayout.isSlideable()) {
                 mActionBar.setTitle(exam.getCourseCode() + " | " + exam.getCourseName());
+                getMainActivity().setActionBarAdapter(null);
                 mActionBar.setDisplayHomeAsUpEnabled(true);
-                mSlidingLayout.closePane();
+
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSlidingLayout.closePane();
+                    }
+                });
             } else {
-                if (lastHighlighted != null)
+                if (lastHighlighted != null) {
                     lastHighlighted.setBackgroundResource(R.color.standard_grey);
+                    /*lastHighlighted.findViewById(R.id.layout_datetime).setBackgroundResource(0);*/
+                }
 
                 view.setBackgroundResource(R.color.white);
+                /*view.findViewById(R.id.layout_datetime).setBackgroundResource(R.drawable.invert_arrow_right_pos_right);*/
                 lastHighlighted = view;
             }
         }
@@ -136,4 +148,28 @@ public class BrowserPaneFragment extends BaseFragment {
     public ArrayAdapter getAdapter() {
         return (ArrayAdapter) mList.getAdapter();
     }
+
+    private void setAdapter() {
+        adapterData = exams.getCourses();
+        adapterData.put(-1, "Zobrazit všechny");
+        getMainActivity().setActionBarAdapter(adapterData.getValues());
+    }
+
+    @Override
+    public void onNavigationItemSelected(final int id) {
+        final int courseId = adapterData.keyAt(id);
+
+        adapter = new ExamAdapter(getActivity(), exams.filter(new ExamList.MatchChecker() {
+            @Override
+            public boolean isMatch(Exam exam) {
+                return courseId == -1 || exam.getCourseId() == courseId;
+            }
+        }));
+
+        mList.setAdapter(adapter);
+
+        if (mList.getOnItemClickListener() == null) {
+            mList.setOnItemClickListener(new ListItemClickListener());
+        }
+   }
 }

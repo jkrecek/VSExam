@@ -62,11 +62,7 @@ public class ExamAdapter extends ArrayAdapter<String> {
                 TextView text3 = (TextView)view.findViewById(R.id.text3);       // date
                 TextView text4 = (TextView)view.findViewById(R.id.text4);       // time
 
-                String pre = "N";
-                if (exam.getGroup() == Exam.Group.IS_REGISTERED)
-                    pre = "R";
-
-                text1.setText(pre+exam.getCourseCode());
+                text1.setText(exam.getCourseCode());
                 text2.setText(exam.getCourseName());
 
                 if (TextUtils.isEmpty(exam.getCourseName()))

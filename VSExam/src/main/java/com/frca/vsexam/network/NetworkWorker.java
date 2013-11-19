@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.frca.vsexam.fragments.LoadingFragment;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,10 +16,11 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.text.ParseException;
-import java.util.Date;
 
 /**
  * Created by KillerFrca on 26.10.13.
@@ -35,28 +38,27 @@ public class NetworkWorker {
     }
 
     public Response execute(HttpRequestBase request, Response.Type type) {
+        Response response = new Response();
         try {
-            Date startTime = new Date();
             httpResponse = client.execute(request);
             HttpEntity entity = httpResponse.getEntity();
-            InputStream is = entity.getContent();
-            int statusCode = httpResponse.getStatusLine().getStatusCode();
+            response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+            response.setContentLength(entity.getContentLength());
+            Log.d("execute", "Response content length: " + String.valueOf(entity.getContentLength()));
 
-            Response response;
             if (type == Response.Type.TEXT) {
                 Charset charset = Charset.forName(EntityUtils.getContentCharSet(entity));
-                String text = Response.parseText(is, charset);
-                response = new Response(text, statusCode);
+                String text = Response.parseText(entity, charset);
+                Log.d("execute", "Parsed response text: " + String.valueOf(text.length()));
+                response.setText(text);
             } else if (type == Response.Type.BITMAP) {
-                Bitmap bitmap = Response.parseBitmap(is);
-                response = new Response(bitmap, statusCode);
+                Bitmap bitmap = Response.parseBitmap(entity);
+                response.setBitmap(bitmap);
             } else
-                return null;
+                throw new UnsupportedOperationException("Response type must be Text or Bitmap");
 
-            response.setLocalTime(startTime);
             response.setServerTime(httpResponse.getFirstHeader("Date").getValue());
 
-            return response;
         } catch (IOException e) {
             Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`" +
                 (TextUtils.isEmpty(e.getMessage()) ? "." : ", error: `" + e.getMessage() + "`"));
@@ -66,9 +68,11 @@ public class NetworkWorker {
             Log.e(getClass().getName(), "Unable to parse Http Date Header, `" + e.getMessage() + "`");
         } catch (DateParseException e) {
             Log.e(getClass().getName(), "Unable to parse Date, `" + e.getMessage() + "`");
+        } catch (UnsupportedOperationException e) {
+            Log.e(getClass().getName(), "Unsupported operation: , `" + e.getMessage() + "`");
         }
 
-        return null;
+        return response;
     }
 
     public HttpResponse getHttpResponse() {
@@ -86,4 +90,5 @@ public class NetworkWorker {
     public void setUsed(boolean isUsed) {
         this.isUsed = isUsed;
     }
+
 }

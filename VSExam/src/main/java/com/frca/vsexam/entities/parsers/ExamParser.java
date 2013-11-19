@@ -16,10 +16,12 @@ public class ExamParser extends BaseParser {
         String registrationDates = getColumnContent(10, false);
         String[] registrationParts = registrationDates.split("<br />");
         Element info = getLinkFromColumn(11);
+        Element course = getLinkFromColumn(2);
 
         Exam exam = new Exam();
         exam.setCourseCode(getColumnContent(1, true));
-        exam.setCourseName(getColumnContent(2, true));
+        exam.setCourseName(course.text().trim());
+        exam.setCourseId(extractParameterFromLink(course, "predmet"));
         exam.setExamDate(parseDate(getColumnContent(4, true)));
         exam.setLocation(getColumnContent(5, true));
         exam.setType(getColumnContent(6, true));

@@ -9,9 +9,11 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
@@ -22,7 +24,8 @@ import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
-import com.google.gson.Gson;
+
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -40,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
 
         SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
         if (preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD)) {
-            setFragment(new LoadingFragment("Preparing"));
+            setFragment(new LoadingFragment());
         } else {
             setFragment(new LoginFragment());
         }
@@ -98,7 +101,12 @@ public class MainActivity extends ActionBarActivity {
             }
             case R.id.action_settings: {
                 Exam[] exams = OnStartReceiver.getSavedExams(this);
-                Toast.makeText(this, String.valueOf(exams.length), Toast.LENGTH_LONG).show();
+                if (exams[0] == null) {
+                    List<Exam> list = ((BrowserPaneFragment)currentFragment).getExams();
+                    exams = list.toArray(new Exam[list.size()]);
+                }
+
+                /*Toast.makeText(this, String.valueOf(exams.length), Toast.LENGTH_LONG).show();
                 Gson gson = new Gson();
                 String total = "";
                 for (Exam exam : exams) {
@@ -110,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
-                }).create().show();
+                }).create().show();*/
 
                 break;
             }
@@ -134,5 +142,30 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         return false;
+    }
+
+    public void setActionBarAdapter(List<String> values) {
+        ActionBar actionBar = getSupportActionBar();
+        if (values == null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        } else {
+            actionBar.setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            ArrayAdapter<String> aAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            actionBar.setListNavigationCallbacks(aAdpt, new ActionBarAdapterClickListener());
+        }
+
+    }
+
+    private class ActionBarAdapterClickListener implements ActionBar.OnNavigationListener {
+
+        @Override
+        public boolean onNavigationItemSelected(int i, long l) {
+            if (currentFragment instanceof BaseFragment)
+                ((BaseFragment)currentFragment).onNavigationItemSelected(i);
+
+            return false;
+        }
     }
 }

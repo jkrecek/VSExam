@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +102,17 @@ public class DetailFragment extends BaseFragment {
         button_left.setOnClickListener(new OnRegisterOnTimeClick());
         button_right.setOnClickListener(new OnRegisterClick());
 
-        getClassmates();
+        if (exam.getCurrentCapacity() != 0)
+            loadClassmates();
+        else {
+            View left_layout = view.findViewById(R.id.layout_detail_left);
+            View right_layout = view.findViewById(R.id.layout_detail_right);
+            right_layout.setVisibility(View.GONE);
+            LinearLayout.LayoutParams left_params = (LinearLayout.LayoutParams)left_layout.getLayoutParams();
+            ((LinearLayout)left_layout.getParent()).setGravity(Gravity.CENTER_HORIZONTAL);
+            left_params.weight = 0;
+            left_params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 500, getResources().getDisplayMetrics());
+        }
 
         View returnView = view;
         view = null;
@@ -108,7 +120,7 @@ public class DetailFragment extends BaseFragment {
         return returnView;
     }
 
-    private void getClassmates() {
+    private void loadClassmates() {
 
         if (Helper.isValid(exam.getClassmates())) {
             onClassmatesLoaded(exam.getClassmates());
@@ -131,8 +143,6 @@ public class DetailFragment extends BaseFragment {
                         Elements elements = doc.body().select("table#studenti tbody tr");
 
                         ClassmateList classmates = new ClassmateList(elements);
-
-
 
                         exam.setClassmates(classmates);
                         if (getView() != null)
@@ -182,9 +192,9 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
-            //BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
-            //browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
-            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
+            browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
+            /*HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
@@ -193,7 +203,7 @@ public class DetailFragment extends BaseFragment {
                     if (true)
                         browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
                 }
-            }));
+            }));*/
         }
     }
 

@@ -14,17 +14,16 @@ repositories {
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "19"
+    buildToolsVersion '19'
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 18
+        targetSdkVersion 19
     }
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:support-v4:18.0.+'
     compile 'com.android.support:appcompat-v7:18.0.0+'
-    compile 'org.jsoup:jsoup:1.7.2'
+    compile 'org.jsoup:jsoup:1.7.3'
 }

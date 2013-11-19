@@ -5,7 +5,9 @@ import android.widget.ArrayAdapter;
 
 import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.entities.parsers.ExamParser;
+import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.ObjectMap;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,9 +15,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by KillerFrca on 5.10.13.
@@ -58,9 +58,26 @@ public class ExamList extends ArrayList<Exam> {
             add(exam);
         }*/
 
+        finalizeInit();
+    }
 
-        sort();
+    private ExamList() {
 
+    }
+
+    public ExamList filter(MatchChecker checker) {
+        ExamList examList = new ExamList();
+        for (Exam exam : this) {
+            if (checker.isMatch(exam))
+                examList.add(exam);
+        }
+
+        examList.finalizeInit();
+
+        return examList;
+    }
+
+    private void finalizeInit() {
         groupCounts = new int[Exam.Group.values().length];
         for (Exam exam : this) {
             ++groupCounts[exam.getGroup().toInt()];
@@ -81,11 +98,23 @@ public class ExamList extends ArrayList<Exam> {
                 }
             }
         }
+
         sort();
     }
 
     public List<String> getCourseNames() {
-        return Helper.extractObjectValues(this, "courseName");
+        return Helper.getValue(this, "courseName", true);
+    }
+
+    public AppSparseArray<String> getCourses() {
+        List<ObjectMap> maps = Helper.getValuesMap(this, new String[] { "courseId", "courseName" }, true);
+        AppSparseArray<String> sparseArray = new AppSparseArray<String>();
+        for (ObjectMap map : maps) {
+            int id = (Integer)map.get("courseId");
+            String value = (String) map.get("courseName");
+            sparseArray.put(id, value);
+        }
+        return sparseArray;
     }
 
     public void sort() {
@@ -119,6 +148,10 @@ public class ExamList extends ArrayList<Exam> {
         }
 
         return null;
+    }
+
+    public List<String> getExamClassNames() {
+        return Helper.getValue(this, "className", false);
     }
 
     public int getAdapterSize() {
@@ -155,9 +188,9 @@ public class ExamList extends ArrayList<Exam> {
 
         // update others
         List<Exam> courseExams = getSameCourseExams(exam, false);
-        int otherCouseRegisterOnId = apply ? exam.getId() : 0;
+        int otherCourseRegisterOnId = apply ? exam.getId() : 0;
         for (Exam courseExam : courseExams)
-            courseExam.setRegisteredOnId(otherCouseRegisterOnId);
+            courseExam.setRegisteredOnId(otherCourseRegisterOnId);
 
         sort();
 
@@ -181,4 +214,7 @@ public class ExamList extends ArrayList<Exam> {
         return list;
     }
 
+    public static interface MatchChecker {
+        boolean isMatch(Exam exam);
+    }
 }

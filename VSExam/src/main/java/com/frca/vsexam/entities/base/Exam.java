@@ -45,6 +45,7 @@ public class Exam extends ParentEntity {
     private int authorId;
     private int currentCapacity;
     private int maxCapacity;
+    private int courseId;
     private String courseCode;
     private String courseName;
     private String location;
@@ -243,4 +244,11 @@ public class Exam extends ParentEntity {
         return registerOnTime;
     }
 
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 }

@@ -2,69 +2,137 @@ package com.frca.vsexam.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
+import com.frca.vsexam.fragments.LoadingFragment;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Date;
 
-/**
- * Created by KillerFrca on 14.10.13.
- */
 public class Response {
 
-    private final int statusCode;
-    private final String text;
-    private final Bitmap bitmap;
+    private int statusCode;
+    private String text;
+    private Bitmap bitmap;
 
-    private final Type type;
+    private Type type;
 
     private Date serverTime;
     private Date localTime;
+    private long contentLength;
+
+    private Boolean isValid = null;
 
     public enum Type {
         TEXT,
         BITMAP
     }
 
-    public Response(String text, int statusCode) {
+    public Response() {
+        localTime = new Date();
+    }
+
+    public static String parseText(HttpEntity entity, Charset charset) {
+
+        String result = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1536];
+            int length = 0;
+            InputStream is = entity.getContent();
+            Log.e("chunked", String.valueOf(entity.isChunked()));
+            Log.e("rep", String.valueOf(entity.isRepeatable()));
+            Log.e("str", String.valueOf(entity.isStreaming()));
+
+            while ((length = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, length);
+                Log.e("state", String.valueOf(baos.size()));
+            }
+
+            if (baos.size() < 30000) {
+                Log.e("Bef", "bef");
+                is = entity.getContent();
+                Log.e("new", "nonconsume");
+
+                while ((length = is.read(buffer)) != -1) {
+                    baos.write(buffer, 0, length);
+                    Log.e("state", String.valueOf(baos.size()));
+                }
+
+                Log.e("end", "nonconsume");
+            }
+            result = baos.toString(charset.name());
+
+        } catch (IOException e ){
+            e.printStackTrace();
+        }
+
+
+        saveToFile(result, "file" + String.valueOf(new Date().getTime()) + ".txt");
+        saveToFile(result, "file_" + String.valueOf(new Date().getTime()) + ".html");
+
+        return result;
+
+    }
+
+    private static void saveToFile(String text, String filename) {
+        FileOutputStream stream = null;
+        try {
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+            stream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream);
+            outputStreamWriter.write(text);
+            outputStreamWriter.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap parseBitmap(HttpEntity entity) {
+        try {
+            return BitmapFactory.decodeStream(entity.getContent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public void setText(String text) {
         this.text = text;
         this.bitmap = null;
-        this.statusCode = statusCode;
         this.type = Type.TEXT;
     }
 
-    public Response(Bitmap bitmap, int statusCode) {
+    public void setBitmap(Bitmap bitmap) {
         this.text = null;
         this.bitmap = bitmap;
-        this.statusCode = statusCode;
         this.type = Type.BITMAP;
     }
 
-    public static String parseText(InputStream is, Charset charset) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset), 8);
-        StringBuilder sb = new StringBuilder();
-        String line;
-        try {
-            while ((line = reader.readLine()) != null)
-                sb.append(line + "\n");
-        } catch (IOException e) {
-            Log.e("Buffer Error", "Error converting result " + e.toString());
-        }
-
-        return sb.toString();
-
-    }
-
-    public static Bitmap parseBitmap(InputStream is) {
-        return BitmapFactory.decodeStream(is);
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public void setServerTime(String serverTime) throws ParseException, DateParseException {
@@ -100,7 +168,25 @@ public class Response {
     }
 
     public long getServerLocalTimeDiff() {
-        return serverTime.getTime() - localTime.getTime();
+        if (serverTime != null)
+            return serverTime.getTime() - localTime.getTime();
+
+        return 0L;
+    }
+
+    public boolean isValid() {
+        if (isValid == null)
+            isValid = type != null && (text != null || bitmap != null) && localTime != null && serverTime != null;
+
+        return isValid;
+    }
+
+    public long getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLength(long contentLength) {
+        this.contentLength = contentLength;
     }
 }
 

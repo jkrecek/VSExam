@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,30 +23,100 @@ import java.util.List;
 
 
 public abstract class Helper {
-    public static <T> List<T> extractObjectValues(List<?> list, String valueName) {
+    public static <T> List<T> getValue(List<?> list, String valueName, boolean exclusive) {
         if (list.isEmpty())
             return null;
 
-        Class originalListClass = list.get(0).getClass();
-        Field field;
-        try {
-            field = originalListClass.getField(valueName);
-        } catch (NoSuchFieldException e) {
-            Log.e("extractValues", "No such field in class " + originalListClass.getName());
+        Object[] sources = getSource(list, new String[] { valueName } );
+        if (sources == null)
             return null;
-        }
+
+        Object source = sources[0];
 
         List<T> newList = new ArrayList<T>();
         for (Object o : list) {
             try {
-                newList.add((T)field.get(o));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch(ClassCastException e) {
+                T val;
+                if (source instanceof Field)
+                    val = (T)((Field)source).get(o);
+                else
+                    val = (T)((Method)source).invoke(o);
+
+                if (!exclusive || !newList.contains(val))
+                    newList.add(val);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return newList;
+    }
+
+    public static List<ObjectMap> getValuesMap(List<?> list, String[] valuesName, boolean exclusive) {
+        if (list.isEmpty())
+            return null;
+
+        Object[] sources = getSource(list, valuesName);
+        if (sources == null)
+            return null;
+
+        List<ObjectMap> newList = new ArrayList<ObjectMap>();
+        for (Object o : list) {
+            ObjectMap objectValues = new ObjectMap();
+            for (int i = 0; i < valuesName.length; ++i) {
+                Object source = sources[i];
+                try {
+                    Object val;
+                    if (source instanceof Field)
+                        val = ((Field)source).get(o);
+                    else
+                        val = ((Method)source).invoke(o);
+
+                    objectValues.put(valuesName[i], val);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (!exclusive || !objectValues.isInList(newList))
+                newList.add(objectValues);
+        }
+
+        return newList;
+    }
+
+    private static Object[] getSource(List<?> list, String[] valueNames) {
+        Class originalListClass = list.get(0).getClass();
+        Object[] sources = new Object[valueNames.length];
+        for (int i = 0; i < valueNames.length; ++i) {
+            String valueName = valueNames[i];
+            String[] values = new String[] {
+                valueName,
+                "get" + valueName.substring(0, 1).toUpperCase() + valueName.substring(1)
+            };
+
+            for (String value : values) {
+                try {
+                    sources[i] = originalListClass.getField(value);
+                    break;
+                } catch (NoSuchFieldException e) {
+                    Log.v("extractValues", "No such field `" + value +"`");
+                }
+
+                try {
+                    sources[i] = originalListClass.getMethod(value);
+                    break;
+                } catch (NoSuchMethodException e) {
+                    Log.v("extractValues", "No such method `" + value +"`");
+                }
+            }
+
+            if (sources[i] == null) {
+                Log.e("extractValues", "No such field or method `" + valueName + "` in class " + originalListClass.getName());
+                return null;
+            }
+        }
+
+        return sources;
     }
 
     public enum DateOutputType {

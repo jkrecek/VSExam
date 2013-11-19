@@ -62,11 +62,13 @@ public class LoginFragment extends BaseFragment {
                             .putString(HttpRequestBuilder.KEY_PASSWORD, loginPassword)
                             .commit();
 
-                        ((MainActivity)getActivity()).setFragment(new LoadingFragment(null));
+                        getMainActivity().setFragment(new LoadingFragment());
                     }
                 }
             }
         });
+
+        getMainActivity().setActionBarAdapter(null);
 
         return rootView;
     }

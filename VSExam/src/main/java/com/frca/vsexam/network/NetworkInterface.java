@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class NetworkInterface {
 
-    private final static int TIMEOUT_MS = 15000;
+    private final static int TIMEOUT_MS = 20000;
 
     private final static int CLIENT_COUNT = 5;
 
@@ -60,8 +60,10 @@ public class NetworkInterface {
     public void freeClient(NetworkWorker networkWorker) {
         if (networkWorker.getHttpResponse() != null) {
             try {
-                if (networkWorker.getHttpResponse().getEntity() != null)
+                if (networkWorker.getHttpResponse().getEntity() != null) {
+                    Log.e("C", "Consumed");
                     networkWorker.getHttpResponse().getEntity().consumeContent();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -80,7 +82,8 @@ public class NetworkInterface {
         NetworkWorker networkWorker = getFreeClient();
         try {
             Response response = networkWorker.execute(request, type);
-            lastServerLocalTimeDiff = response.getServerLocalTimeDiff();
+            if (response.getServerTime() != null)
+                lastServerLocalTimeDiff = response.getServerLocalTimeDiff();
             return response;
         } finally {
             freeClient(networkWorker);

@@ -55,7 +55,8 @@ public class ImageNetworkTask extends BaseNetworkTask {
 
     @Override
     protected void onFinish(Response result) {
-        finishOnViews(result.getBitmap());
+        if (result.isValid())
+            finishOnViews(result.getBitmap());
     }
 
     protected void finishOnViews(Bitmap bitmap) {

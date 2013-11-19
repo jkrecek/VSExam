@@ -58,6 +58,7 @@
                           android:paddingBottom="10dp" >
 
                 <LinearLayout style="@style/ResponsiveLayoutItem.Details"
+                              android:id="@+id/layout_detail_left"
                               android:layout_marginLeft="@dimen/details_side_margin">
 
                     <TextView style="?android:listSeparatorTextViewStyle"
@@ -153,6 +154,7 @@
                 </LinearLayout>
 
                 <LinearLayout style="@style/ResponsiveLayoutItem.Details"
+                              android:id="@+id/layout_detail_right"
                               android:layout_marginRight="@dimen/details_side_margin">
 
                     <TextView style="?android:listSeparatorTextViewStyle"
@@ -182,21 +184,28 @@
 
     </ScrollView>
 
+
     <LinearLayout style="?buttonBarStyle"
-                  android:background="@color/white"
                   android:layout_height="wrap_content"
                   android:divider="@color/standard_grey"
                   android:dividerPadding="2dp"
+                  android:background="@color/white"
                   android:layout_width="match_parent">
 
-        <Button style="?buttonBarButtonStyle"
+        <Button style="?buttonBarStyle"
+                android:background="@drawable/aboveline"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:id="@+id/button_left"
                 android:text="Register ASAP" />
 
+        <View android:layout_height="match_parent"
+              android:layout_width="1dp"
+              android:background="@color/standard_grey"/>
+
         <Button style="?buttonBarButtonStyle"
+                android:background="@drawable/aboveline"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"

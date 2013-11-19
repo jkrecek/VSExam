@@ -3,15 +3,19 @@ package com.frca.vsexam.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.lists.ExamList;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.network.Response;
@@ -22,14 +26,23 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Date;
+
 public class LoadingFragment extends BaseFragment {
 
     private String message;
 
     private TextView messageField;
 
-    public LoadingFragment(String message) {
-        this.message = message;
+    private static ProgressBar progressBar;
+
+    public LoadingFragment() {
+
     }
 
     @Override
@@ -62,16 +75,25 @@ public class LoadingFragment extends BaseFragment {
         if (!TextUtils.isEmpty(message))
             setMessage(message);
 
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+        getMainActivity().setActionBarAdapter(null);
+
         return rootView;
     }
 
-    public void setMessage(String message) {
-        if (message != null)
-            this.message = message + Character.toString((char)0x85);
+    public void setMessage(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (message != null)
+                    LoadingFragment.this.message = message + Character.toString((char)0x85);
 
-        // may be called before view is created
-        if (messageField != null)
-            messageField.setText(this.message);
+                // may be called before view is created
+                if (messageField != null)
+                    messageField.setText(LoadingFragment.this.message);
+            }
+        });
     }
 
     private void loadExams() {
@@ -84,6 +106,24 @@ public class LoadingFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response response) {
+                        if (!response.isValid()) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Error").setMessage("Error while accesing exam data, do you want to try again?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        getMainActivity().setFragment(new LoadingFragment());
+                                    }
+                                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).create().show();
+                            return;
+                        }
+
                         if (response.getStatusCode() == 401) {
                             getMainActivity().setFragment(new LoginFragment());
                             Toast.makeText(getActivity(), "Invalid access", Toast.LENGTH_LONG).show();
@@ -97,8 +137,8 @@ public class LoadingFragment extends BaseFragment {
 
                         ExamList exams = new ExamList(elements);
 
-                        for (Exam exam : exams)
-                            exam.saveToFile(getActivity());
+                        /*for (Exam exam : exams)
+                            exam.saveToFile(getActivity());*/
 
                         getMainActivity().setFragment(new BrowserPaneFragment(exams));
                     }
