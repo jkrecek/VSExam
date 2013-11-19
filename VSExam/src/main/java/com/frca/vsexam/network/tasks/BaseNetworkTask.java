@@ -8,6 +8,10 @@ import com.frca.vsexam.network.Response;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import java.net.HttpURLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Created by KillerFrca on 26.10.13.
  */
@@ -16,7 +20,7 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
     protected final Response.Type responseType;
 
     protected ResponseCallback responseCallback;
-    protected HttpRequestBase request;
+    protected HttpURLConnection request;
 
     public BaseNetworkTask(DataHolder dataHolder, String url, ResponseCallback responseCallback, ExceptionCallback exceptionCallback, Response.Type responseType) {
         this.responseCallback = responseCallback;
@@ -31,7 +35,7 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         }
     }
 
-    public BaseNetworkTask(DataHolder dataHolder, HttpRequestBase request, ResponseCallback responseCallback, Response.Type responseType) {
+    public BaseNetworkTask(DataHolder dataHolder, HttpURLConnection request, ResponseCallback responseCallback, Response.Type responseType) {
         this(dataHolder, responseCallback, responseType);
         this.request = request;
     }

@@ -18,6 +18,7 @@ import com.frca.vsexam.network.tasks.TextNetworkTask;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +33,7 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
 
     private Exam exam;
     private DataHolder dataHolder;
-    private HttpRequestBase registerRequest;
+    private HttpURLConnection registerRequest;
 
     private Thread thread;
 
@@ -72,7 +73,7 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
 
     private void runRegistering() throws InterruptedException {
         long startTime = System.currentTimeMillis();
-        HttpRequestBase request = HttpRequestBuilder.getRegisterRequest(dataHolder, exam, true);
+        HttpURLConnection request = HttpRequestBuilder.getRegisterRequest(dataHolder, exam, true);
         Response response = dataHolder.getNetworkInterface().execute(request, Response.Type.TEXT);
         long serverTime = response.getServerTime().getTime();
         long endTime = System.currentTimeMillis();

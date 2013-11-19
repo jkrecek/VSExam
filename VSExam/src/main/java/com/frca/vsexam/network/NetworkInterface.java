@@ -11,6 +11,9 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class NetworkInterface {
 
@@ -58,7 +61,7 @@ public class NetworkInterface {
 
 
     public void freeClient(NetworkWorker networkWorker) {
-        if (networkWorker.getHttpResponse() != null) {
+        /*if (networkWorker.getHttpResponse() != null) {
             try {
                 if (networkWorker.getHttpResponse().getEntity() != null) {
                     Log.e("C", "Consumed");
@@ -69,15 +72,15 @@ public class NetworkInterface {
             }
 
             networkWorker.setHttpResponse(null);
-        }
+        }*/
 
         networkWorker.setUsed(false);
     }
 
-    public Response execute(HttpRequestBase request, Response.Type type) {
-        Log.d("Currently Processing", request.getURI().toString());
+    public Response execute(HttpURLConnection request, Response.Type type) {
+        /*Log.d("Currently Processing", request.getURI().toString());
         if (type == Response.Type.TEXT)
-            Helper.dumpRequest(request);
+            Helper.dumpRequest(request);*/
 
         NetworkWorker networkWorker = getFreeClient();
         try {

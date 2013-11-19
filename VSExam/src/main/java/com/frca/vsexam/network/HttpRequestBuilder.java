@@ -18,10 +18,17 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by KillerFrca on 3.10.13.
@@ -36,13 +43,13 @@ public class HttpRequestBuilder {
 
     private final DataHolder dataHolder;
 
-    private Class<? extends HttpRequestBase> requestType = HttpGet.class;
+    private String method = "GET";
 
     private String partialUrl;
 
     private AbstractHttpEntity entity;
 
-    private HttpRequestBase request = null;
+    private HttpURLConnection mConnection = null;
 
     public HttpRequestBuilder(Context context,  String partialUrl) {
         this(DataHolder.getInstance(context), partialUrl);
@@ -53,47 +60,56 @@ public class HttpRequestBuilder {
         this.partialUrl = partialUrl;
     }
 
-    public HttpRequestBase build() throws NoAuthException {
+    public HttpURLConnection build() throws NoAuthException {
 
-        if (request != null)
-            return request;
+        if (mConnection != null)
+            return mConnection;
+
+
 
         try {
-            request = requestType.getDeclaredConstructor(String.class).newInstance(completeURLString(partialUrl));
-        } catch (InstantiationException e) {
+            URL url = new URL(completeURLString(partialUrl));
+            mConnection = (HttpURLConnection) url.openConnection();
+            mConnection.setRequestMethod(method);
+        } catch (ProtocolException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        request.setHeader("Host", "isis.vse.cz");
-        request.setHeader("Authorization", getB64Auth());
-        request.setHeader("Accept-Encoding", "gzip,deflate,sdch");
-        request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
-        request.setHeader("Connection", "keep-alive");
-        request.setHeader("Origin", "https://isis.vse.cz");
-        request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36");
+        mConnection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        mConnection.setRequestProperty("Host", "isis.vse.cz");
+        mConnection.setRequestProperty("Authorization", getB64Auth());
+        mConnection.setRequestProperty("Accept-Encoding", "gzip,deflate,sdch");
+        mConnection.setRequestProperty("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
+        mConnection.setRequestProperty("Connection", "keep-alive");
+        mConnection.setRequestProperty("Origin", "https://isis.vse.cz");
+        mConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36");
 
-        if (request instanceof HttpEntityEnclosingRequestBase)
-            ((HttpPost)request).setEntity(entity);
+        if (entity != null) {
+            mConnection.setRequestProperty(entity.getContentType().getName(), entity.getContentType().getValue());
+            mConnection.setRequestProperty(entity.getContentEncoding().getName(), entity.getContentEncoding().getValue());
+            mConnection.setRequestProperty("Content-Length", String.valueOf(entity.getContentLength()));
+            mConnection.setDoInput(true);
+        }
 
-        Log.d(getClass().getName(), "Http request to url `" + request.getURI() + "`");
+        mConnection.setUseCaches(false);
+        mConnection.setDoOutput(true);
 
-        return request;
+        Log.d(getClass().getName(), "Http request to url `" + mConnection.getURL().toExternalForm() + "`");
+
+        return mConnection;
     }
 
-    public void setHttpEntity(Class<? extends HttpRequestBase> requestType, AbstractHttpEntity entity) {
-        this.requestType = requestType;
+    public void setHttpEntity(String method, AbstractHttpEntity entity) {
+        this.method = method;
         this.entity = entity;
     }
 
-    public HttpRequestBase getRequest() {
-        return request;
+    public HttpURLConnection getRequest() {
+        return mConnection;
     }
 
     private String getB64Auth () throws NoAuthException {
@@ -137,10 +153,10 @@ public class HttpRequestBuilder {
     }
 
     public boolean isBuilt() {
-        return request != null;
+        return mConnection != null;
     }
 
-    public static HttpRequestBase getRegisterRequest(DataHolder holder, Exam exam, boolean apply) {
+    public static HttpURLConnection getRegisterRequest(DataHolder holder, Exam exam, boolean apply) {
         HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_prihlaseni.pl");
 
         try {
@@ -160,9 +176,9 @@ public class HttpRequestBuilder {
                 urlParameters.add(new BasicNameValuePair("odhlasit", "Odhlásit z termínu"));
             }
 
-            builder.setHttpEntity(HttpPost.class, new UrlEncodedFormEntity(urlParameters, "iso-8859-2"));
-            HttpPost post = (HttpPost) builder.build();
-            post.setHeader("Referer", "https://isis.vse.cz/auth/student/terminy_prihlaseni.pl");
+            builder.setHttpEntity("POST", new UrlEncodedFormEntity(urlParameters, "iso-8859-2"));
+            HttpURLConnection post = builder.build();
+            post.setRequestProperty("Referer", "https://isis.vse.cz/auth/student/terminy_prihlaseni.pl");
             return post;
 
         } catch (NoAuthException e) {

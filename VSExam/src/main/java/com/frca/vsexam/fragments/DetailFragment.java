@@ -32,6 +32,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.net.HttpURLConnection;
+
 public class DetailFragment extends BaseFragment {
 
     private final Exam exam;
@@ -194,7 +196,7 @@ public class DetailFragment extends BaseFragment {
         public void onClick(View view) {
             BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
             browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
-            /*HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            /*HttpURLConnection requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
@@ -211,7 +213,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
-            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            HttpURLConnection requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {

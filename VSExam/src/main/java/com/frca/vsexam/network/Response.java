@@ -45,7 +45,7 @@ public class Response {
         localTime = new Date();
     }
 
-    public static String parseText(HttpEntity entity, Charset charset) {
+    public static String parseText(InputStream is, Charset charset) {
 
         String result = null;
         ByteArrayOutputStream baos = null;
@@ -53,28 +53,16 @@ public class Response {
             baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1536];
             int length = 0;
-            InputStream is = entity.getContent();
+            /*InputStream is = entity.getContent();
             Log.e("chunked", String.valueOf(entity.isChunked()));
             Log.e("rep", String.valueOf(entity.isRepeatable()));
-            Log.e("str", String.valueOf(entity.isStreaming()));
+            Log.e("str", String.valueOf(entity.isStreaming()));*/
 
             while ((length = is.read(buffer)) != -1) {
                 baos.write(buffer, 0, length);
                 Log.e("state", String.valueOf(baos.size()));
             }
 
-            if (baos.size() < 30000) {
-                Log.e("Bef", "bef");
-                is = entity.getContent();
-                Log.e("new", "nonconsume");
-
-                while ((length = is.read(buffer)) != -1) {
-                    baos.write(buffer, 0, length);
-                    Log.e("state", String.valueOf(baos.size()));
-                }
-
-                Log.e("end", "nonconsume");
-            }
             result = baos.toString(charset.name());
 
         } catch (IOException e ){
@@ -82,6 +70,7 @@ public class Response {
         }
 
 
+        saveToFile("create", String.valueOf(new Date().getTime()) + ".txt");
         saveToFile(result, "file" + String.valueOf(new Date().getTime()) + ".txt");
         saveToFile(result, "file_" + String.valueOf(new Date().getTime()) + ".html");
 
@@ -105,14 +94,8 @@ public class Response {
         }
     }
 
-    public static Bitmap parseBitmap(HttpEntity entity) {
-        try {
-            return BitmapFactory.decodeStream(entity.getContent());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public static Bitmap parseBitmap(InputStream is) {
+        return BitmapFactory.decodeStream(is);
     }
 
     public void setStatusCode(int statusCode) {
@@ -178,7 +161,8 @@ public class Response {
         if (isValid == null)
             isValid = type != null && (text != null || bitmap != null) && localTime != null && serverTime != null;
 
-        return isValid;
+        return true;
+        //return isValid;
     }
 
     public long getContentLength() {

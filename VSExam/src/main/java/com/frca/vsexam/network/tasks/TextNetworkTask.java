@@ -7,9 +7,11 @@ import com.frca.vsexam.network.Response;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import java.net.HttpURLConnection;
+
 public class TextNetworkTask extends BaseNetworkTask {
 
-    public TextNetworkTask(Context context, HttpRequestBase requestBase, ResponseCallback responseCallback) {
+    public TextNetworkTask(Context context, HttpURLConnection requestBase, ResponseCallback responseCallback) {
         super(DataHolder.getInstance(context), requestBase, responseCallback, Response.Type.TEXT);
     }
 
