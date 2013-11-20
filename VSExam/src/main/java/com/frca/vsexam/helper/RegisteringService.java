@@ -47,6 +47,7 @@ public class RegisteringService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int examId = intent.getIntExtra(EXTRA_ID, 0);
+        Helper.appendLog("Registering process starting");
         if (examId != 0) {
             exam = (Exam) Exam.getFromFile(Exam.class, this, examId);
         }
@@ -74,19 +75,25 @@ public class RegisteringService extends Service {
     private void runRegistering() throws InterruptedException {
         long startTime = System.currentTimeMillis();
         HttpRequestBase request = HttpRequestBuilder.getRegisterRequest(dataHolder, exam, true);
+        Helper.appendLog("Preparing premature request");
         Response response = dataHolder.getNetworkInterface().execute(request, Response.Type.TEXT);
-        long serverTime = response.getServerTime().getTime();
-        long endTime = System.currentTimeMillis();
-        long responseLength = endTime - startTime;
-        long serverTimeToReg = exam.getRegisterStart().getTime() - serverTime;
-        if (serverTimeToReg < 0) {
-            // already passed .... FCUK!
-        }
+        Helper.appendLog("Premature request complete, code: " + String.valueOf(response.getStatusCode()) + ", headers:");
+        Helper.appendLog(response.getHeadersString());
 
-        long timeToReg = serverTimeToReg - responseLength;
-        if (timeToReg > 5000) {
-            Thread.sleep(timeToReg - 5000);
-        }
+        long serverTime = response.getServerTime().getTime();
+        long serverTimeToReg = exam.getRegisterStart().getTime() - serverTime;
+        Helper.appendLog("Actual registering will start in " + String.valueOf(serverTimeToReg / 1000L));
+        if (serverTimeToReg > 0) {
+            long delay = System.currentTimeMillis() - startTime;
+            long timeToReg = serverTimeToReg - delay;
+            if (timeToReg > 5000) {
+                Thread.sleep(timeToReg - 5000);
+            }
+        } else
+            Helper.appendLog("Request starting should start ASAP");
+
+        Helper.appendLog("Actual request sending starting now");
+
 
         // now spam registering
         while(!exam.isRegistered()) {
@@ -95,23 +102,32 @@ public class RegisteringService extends Service {
                 @Override
                 public void onSuccess(Response response) {
                     tasks.remove(task);
+                    Helper.appendLog("Task finished, status code: " + String.valueOf(response.getStatusCode()) + ", headers:");
+                    Helper.appendLog(response.getHeadersString());
                     // lets consider it for the time being as a way to know we were registered successfully
-                    if (response.getStatusCode() == 302) {
+                    // it returns code 200, but it will be returned probably even if registration is unsuccessful
+                    /*if (response.getStatusCode() == 302) {
+                        Helper.appendLog("Probably registered");
                         onRegistered();
                         return;
-                    }
+                    }*/
+
+                    Helper.appendLog("Not yet registered, returned code id: " + String.valueOf(response.getStatusCode()));
 
                     // TODO: find a way to properly detect wrong register
                 }
             });
+
             tasks.add(task);
             BaseNetworkTask.run(task);
+            Helper.appendLog("Starting new task");
             Thread.sleep(REQUEST_TIME_DIFF_MS);
         }
     }
 
     private void onRegistered() {
         exam.setRegistered(true);
+        Helper.appendLog("Handling after registered, stopping concurrent tasks");
         for (TextNetworkTask task : tasks) {
             if (task != null && task.getStatus() != AsyncTask.Status.FINISHED)
                 task.cancel(true);
@@ -130,10 +146,16 @@ public class RegisteringService extends Service {
         targetInMillis -= 30 * 1000;
         long startInMillis = targetInMillis - System.currentTimeMillis();
 
+        Helper.appendLog("Planing exam registering. Registering should start on `" +
+            Helper.getDateOutput(targetInMillis, Helper.DateOutputType.DATE_TIME) +
+        "`, which is in " + String.valueOf(startInMillis / 1000L) + " seconds");
+
         if (startInMillis < 0) {
+            Helper.appendLog("Exam register time is too soon, registering should start right away.");
             sendPendingIntent(getAproxRegisterPI(context, exam, false));
         } else {
             Toast.makeText(context, "Exam will be registered in " + Helper.secondsCountdown(startInMillis, false), Toast.LENGTH_LONG).show();
+            Helper.appendLog("Exam registering will start in " + Helper.secondsCountdown(startInMillis, false));
             getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, targetInMillis, getAproxRegisterPI(context, exam, false));
         }
     }

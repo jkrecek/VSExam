@@ -197,6 +197,8 @@ public class DetailFragment extends BaseFragment {
                 @Override
                 public void onSuccess(Response response) {
                     Toast.makeText(getActivity(), "Registrace! " + String.valueOf(response.getStatusCode()), Toast.LENGTH_LONG).show();
+                    Helper.appendLog("Register complete, " + String.valueOf(response.getStatusCode()));
+                    Helper.appendLog(response.getHeadersString());
                     BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
                     if (true)
                         browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
@@ -214,6 +216,8 @@ public class DetailFragment extends BaseFragment {
                 @Override
                 public void onSuccess(Response response) {
                     Toast.makeText(getActivity(), "Unregistrace! " + String.valueOf(response.getStatusCode()), Toast.LENGTH_LONG).show();
+                    Helper.appendLog("Deregister complete, " + String.valueOf(response.getStatusCode()));
+                    Helper.appendLog(response.getHeadersString());
                     BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
                     if (true)
                         browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
@@ -226,6 +230,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
+            Helper.appendLog("User clicked onto register on time");
             exam.setRegisterOnTime(getActivity(), true);
         }
     }

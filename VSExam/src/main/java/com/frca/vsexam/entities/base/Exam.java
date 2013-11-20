@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.lists.ClassmateList;
+import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.helper.RegisteringService;
 
 import java.util.Date;
@@ -87,6 +88,7 @@ public class Exam extends ParentEntity {
 
     public void setRegisterOnTime(Context context, boolean registerOnTime) {
         if (this.registerOnTime != registerOnTime) {
+            Helper.appendLog("Exam ROT is set to " + String.valueOf(registerOnTime));
             if (registerOnTime) {
                 saveToFile(context);
                 RegisteringService.setExamRegister(context, this);
@@ -94,6 +96,8 @@ public class Exam extends ParentEntity {
                 deleteFile(context);
                 RegisteringService.cancelExamRegister(context, this);
             }
+        } else {
+            Helper.appendLog("User tried to ROT, but it is already set");
         }
 
         this.registerOnTime = registerOnTime;
