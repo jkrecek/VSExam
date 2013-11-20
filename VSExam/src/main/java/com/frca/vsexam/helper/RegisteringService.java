@@ -127,6 +127,7 @@ public class RegisteringService extends Service {
 
     private void onRegistered() {
         exam.setRegistered(true);
+        exam.setRegisterOnTime(getApplicationContext(), false);
         Helper.appendLog("Handling after registered, stopping concurrent tasks");
         for (TextNetworkTask task : tasks) {
             if (task != null && task.getStatus() != AsyncTask.Status.FINISHED)
