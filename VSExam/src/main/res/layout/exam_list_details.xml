@@ -5,8 +5,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:id="@+id/layout_details"
-              tools:background="@color/standard_grey" >
+              android:id="@+id/layout_details" >
 
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -184,30 +183,34 @@
 
     </ScrollView>
 
+    <View android:layout_height="1dp"
+          android:layout_width="match_parent"
+          android:background="@color/standard_grey"/>
 
     <LinearLayout style="?buttonBarStyle"
                   android:layout_height="wrap_content"
-                  android:divider="@color/standard_grey"
-                  android:dividerPadding="2dp"
+                  android:layout_marginBottom="0dp"
+                  android:paddingBottom="0dp"
                   android:background="@color/white"
                   android:layout_width="match_parent">
 
         <Button style="?buttonBarStyle"
-                android:background="@drawable/aboveline"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:id="@+id/button_left"
+                android:background="?selectableItemBackground"
                 android:text="Register ASAP" />
 
-        <View android:layout_height="match_parent"
+
+        <!--<View android:layout_height="match_parent"
               android:layout_width="1dp"
-              android:background="@color/standard_grey"/>
+              android:background="@color/standard_grey"/>-->
 
         <Button style="?buttonBarButtonStyle"
-                android:background="@drawable/aboveline"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
+                android:background="?selectableItemBackground"
                 android:layout_weight="1"
                 android:id="@+id/button_right"
                 android:text="Deregister" />
