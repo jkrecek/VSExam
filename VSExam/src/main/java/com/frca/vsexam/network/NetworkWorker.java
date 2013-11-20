@@ -40,6 +40,7 @@ public class NetworkWorker {
             response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
             response.setContentLength(entity.getContentLength());
             Log.d("execute", "Response content length: " + String.valueOf(entity.getContentLength()));
+            response.setHeaders(httpResponse.getAllHeaders());
 
             if (type == Response.Type.TEXT) {
                 Charset charset = Charset.forName(EntityUtils.getContentCharSet(entity));

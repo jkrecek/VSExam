@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
+import org.apache.http.Header;
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 
@@ -17,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Response {
 
@@ -31,6 +34,8 @@ public class Response {
     private long contentLength;
 
     private Boolean isValid = null;
+
+    private Map<String, String> headers;
 
     public enum Type {
         TEXT,
@@ -163,6 +168,29 @@ public class Response {
 
     public void setContentLength(long contentLength) {
         this.contentLength = contentLength;
+    }
+
+    public void setHeaders(Header[] headers) {
+        this.headers = new HashMap<String, String>();
+        for (Header header : headers) {
+            String value = header.getValue();
+            if (this.headers.containsKey(header.getName()))
+                value = this.headers.get(header.getName()) + " | " + value;
+
+            this.headers.put(header.getName(), value);
+        }
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getHeadersString() {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : headers.entrySet())
+            sb.append(entry.getKey() + ": " + entry.getValue() + "\n");
+
+        return sb.toString();
     }
 }
 
