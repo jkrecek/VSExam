@@ -141,6 +141,13 @@ public class HttpRequestBuilder {
     }
 
     public static HttpRequestBase getRegisterRequest(DataHolder holder, Exam exam, boolean apply) {
+        // TODO: Disable in production
+        try {
+            return new HttpRequestBuilder(holder, "student/terminy_seznam.pl").build();
+        } catch (NoAuthException e) {
+            e.printStackTrace();
+        }
+
         HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_prihlaseni.pl");
 
         try {
