@@ -6,6 +6,7 @@ import android.util.Log;
 import com.frca.vsexam.helper.Helper;
 
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -23,6 +24,7 @@ public class NetworkInterface {
     static {
         HttpConnectionParams.setConnectionTimeout(httpClientParams, TIMEOUT_MS);
         HttpConnectionParams.setSoTimeout(httpClientParams, TIMEOUT_MS);
+        HttpClientParams.setRedirecting(httpClientParams, false);
     }
 
 
