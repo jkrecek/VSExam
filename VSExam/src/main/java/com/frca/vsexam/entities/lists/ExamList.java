@@ -207,7 +207,7 @@ public class ExamList extends ArrayList<Exam> {
                 continue;
             }
 
-            if (exam.getCourseCode().equals(compareExam.getCourseCode()) && exam.getType().equals(compareExam.getType()))
+            if (exam.getCourseId() == compareExam.getCourseId() && exam.getType().equals(compareExam.getType()))
                 list.add(exam);
         }
 
