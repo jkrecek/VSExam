@@ -192,9 +192,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick(View view) {
-            BrowserPaneFragment browserPaneFragment = (BrowserPaneFragment) getParentFragment();
-            browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
-            /*HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
@@ -203,7 +201,7 @@ public class DetailFragment extends BaseFragment {
                     if (true)
                         browserPaneFragment.getExams().setExamRegister(exam, true, browserPaneFragment.getAdapter());
                 }
-            }));*/
+            }));
         }
     }
 

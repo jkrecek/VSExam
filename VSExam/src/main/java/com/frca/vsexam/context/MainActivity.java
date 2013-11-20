@@ -1,8 +1,6 @@
 package com.frca.vsexam.context;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,7 +12,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.base.Exam;

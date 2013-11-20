@@ -17,4 +17,10 @@ public class TextNetworkTask extends BaseNetworkTask {
         super(DataHolder.getInstance(context), url, responseCallback, exceptionCallback, Response.Type.TEXT);
     }
 
+    public TextNetworkTask(Context context, HttpRequestBase requestBase) {
+        super(DataHolder.getInstance(context), Response.Type.TEXT);
+
+        request = requestBase;
+    }
+
 }

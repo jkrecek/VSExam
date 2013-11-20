@@ -194,7 +194,6 @@ public abstract class Helper {
     }
 
     public static void dumpRequest(HttpRequest request) {
-
         StringBuilder sb = new StringBuilder();
         sb.append("Dumping http request\n");
         sb.append(request.getRequestLine().getMethod() + " " + request.getRequestLine().getUri() + " " + request.getRequestLine().getProtocolVersion().toString() + "\n");
@@ -220,6 +219,35 @@ public abstract class Helper {
         }
 
         Log.d("REQUEST_DUMP", sb.toString());
+    }
+
+    private static String[] dayPart = new String[] { "den", "dny", "dní" };
+    private static String[] hourPart = new String[] { "hodina", "hodiny", "hodin" };
+    private static String[] minutePart = new String[] { "minuta", "minuty", "minut" };
+    private static String[] secondPart = new String[] { "vteřina", "vteřiny", "vteřin" };
+
+    public static String secondsCountdown(long milis, boolean show_seconds) {
+        int total_seconds = (int) (milis / 1000L);
+        int days    = (int) Math.floor(total_seconds / 86400);
+        int hours   = (int) Math.floor((total_seconds - (days * 86400))/ 3600);
+        int minutes = (int) Math.floor((total_seconds - (days * 86400) - (hours * 3600)) / 60);
+        int seconds = (show_seconds || minutes == 0) ? (int) Math.floor(total_seconds - (days * 86400) - (hours * 3600) - (minutes * 60)) : 0;
+
+        return (getNamedTimeValue(days, dayPart) + " " +
+                getNamedTimeValue(hours, hourPart) + " " +
+                getNamedTimeValue(minutes, minutePart) + " " +
+                getNamedTimeValue(seconds, secondPart)).trim();
+    }
+
+    private static String getNamedTimeValue(int unit, String[] parts) {
+        if (unit == 0)
+            return "";
+        else if (unit == 1)
+            return String.valueOf(unit) + " " + parts[0];
+        else if (unit < 5)
+            return String.valueOf(unit) + " " + parts[1];
+        else
+            return String.valueOf(unit) + " " + parts[2];
     }
 
 }

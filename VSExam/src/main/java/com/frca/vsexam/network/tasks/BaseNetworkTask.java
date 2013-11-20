@@ -64,8 +64,16 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
 
     }
 
+    public void setRequest(HttpRequestBase request) {
+        this.request = request;
+    }
+
     public static void run(BaseNetworkTask task) {
         task.execute();
+    }
+
+    public void setResponseCallback(ResponseCallback responseCallback) {
+        this.responseCallback = responseCallback;
     }
 
     public static interface ResponseCallback {

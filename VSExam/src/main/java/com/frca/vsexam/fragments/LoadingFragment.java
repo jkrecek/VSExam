@@ -3,9 +3,6 @@ package com.frca.vsexam.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.lists.ExamList;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.network.Response;
@@ -25,13 +21,6 @@ import com.frca.vsexam.network.tasks.TextNetworkTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.Date;
 
 public class LoadingFragment extends BaseFragment {
 

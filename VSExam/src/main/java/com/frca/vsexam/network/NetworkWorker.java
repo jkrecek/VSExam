@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.frca.vsexam.fragments.LoadingFragment;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,9 +13,6 @@ import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.text.ParseException;
@@ -48,11 +43,11 @@ public class NetworkWorker {
 
             if (type == Response.Type.TEXT) {
                 Charset charset = Charset.forName(EntityUtils.getContentCharSet(entity));
-                String text = Response.parseText(entity, charset);
+                String text = Response.parseText(entity.getContent(), charset);
                 Log.d("execute", "Parsed response text: " + String.valueOf(text.length()));
                 response.setText(text);
             } else if (type == Response.Type.BITMAP) {
-                Bitmap bitmap = Response.parseBitmap(entity);
+                Bitmap bitmap = Response.parseBitmap(entity.getContent());
                 response.setBitmap(bitmap);
             } else
                 throw new UnsupportedOperationException("Response type must be Text or Bitmap");

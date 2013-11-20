@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.frca.vsexam.entities.base.Exam;
 import com.frca.vsexam.network.HttpRequestBuilder;
@@ -23,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class RegisteringService extends Service implements BaseNetworkTask.ResponseCallback {
+public class RegisteringService extends Service {
 
     public static final String EXTRA_ID = "id";
     public static final String EXTRA_PERFORM_NOW = "perform_now";
@@ -51,7 +52,7 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
         }
 
         if (exam.isRegistered()) {
-            Log.e(getClass().getName(), "Exam is already registered");
+            Log.e(getClass().getName(), "ERROR: Exam is already registered");
         }
         dataHolder = DataHolder.getInstance(this);
         registerRequest = HttpRequestBuilder.getRegisterRequest(dataHolder, exam, true);
@@ -89,34 +90,34 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
 
         // now spam registering
         while(!exam.isRegistered()) {
-            TextNetworkTask task = new TextNetworkTask(this, registerRequest, this);
+            final TextNetworkTask task = new TextNetworkTask(this, registerRequest);
+            task.setResponseCallback(new BaseNetworkTask.ResponseCallback() {
+                @Override
+                public void onSuccess(Response response) {
+                    tasks.remove(task);
+                    // lets consider it for the time being as a way to know we were registered successfully
+                    if (response.getStatusCode() == 302) {
+                        onRegistered();
+                        return;
+                    }
+
+                    // TODO: find a way to properly detect wrong register
+                }
+            });
             tasks.add(task);
             BaseNetworkTask.run(task);
             Thread.sleep(REQUEST_TIME_DIFF_MS);
         }
-
     }
 
     private void onRegistered() {
         exam.setRegistered(true);
         for (TextNetworkTask task : tasks) {
-            if (task.getStatus() != AsyncTask.Status.FINISHED)
+            if (task != null && task.getStatus() != AsyncTask.Status.FINISHED)
                 task.cancel(true);
         }
 
         stopSelf();
-    }
-
-    @Override
-    public void onSuccess(Response response) {
-        // lets consider it for the time being as a way to know we were registered successfully
-        if (response.getStatusCode() == 302) {
-            onRegistered();
-            return;
-        }
-
-        // TODO: find a way to properly detect wrong register
-
     }
 
     public static AlarmManager getAlarmManager(Context context) {
@@ -125,15 +126,15 @@ public class RegisteringService extends Service implements BaseNetworkTask.Respo
 
     public static void setExamRegister(Context context, Exam exam) {
         NetworkInterface networkInterface = DataHolder.getInstance(context).getNetworkInterface();
-        long startInMillis = exam.getRegisterStart().getTime() - networkInterface.getCurrentServerTime();
-        if (startInMillis < 0) {                    // should have already started
-            // DAMN! What to do now?!
-            sendPendingIntent(getAproxRegisterPI(context, exam, true));
-        } else if (startInMillis < 30 * 1000) {     // starts in 30 seconds, handle right away
+        long targetInMillis = exam.getRegisterStart().getTime() - networkInterface.getLastServerLocalTimeDiff();
+        targetInMillis -= 30 * 1000;
+        long startInMillis = targetInMillis - System.currentTimeMillis();
+
+        if (startInMillis < 0) {
             sendPendingIntent(getAproxRegisterPI(context, exam, false));
         } else {
-            startInMillis -= 30 * 1000;
-            getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, startInMillis, getAproxRegisterPI(context, exam, false));
+            Toast.makeText(context, "Exam will be registered in " + Helper.secondsCountdown(startInMillis, false), Toast.LENGTH_LONG).show();
+            getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, targetInMillis, getAproxRegisterPI(context, exam, false));
         }
     }
 

@@ -60,10 +60,8 @@ public class NetworkInterface {
     public void freeClient(NetworkWorker networkWorker) {
         if (networkWorker.getHttpResponse() != null) {
             try {
-                if (networkWorker.getHttpResponse().getEntity() != null) {
-                    Log.e("C", "Consumed");
+                if (networkWorker.getHttpResponse().getEntity() != null)
                     networkWorker.getHttpResponse().getEntity().consumeContent();
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,4 +92,7 @@ public class NetworkInterface {
         return System.currentTimeMillis() + lastServerLocalTimeDiff;
     }
 
+    public long getLastServerLocalTimeDiff() {
+        return lastServerLocalTimeDiff;
+    }
 }

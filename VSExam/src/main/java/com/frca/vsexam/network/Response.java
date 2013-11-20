@@ -3,11 +3,7 @@ package com.frca.vsexam.network;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
 
-import com.frca.vsexam.fragments.LoadingFragment;
-
-import org.apache.http.HttpEntity;
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 
@@ -45,44 +41,26 @@ public class Response {
         localTime = new Date();
     }
 
-    public static String parseText(HttpEntity entity, Charset charset) {
+    public static String parseText(InputStream is, Charset charset) throws IOException {
 
-        String result = null;
-        ByteArrayOutputStream baos = null;
+        String result;
+        ByteArrayOutputStream baos;
+
+        baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
         try {
-            baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1536];
-            int length = 0;
-            InputStream is = entity.getContent();
-            Log.e("chunked", String.valueOf(entity.isChunked()));
-            Log.e("rep", String.valueOf(entity.isRepeatable()));
-            Log.e("str", String.valueOf(entity.isStreaming()));
-
             while ((length = is.read(buffer)) != -1) {
                 baos.write(buffer, 0, length);
-                Log.e("state", String.valueOf(baos.size()));
+                /*Log.e("ParsedBytes", String.valueOf(baos.size()));*/
             }
-
-            if (baos.size() < 30000) {
-                Log.e("Bef", "bef");
-                is = entity.getContent();
-                Log.e("new", "nonconsume");
-
-                while ((length = is.read(buffer)) != -1) {
-                    baos.write(buffer, 0, length);
-                    Log.e("state", String.valueOf(baos.size()));
-                }
-
-                Log.e("end", "nonconsume");
-            }
-            result = baos.toString(charset.name());
-
-        } catch (IOException e ){
-            e.printStackTrace();
+        } finally {
+            is.close();
         }
 
+        result = baos.toString(charset.name());
 
-        saveToFile(result, "file" + String.valueOf(new Date().getTime()) + ".txt");
+        saveToFile(result, "file_" + String.valueOf(new Date().getTime()) + ".txt");
         saveToFile(result, "file_" + String.valueOf(new Date().getTime()) + ".html");
 
         return result;
@@ -105,14 +83,12 @@ public class Response {
         }
     }
 
-    public static Bitmap parseBitmap(HttpEntity entity) {
+    public static Bitmap parseBitmap(InputStream is) throws IOException {
         try {
-            return BitmapFactory.decodeStream(entity.getContent());
-        } catch (IOException e) {
-            e.printStackTrace();
+            return BitmapFactory.decodeStream(is);
+        } finally {
+            is.close();
         }
-
-        return null;
     }
 
     public void setStatusCode(int statusCode) {
