@@ -17,8 +17,9 @@ public class ExamParser extends BaseParser {
         String[] registrationParts = registrationDates.split("<br />");
         Element info = getLinkFromColumn(11);
         Element course = getLinkFromColumn(2);
+        int id = extractParameterFromLink(info, "termin");
 
-        Exam exam = new Exam();
+        Exam exam = Exam.getExam(id);
         exam.setCourseCode(getColumnContent(1, true));
         exam.setCourseName(course.text().trim());
         exam.setCourseId(extractParameterFromLink(course, "predmet"));
@@ -32,7 +33,7 @@ public class ExamParser extends BaseParser {
         exam.setRegisterStart(parseDate(registrationParts[0]));
         exam.setRegisterEnd(parseDate(registrationParts[1]));
         exam.setUnregisterEnd(parseDate(registrationParts[2]));
-        exam.setId(extractParameterFromLink(info, "termin"));
+        exam.setId(id);
         exam.setStudyId(extractParameterFromLink(info, "studium"));
         exam.setPeriodId(extractParameterFromLink(info, "obdobi"));
         exam.setGroup(currentGroup);

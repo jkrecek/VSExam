@@ -61,9 +61,14 @@ public class Exam extends ParentEntity {
     private ClassmateList classmates;
     private boolean registerOnTime;
 
-    public Exam() {
+    private Exam() {
         registerOnTime = false;
         registeredOnId = 0;
+    }
+
+    public static Exam getExam(int id) {
+        // TODO: Try to load existing
+        return new Exam();
     }
 
 
