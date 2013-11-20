@@ -96,7 +96,10 @@ public class RegisteringService extends Service {
 
 
         // now spam registering
-        while(!exam.isRegistered()) {
+        startTime = System.currentTimeMillis();
+        while(!exam.isRegistered() &&
+            System.currentTimeMillis() - startTime < 15000) { // try only for 15 seconds tops
+
             final TextNetworkTask task = new TextNetworkTask(this, registerRequest);
             task.setResponseCallback(new BaseNetworkTask.ResponseCallback() {
                 @Override
