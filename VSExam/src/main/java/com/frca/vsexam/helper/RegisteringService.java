@@ -29,7 +29,7 @@ public class RegisteringService extends Service {
     public static final String EXTRA_ID = "id";
     public static final String EXTRA_PERFORM_NOW = "perform_now";
 
-    public static final int REQUEST_TIME_DIFF_MS = 100;
+    public static final int REQUEST_TIME_DIFF_MS = 300;
 
     private Exam exam;
     private DataHolder dataHolder;
