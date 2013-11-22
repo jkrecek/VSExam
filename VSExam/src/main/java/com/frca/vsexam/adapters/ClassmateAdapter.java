@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.base.Classmate;
-import com.frca.vsexam.entities.lists.ClassmateList;
+import com.frca.vsexam.entities.classmate.Classmate;
+import com.frca.vsexam.entities.classmate.ClassmateList;
 import com.frca.vsexam.helper.Dialog;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;

@@ -3,11 +3,7 @@ package com.frca.vsexam.entities.base;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
@@ -18,21 +14,29 @@ public class ParentEntity implements Serializable, Cloneable {
 
     protected int id;
 
+    protected boolean isKeptLocally = false;
+
+    protected ParentEntity(int id) {
+        this.id = id;
+
+    }
+
     protected void removeUnsavedValues() { }
 
-    protected static String getFileName(Context context, Class<? extends ParentEntity> entityClass, int id) {
+    protected static String getFileName(Class<? extends ParentEntity> entityClass, int id) {
         return entityClass.getSimpleName() + "_" + String.valueOf(id) + ".data";
     }
 
     public boolean saveToFile(Context context) {
-        String filename = getFileName(context, getClass(), id);
+        String filename = getFileName(getClass(), id);
 
-        FileOutputStream fos  = null;
-        ObjectOutputStream oos  = null;
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
         boolean keep = true;
         ParentEntity object;
 
         try {
+            isKeptLocally = true;
             object = (ParentEntity) clone();
             object.removeUnsavedValues();
             fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -59,67 +63,17 @@ public class ParentEntity implements Serializable, Cloneable {
     }
 
     public void deleteFile(Context context) {
-        String filename = getFileName(context, getClass(), id);
+        isKeptLocally = false;
+        String filename = getFileName(getClass(), id);
         context.deleteFile(filename);
     }
 
-    public static ParentEntity getFromFile(Class<? extends ParentEntity> requestedClass, Context context, int id) {
-        String filename = getFileName(context, requestedClass, id);
-
-        ParentEntity object = null;
-
-        try {
-            object = getFromFile(context.openFileInput(filename));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.e(ParentEntity.class.getName(), "Error in getFromFile(...)");
-        }
-
-        return object;
-    }
-
-    public static ParentEntity getFromFile(File file) {
-        ParentEntity object = null;
-
-        try {
-            object = getFromFile(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.e(ParentEntity.class.getName(), "Error in getFromFile(File)");
-        }
-
-        return object;
-    }
-
-    private static ParentEntity getFromFile(FileInputStream stream) {
-        ObjectInputStream is = null;
-        ParentEntity object = null;
-
-        try {
-            is = new ObjectInputStream(stream);
-            object = (ParentEntity) is.readObject();
-        } catch(Exception e) {
-            //String val = e.getMessage();
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stream != null)
-                    stream.close();
-                if (is != null)
-                    is.close();
-            } catch (Exception e) {
-                /* do nothing */
-            }
-        }
-
-        return object;
-    }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public boolean isKeptLocally() {
+        return isKeptLocally;
     }
 }

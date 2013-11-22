@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.lists.ExamList;
+import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -124,7 +124,8 @@ public class LoadingFragment extends BaseFragment {
                         Document doc = Jsoup.parse(response.getText());
                         Elements elements = doc.body().select("table[id] tr");
 
-                        ExamList exams = new ExamList(elements);
+                        ExamList exams = new ExamList();
+                        exams.parseAndAdd(getActivity(), elements);
 
                         /*for (Exam exam : exams)
                             exam.saveToFile(getActivity());*/

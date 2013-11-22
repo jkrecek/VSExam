@@ -2,11 +2,13 @@ package com.frca.vsexam.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +19,8 @@ import android.widget.ListView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ExamAdapter;
-import com.frca.vsexam.entities.base.Exam;
-import com.frca.vsexam.entities.lists.ExamList;
+import com.frca.vsexam.entities.exam.Exam;
+import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.helper.AppSparseArray;
 
 /**
@@ -36,11 +38,14 @@ public class BrowserPaneFragment extends BaseFragment {
 
     private ActionBar mActionBar;
 
-    private View lastHighlighted;
+    //private View lastHighlighted;
+    private Exam currentlySelected;
 
     private ExamAdapter adapter;
 
-    private AppSparseArray<String> adapterData;
+    private AppSparseArray<String> actionBarAdapterData;
+
+    private int currentCourseId = -1;
 
     public BrowserPaneFragment(ExamList exams) {
         this.exams = exams;
@@ -63,27 +68,29 @@ public class BrowserPaneFragment extends BaseFragment {
 
             @Override
             public void onPanelOpened(View view) {
-                mActionBar.setTitle("Exams");
-                getMainActivity().setActionBarAdapter(exams.getCourseNames());
+                mActionBar.setDisplayShowTitleEnabled(false);
+                mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                mActionBar.setDisplayHomeAsUpEnabled(false);
             }
 
             @Override
             public void onPanelClosed(View view) {
-
+                DetailFragment child = getDetailFragment();
+                if (child != null) {
+                    mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    mActionBar.setTitle(child.getExam().getCourseCode() + " | " + child.getExam().getCourseName());
+                    mActionBar.setDisplayShowTitleEnabled(true);
+                    mActionBar.setDisplayHomeAsUpEnabled(true);
+                }
             }
         });
         mSlidingLayout.openPane();
-        //mSlidingLayout.setCoveredFadeColor(0x000000);
         mSlidingLayout.setSliderFadeColor(0x66cccccc);
         mSlidingLayout.setShadowResource(R.drawable.border_right);
 
-        setAdapter();
+        setActionBarAdapter();
 
         return rootView;
-    }
-
-    public SlidingPaneLayout getSlidingLayout() {
-        return mSlidingLayout;
     }
 
     private class ListItemClickListener implements ListView.OnItemClickListener {
@@ -93,16 +100,15 @@ public class BrowserPaneFragment extends BaseFragment {
             if (exam == null)
                 return;
 
+            Exam previouslySelected = currentlySelected;
+            currentlySelected = exam;
+
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(R.id.container, new DetailFragment(exam));
             transaction.addToBackStack(null);
             transaction.commit();
 
             if (mSlidingLayout.isSlideable()) {
-                mActionBar.setTitle(exam.getCourseCode() + " | " + exam.getCourseName());
-                getMainActivity().setActionBarAdapter(null);
-                mActionBar.setDisplayHomeAsUpEnabled(true);
-
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -110,14 +116,9 @@ public class BrowserPaneFragment extends BaseFragment {
                     }
                 });
             } else {
-                if (lastHighlighted != null) {
-                    lastHighlighted.setBackgroundResource(R.color.standard_grey);
-                    /*lastHighlighted.findViewById(R.id.layout_datetime).setBackgroundResource(0);*/
-                }
-
-                view.setBackgroundResource(R.color.white);
-                /*view.findViewById(R.id.layout_datetime).setBackgroundResource(R.drawable.invert_arrow_right_pos_right);*/
-                lastHighlighted = view;
+                adapter.highlightExam(previouslySelected, false);
+                adapter.highlightExam(currentlySelected, true);
+                adapter.highlightView(view, true);
             }
         }
     }
@@ -140,35 +141,56 @@ public class BrowserPaneFragment extends BaseFragment {
         return false;
     }
 
-    public ExamList getExams() {
-        return exams;
-    }
-
-    public ArrayAdapter getAdapter() {
-        return (ArrayAdapter) mList.getAdapter();
-    }
-
-    private void setAdapter() {
-        adapterData = exams.getCourses();
-        adapterData.put(-1, "Zobrazit všechny");
-        getMainActivity().setActionBarAdapter(adapterData.getValues());
+    private void setActionBarAdapter() {
+        actionBarAdapterData = exams.getCourses();
+        actionBarAdapterData.put(-1, "Zobrazit všechny");
+        getMainActivity().setActionBarAdapter(actionBarAdapterData.getValues());
     }
 
     @Override
     public void onNavigationItemSelected(final int id) {
-        final int courseId = adapterData.keyAt(id);
+        currentCourseId = actionBarAdapterData.keyAt(id);
 
+        updateActionBarAdapter();
+    }
+
+    private void updateActionBarAdapter() {
         adapter = new ExamAdapter(getActivity(), exams.filter(new ExamList.MatchChecker() {
             @Override
             public boolean isMatch(Exam exam) {
-                return courseId == -1 || exam.getCourseId() == courseId;
+                return currentCourseId == -1 || exam.getCourseId() == currentCourseId;
             }
-        }));
+        }), currentlySelected);
 
         mList.setAdapter(adapter);
 
         if (mList.getOnItemClickListener() == null) {
             mList.setOnItemClickListener(new ListItemClickListener());
         }
-   }
+    }
+
+    public void updateView() {
+        updateActionBarAdapter();
+
+        DetailFragment fragment = getDetailFragment();
+        if (fragment != null) {
+            fragment.updateView();
+        }
+    }
+
+    public ExamList getExams() {
+        return exams;
+    }
+
+    public SlidingPaneLayout getSlidingLayout() {
+        return mSlidingLayout;
+    }
+
+    public DetailFragment getDetailFragment() {
+        Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.container);
+        if (currentFragment != null && currentFragment instanceof DetailFragment)
+            return (DetailFragment)currentFragment;
+
+        return null;
+    }
 }

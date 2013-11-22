@@ -1,7 +1,4 @@
-package com.frca.vsexam.entities.lists;
-
-import com.frca.vsexam.entities.base.Classmate;
-import com.frca.vsexam.entities.parsers.ClassmateParser;
+package com.frca.vsexam.entities.classmate;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

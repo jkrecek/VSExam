@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 
@@ -33,6 +33,8 @@ public class HttpRequestBuilder {
     public final static String KEY_PASSWORD = "key_password";
 
     public final static String BASE_URL = "https://isis.vse.cz/auth/";
+
+    public final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36";
 
     private final DataHolder dataHolder;
 
@@ -77,7 +79,7 @@ public class HttpRequestBuilder {
         request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
         request.setHeader("Connection", "keep-alive");
         request.setHeader("Origin", "https://isis.vse.cz");
-        request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36");
+        request.setHeader("User-Agent", USER_AGENT);
 
         if (request instanceof HttpEntityEnclosingRequestBase)
             ((HttpPost)request).setEntity(entity);
@@ -142,11 +144,11 @@ public class HttpRequestBuilder {
 
     public static HttpRequestBase getRegisterRequest(DataHolder holder, Exam exam, boolean apply) {
         // TODO: Disable in production
-        try {
+        /*try {
             return new HttpRequestBuilder(holder, "student/terminy_seznam.pl").build();
         } catch (NoAuthException e) {
             e.printStackTrace();
-        }
+        }*/
 
         HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_prihlaseni.pl");
 

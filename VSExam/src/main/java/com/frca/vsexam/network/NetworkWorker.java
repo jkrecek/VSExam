@@ -1,6 +1,7 @@
 package com.frca.vsexam.network;
 
 import android.graphics.Bitmap;
+import android.net.http.AndroidHttpClient;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,12 +23,12 @@ import java.text.ParseException;
  */
 public class NetworkWorker {
 
-    private HttpClient client;
+    private AndroidHttpClient client;
     private boolean isUsed;
     private HttpResponse httpResponse;
 
     public NetworkWorker() {
-        client = new DefaultHttpClient(NetworkInterface.httpClientParams);
+        client = AndroidHttpClient.newInstance(HttpRequestBuilder.USER_AGENT);
         isUsed = false;
         httpResponse = null;
     }

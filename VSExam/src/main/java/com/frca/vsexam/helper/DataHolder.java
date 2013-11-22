@@ -24,6 +24,8 @@ public class DataHolder {
 
     private final NetworkInterface networkInterface;
 
+    private final SparseArray<RegisteringService> registeringServiceContainer = new SparseArray<RegisteringService>();
+
     private DataHolder(Context context) {
         preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         configuration = context.getResources().getConfiguration();
@@ -55,5 +57,9 @@ public class DataHolder {
 
     public NetworkInterface getNetworkInterface() {
         return networkInterface;
+    }
+
+    public SparseArray<RegisteringService> getRegisteringServiceContainer() {
+        return registeringServiceContainer;
     }
 }

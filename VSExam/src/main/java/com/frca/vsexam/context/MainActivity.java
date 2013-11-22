@@ -1,6 +1,8 @@
 package com.frca.vsexam.context;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,29 +14,36 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.base.Exam;
+import com.frca.vsexam.entities.exam.Exam;
+import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.fragments.BaseFragment;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
 import com.frca.vsexam.helper.DataHolder;
+import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
+import com.google.gson.Gson;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    private Fragment currentFragment;
+    private BaseFragment currentFragment;
 
-    private boolean paused = true;
+    private static MainActivity instance = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        paused = false;
+        instance = this;
 
         setContentView(R.layout.activity_main);
 
@@ -50,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        paused = false;
+        instance = this;
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_base);
         if (!fragment.equals(currentFragment))
@@ -61,12 +70,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
 
-        paused = true;
+        instance = null;
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(BaseFragment fragment) {
         currentFragment = fragment;
-        if (!paused)
+        if (instance != null)
             getSupportFragmentManager().beginTransaction().replace(R.id.container_base, fragment).commit();
 
     }
@@ -96,27 +105,58 @@ public class MainActivity extends ActionBarActivity {
                 }
                 break;
             }
-            case R.id.action_settings: {
-                Exam[] exams = OnStartReceiver.getSavedExams(this);
-                if (exams[0] == null) {
-                    List<Exam> list = ((BrowserPaneFragment)currentFragment).getExams();
-                    exams = list.toArray(new Exam[list.size()]);
+            case R.id.action_json: {
+                ExamList examList = getLoadedExams();
+                if (examList == null) {
+                    examList = new ExamList();
+                    examList.loadSaved(this);
                 }
 
-                /*Toast.makeText(this, String.valueOf(exams.length), Toast.LENGTH_LONG).show();
                 Gson gson = new Gson();
-                String total = "";
-                for (Exam exam : exams) {
-                    total += gson.toJson(exam) + "\n\n";
+                StringBuilder sb = new StringBuilder();
+                for (Exam exam : examList) {
+                    sb.append(gson.toJson(exam));
+                    sb.append("\n\n");
                 }
 
-                new AlertDialog.Builder(this).setTitle("Jsons").setMessage(total).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).create().show();*/
+                final String exam_json = sb.toString();
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Exam Jsons")
+                    .setMessage(exam_json)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).setNegativeButton(R.string.into_file, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            String result;
+                            BufferedWriter buf = null;
+                            try {
+                                String fileName = "/sdcard/vsexam_data_" + String.valueOf(System.currentTimeMillis() / 1000L) + ".json";
+                                File logFile = new File(fileName);
+                                if (!logFile.exists())
+                                    logFile.createNewFile();
+
+                                buf = new BufferedWriter(new FileWriter(logFile, false));
+                                buf.append(exam_json);
+                                buf.close();
+                                result = "Succesfully dumped into file `" + fileName + "`";
+                            } catch (Exception e) {
+                                result = e.getMessage();
+                            }
+
+                            Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+                        }
+                    }).create().show();
+                    break;
+                }
+
+                case R.id.action_refresh: {
+                setFragment(new LoadingFragment());
                 break;
             }
         }
@@ -126,7 +166,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         if (currentFragment instanceof BaseFragment)
-            if (((BaseFragment)currentFragment).onBackPressed())
+            if (currentFragment.onBackPressed())
                 return;
 
         super.onBackPressed();
@@ -148,7 +188,7 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         } else {
             actionBar.setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
             ArrayAdapter<String> aAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
             actionBar.setListNavigationCallbacks(aAdpt, new ActionBarAdapterClickListener());
         }
@@ -159,10 +199,29 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public boolean onNavigationItemSelected(int i, long l) {
-            if (currentFragment instanceof BaseFragment)
-                ((BaseFragment)currentFragment).onNavigationItemSelected(i);
-
+            currentFragment.onNavigationItemSelected(i);
             return false;
         }
+   }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
+
+    public static BrowserPaneFragment getBrowserPaneFragment() {
+        if (instance != null && instance.currentFragment != null && instance.currentFragment instanceof BrowserPaneFragment)
+            return (BrowserPaneFragment) instance.currentFragment;
+
+        return null;
+    }
+
+
+    public static ExamList getLoadedExams() {
+        BrowserPaneFragment fragment = getBrowserPaneFragment();
+        if (fragment != null && Helper.isValid(fragment.getExams()))
+            return fragment.getExams();
+
+        return null;
+    }
+
 }

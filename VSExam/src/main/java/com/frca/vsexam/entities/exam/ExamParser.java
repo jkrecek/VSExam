@@ -1,12 +1,23 @@
-package com.frca.vsexam.entities.parsers;
+package com.frca.vsexam.entities.exam;
 
-import com.frca.vsexam.entities.base.Exam;
+import android.content.Context;
+
+import com.frca.vsexam.entities.base.BaseParser;
 
 import org.jsoup.nodes.Element;
 
 public class ExamParser extends BaseParser {
 
     public Exam.Group currentGroup = null;
+
+    private ExamList parentList;
+
+    private Context context;
+
+    ExamParser(Context context, ExamList parentList) {
+        this.context = context;
+        this.parentList = parentList;
+    }
 
     @Override
     protected Exam doParse() throws EntityParsingException {
@@ -19,7 +30,7 @@ public class ExamParser extends BaseParser {
         Element course = getLinkFromColumn(2);
         int id = extractParameterFromLink(info, "termin");
 
-        Exam exam = Exam.getExam(id);
+        Exam exam = parentList.createExam(context, id);
         exam.setCourseCode(getColumnContent(1, true));
         exam.setCourseName(course.text().trim());
         exam.setCourseId(extractParameterFromLink(course, "predmet"));
@@ -33,7 +44,6 @@ public class ExamParser extends BaseParser {
         exam.setRegisterStart(parseDate(registrationParts[0]));
         exam.setRegisterEnd(parseDate(registrationParts[1]));
         exam.setUnregisterEnd(parseDate(registrationParts[2]));
-        exam.setId(id);
         exam.setStudyId(extractParameterFromLink(info, "studium"));
         exam.setPeriodId(extractParameterFromLink(info, "obdobi"));
         exam.setGroup(currentGroup);

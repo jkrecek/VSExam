@@ -1,9 +1,10 @@
-package com.frca.vsexam.entities.base;
+package com.frca.vsexam.entities.exam;
 
 import android.content.Context;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.lists.ClassmateList;
+import com.frca.vsexam.entities.base.ParentEntity;
+import com.frca.vsexam.entities.classmate.ClassmateList;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.helper.RegisteringService;
 
@@ -40,44 +41,31 @@ public class Exam extends ParentEntity {
 
     }
 
-    private int registeredOnId;
-    private int studyId;
-    private int periodId;
-    private int authorId;
-    private int currentCapacity;
-    private int maxCapacity;
-    private int courseId;
-    private String courseCode;
-    private String courseName;
-    private String location;
-    private String type;
-    private String authorName;
-    private Date examDate;
-    private Date registerStart;
-    private Date registerEnd;
-    private Date unregisterEnd;
-    private Group group;
+    int registeredOnId;
+    int studyId;
+    int periodId;
+    int authorId;
+    int currentCapacity;
+    int maxCapacity;
+    int courseId;
+    String courseCode;
+    String courseName;
+    String location;
+    String type;
+    String authorName;
+    Date examDate;
+    Date registerStart;
+    Date registerEnd;
+    Date unregisterEnd;
+    Group group;
 
-    private ClassmateList classmates;
-    private boolean registerOnTime;
+    ClassmateList classmates;
+    private boolean toBeRegistered;
 
-    private Exam() {
-        registerOnTime = false;
+    Exam(int id) {
+        super(id);
+        toBeRegistered = false;
         registeredOnId = 0;
-    }
-
-    public static Exam getExam(int id) {
-        // TODO: Try to load existing
-        return new Exam();
-    }
-
-
-    public ClassmateList getClassmates() {
-        return classmates;
-    }
-
-    public void setClassmates(ClassmateList classmates) {
-        this.classmates = classmates;
     }
 
     public void setRegistered(boolean apply) {
@@ -91,34 +79,24 @@ public class Exam extends ParentEntity {
         return group == Group.IS_REGISTERED;
     }
 
-    public void setRegisterOnTime(Context context, boolean registerOnTime) {
-        if (this.registerOnTime != registerOnTime) {
-            Helper.appendLog("Exam ROT is set to " + String.valueOf(registerOnTime));
-            if (registerOnTime) {
+    public void setToBeRegistered(Context context, boolean toBeRegistered) {
+        if (this.toBeRegistered != toBeRegistered) {
+            Helper.appendLog("Exam ROT is set to " + String.valueOf(toBeRegistered));
+            if (toBeRegistered) {
                 saveToFile(context);
                 RegisteringService.setExamRegister(context, this);
             } else {
                 deleteFile(context);
                 RegisteringService.cancelExamRegister(context, this);
             }
-        } else {
-            Helper.appendLog("User tried to ROT, but it is already set");
         }
 
-        this.registerOnTime = registerOnTime;
+        this.toBeRegistered = toBeRegistered;
     }
 
     @Override
     protected void removeUnsavedValues() {
         classmates = null;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getRegisteredOnId() {
@@ -249,8 +227,8 @@ public class Exam extends ParentEntity {
         this.group = group;
     }
 
-    public boolean isRegisterOnTime() {
-        return registerOnTime;
+    public boolean isToBeRegistered() {
+        return toBeRegistered;
     }
 
     public int getCourseId() {
@@ -260,4 +238,14 @@ public class Exam extends ParentEntity {
     public void setCourseId(int courseId) {
         this.courseId = courseId;
     }
+
+    public ClassmateList getClassmates() {
+        return classmates;
+    }
+
+    public void setClassmates(ClassmateList classmates) {
+        this.classmates = classmates;
+    }
+
+
 }

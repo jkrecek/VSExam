@@ -10,8 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.base.Exam;
-import com.frca.vsexam.entities.lists.ExamList;
+import com.frca.vsexam.entities.exam.Exam;
+import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.helper.Helper;
 
 /**
@@ -20,6 +20,7 @@ import com.frca.vsexam.helper.Helper;
 public class ExamAdapter extends ArrayAdapter<String> {
 
     private ExamList exams;
+    private Exam selectedExam;
 
     private static final int resourceLayout = R.layout.exam_list_item;
     private static final int displayField = R.id.layout;
@@ -27,10 +28,11 @@ public class ExamAdapter extends ArrayAdapter<String> {
 
     private SparseArray<View> existingViews = new SparseArray<View>();
 
-    public ExamAdapter(Context context, ExamList exams) {
+    public ExamAdapter(Context context, ExamList exams, Exam selectedExam) {
         super(context, resourceLayout);
         this.exams = exams;
         inflater = (LayoutInflater) getContext().getSystemService (Context.LAYOUT_INFLATER_SERVICE);
+        this.selectedExam = selectedExam;
     }
 
     @Override
@@ -41,43 +43,46 @@ public class ExamAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         View view = existingViews.get(position);
-        if (view == null) {
-            Object object = exams.getExamOrVoid(position);
-            if (object == null)
-                view = inflater.inflate(R.layout.list_header, null);
-            else if (object instanceof Exam.Group) {
-                Exam.Group group = (Exam.Group) object;
-                view = inflater.inflate(R.layout.list_header, null);
-                ((TextView)view).setText(group.getTitleRes());
-            }
-            if (object instanceof Exam) {
-                Exam exam = (Exam) object;
-                /*if (convertView != null && convertView instanceof LinearLayout)
-                    view = convertView;
-                else*/
-                    view = inflater.inflate(resourceLayout, null);
-
-                TextView text1 = (TextView)view.findViewById(R.id.text1);       // code
-                TextView text2 = (TextView)view.findViewById(R.id.text2);       // name
-                TextView text3 = (TextView)view.findViewById(R.id.text3);       // date
-                TextView text4 = (TextView)view.findViewById(R.id.text4);       // time
-
-                text1.setText(exam.getCourseCode());
-                text2.setText(exam.getCourseName());
-
-                if (TextUtils.isEmpty(exam.getCourseName()))
-                    text2.setText(String.valueOf(exam.getGroup()));
-
-                text3.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE));
-                text4.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.TIME));
-            }
-        }
+        if (view == null)
+            view = createCustomView(position);
 
         return view;
     }
 
+    private View createCustomView(int position) {
+        Object object = exams.getFromAdapter(position);
+        if (object == null) {
+            return inflater.inflate(R.layout.list_header, null);
+        } else if (object instanceof Exam.Group) {
+            Exam.Group group = (Exam.Group) object;
+            View view = inflater.inflate(R.layout.list_header, null);
+            ((TextView)view).setText(group.getTitleRes());
+            return view;
+        } else if (object instanceof Exam) {
+            Exam exam = (Exam) object;
+            View view = inflater.inflate(resourceLayout, null);
+
+            TextView text1 = (TextView)view.findViewById(R.id.text1);       // code
+            TextView text2 = (TextView)view.findViewById(R.id.text2);       // name
+            TextView text3 = (TextView)view.findViewById(R.id.text3);       // date
+            TextView text4 = (TextView)view.findViewById(R.id.text4);       // time
+
+            text1.setText(exam.getCourseCode());
+            text2.setText(exam.getCourseName());
+            text3.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE));
+            text4.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.TIME));
+
+            if (selectedExam == exam)
+                highlightView(view, true);
+
+            return view;
+        }
+
+        return null;
+    }
+
     public Exam getExam(final int position) {
-        Object obj = exams.getExamOrVoid(position);
+        Object obj = exams.getFromAdapter(position);
         if (obj instanceof Exam)
             return (Exam)obj;
         else
@@ -86,12 +91,45 @@ public class ExamAdapter extends ArrayAdapter<String> {
 
     @Override
     public boolean isEnabled(int position) {
-        return exams.getExamOrVoid(position) instanceof Exam;
+        return exams.getFromAdapter(position) instanceof Exam;
     }
 
-    @Override
+    public View getViewForExam(Exam exam) {
+        if (exam == null)
+            return null;
+
+        int position = exams.indexOf(exam);
+        int[] groupCounts = exams.getGroupCounts();
+        for (int i = 0; i <= exam.getGroup().toInt(); ++i)
+            if (groupCounts[i] > 0)
+                ++position;
+
+        return getView(position, null, null);
+    }
+
+    public void highlightExam(Exam exam, boolean apply) {
+        if (apply)
+            selectedExam = exam;
+
+        highlightView(getViewForExam(exam), apply);
+    }
+
+    public void highlightView(View view, boolean apply) {
+        if (view == null)
+            return;
+
+        if (apply) {
+            view.setBackgroundResource(R.color.white);
+            /*view.findViewById(R.id.layout_datetime).setBackgroundResource(R.drawable.invert_arrow_right_pos_right);*/
+        } else {
+            view.setBackgroundResource(R.color.standard_grey);
+            /*viewfindViewById(R.id.layout_datetime).setBackgroundResource(0);*/
+        }
+    }
+
+    /*@Override
     public void notifyDataSetChanged() {
         existingViews.clear();
         super.notifyDataSetChanged();
-    }
+    }*/
 }

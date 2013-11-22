@@ -1,13 +1,18 @@
-package com.frca.vsexam.entities.lists;
+package com.frca.vsexam.entities.exam;
 
 
-import android.widget.ArrayAdapter;
+import android.content.Context;
+import android.util.SparseArray;
 
-import com.frca.vsexam.entities.base.Exam;
-import com.frca.vsexam.entities.parsers.ExamParser;
+import com.frca.vsexam.context.MainActivity;
+import com.frca.vsexam.entities.base.BaseEntityList;
+import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.helper.AppSparseArray;
+import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.helper.ObjectMap;
+import com.frca.vsexam.helper.RegisteringService;
+import com.frca.vsexam.network.Response;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -20,13 +25,16 @@ import java.util.List;
 /**
  * Created by KillerFrca on 5.10.13.
  */
-public class ExamList extends ArrayList<Exam> {
+public class ExamList extends BaseEntityList<Exam> {
 
     private int[] groupCounts;
 
-    public ExamList(Elements elements) {
+    public ExamList() {
 
-        ExamParser parser = new ExamParser();
+    }
+
+    public void parseAndAdd(Context context, Elements elements) {
+        ExamParser parser = new ExamParser(context, this);
         for (Element element : elements) {
             if (element.className().equals("zahlavi")) {
                 if (parser.currentGroup == null)
@@ -61,10 +69,6 @@ public class ExamList extends ArrayList<Exam> {
         finalizeInit();
     }
 
-    private ExamList() {
-
-    }
-
     public ExamList filter(MatchChecker checker) {
         ExamList examList = new ExamList();
         for (Exam exam : this) {
@@ -78,13 +82,10 @@ public class ExamList extends ArrayList<Exam> {
     }
 
     private void finalizeInit() {
-        groupCounts = new int[Exam.Group.values().length];
-        for (Exam exam : this) {
-            ++groupCounts[exam.getGroup().toInt()];
-        }
+        setGroupCounts();
 
         if (groupCounts[0] != 0 && groupCounts[1] + groupCounts[2] != 0) {
-            for (int i = 0; i < groupCounts[0]; ++i) {
+            /*for (int i = 0; i < groupCounts[0]; ++i) {
                 Exam exam = get(i);
                 if (!exam.isRegistered())
                     continue;
@@ -96,10 +97,23 @@ public class ExamList extends ArrayList<Exam> {
 
                     altExam.setRegisteredOnId(exam.getId());
                 }
+            }*/
+
+            for (Exam exam : this) {
+                if (exam.isRegistered())
+                    notifyRegisteredExamChange(exam, true);
             }
         }
 
+
         sort();
+    }
+
+    private void setGroupCounts() {
+        groupCounts = new int[Exam.Group.values().length];
+        for (Exam exam : this) {
+            ++groupCounts[exam.getGroup().toInt()];
+        }
     }
 
     public List<String> getCourseNames() {
@@ -130,28 +144,27 @@ public class ExamList extends ArrayList<Exam> {
         });
     }
 
-    public Object getExamOrVoid(int position) {
+    public Object getFromAdapter(int position) {
         if (position >= getAdapterSize())
             return null;
 
         int counter = -1;
+        int groupHeaders = -1;
         for (int i = 0; i < Exam.Group.values().length; ++i) {
             if (groupCounts[i] > 0) {
-                if (++counter >= position)
+                ++groupHeaders;
+                if (++counter >= position) {
                     return Exam.Group.fromInt(i);
+                }
 
                 counter += groupCounts[i];
                 if (counter >= position)
-                    return get(position - i - 1);
+                    return get(position - groupHeaders - 1);
             }
 
         }
 
         return null;
-    }
-
-    public List<String> getExamClassNames() {
-        return Helper.getValue(this, "className", false);
     }
 
     public int getAdapterSize() {
@@ -167,38 +180,26 @@ public class ExamList extends ArrayList<Exam> {
         return count;
     }
 
-    public Exam getExamById(int id) {
-        for (Exam exam : this)
-            if (exam.getId() == id)
-                return exam;
-
-        return null;
+    public static interface MatchChecker {
+        boolean isMatch(Exam exam);
     }
 
-    public void setExamRegister(Exam exam, boolean apply, ArrayAdapter adapter) {
-        exam.setRegistered(apply);
+    public Exam createExam(Context context, int id) {
+        Exam exam = load(context, id);
+        if (exam == null)
+            exam = new Exam(id);
 
-        // update this
-        if (apply) {
-            if (exam.getRegisteredOnId() != 0) {
-                Exam registeredOn = getExamById(exam.getRegisteredOnId());
-                registeredOn.setRegistered(false);
-            }
-        }
-
-        // update others
-        List<Exam> courseExams = getSameCourseExams(exam, false);
-        int otherCourseRegisterOnId = apply ? exam.getId() : 0;
-        for (Exam courseExam : courseExams)
-            courseExam.setRegisteredOnId(otherCourseRegisterOnId);
-
-        sort();
-
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
+        return exam;
     }
 
-    private List<Exam> getSameCourseExams(Exam compareExam, boolean include) {
+    private void notifyRegisteredExamChange(Exam exam, boolean registered) {
+        List<Exam> exams = getSameExamCategory(exam, false);
+        int newId = registered ? exam.getId() : 0;
+        for (Exam otherExam : exams)
+            otherExam.setRegisteredOnId(newId);
+    }
+
+    private List<Exam> getSameExamCategory(Exam compareExam, boolean include) {
         List<Exam> list = new ArrayList<Exam>();
         for (Exam exam : this) {
             if (exam == compareExam) {
@@ -214,7 +215,61 @@ public class ExamList extends ArrayList<Exam> {
         return list;
     }
 
-    public static interface MatchChecker {
-        boolean isMatch(Exam exam);
+    public boolean onRegistrationResponse(Context context, Exam exam, Response response) {
+        if (response == null || response.getStatusCode() != 302)
+            return false;
+
+        exam.setRegistered(true);
+        exam.setToBeRegistered(context, false);
+
+        if (exam.getRegisteredOnId() != 0) {
+            Exam currentlyRegistered = find(exam.getRegisteredOnId());
+            if (currentlyRegistered != null)
+                currentlyRegistered.setRegistered(false);
+        }
+
+        notifyRegisteredExamChange(exam, true);
+
+        setGroupCounts();
+
+        sort();
+
+        BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
+        if (browserPaneFragment != null)
+            browserPaneFragment.updateView();
+
+        if (!(context instanceof RegisteringService)) {
+            SparseArray<RegisteringService> container = DataHolder.getInstance(context).getRegisteringServiceContainer();
+            synchronized (container) {
+                RegisteringService runningService = container.get(exam.getId());
+                if (runningService != null)
+                    runningService.stopSelf();
+            }
+        }
+
+        return true;
+    }
+
+    public boolean onUngistrationResponse(Exam exam, Response response) {
+        if (response == null || response.getStatusCode() != 200)
+            return false;
+
+        exam.setRegistered(false);
+
+        notifyRegisteredExamChange(exam, false);
+
+        setGroupCounts();
+
+        sort();
+
+        BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
+        if (browserPaneFragment != null)
+            browserPaneFragment.updateView();
+
+        return true;
+    }
+
+    public int[] getGroupCounts() {
+        return groupCounts;
     }
 }

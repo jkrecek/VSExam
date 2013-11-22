@@ -10,9 +10,19 @@
     <string name="registered">Registrován</string>
     <string name="unregistered">Neregistrován</string>
 
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_json_format">Get JSON format</string>
+
+    <string name="into_file">Do souboru</string>
+
     <string name="group_title_is_registered">Jste přihlášen</string>
     <string name="group_title_can_register">Můžete se registrovat</string>
     <string name="group_title_can_not_register">Nemůžete se registrovat</string>
+
+    <string name="action_register">Přihlásit</string>
+    <string name="action_unregister">Odhlásit</string>
+    <string name="action_registerASAP">Přihlásit co nejdříve</string>
+    <string name="action_cancel_registerASAP">Zrušit přihlášení co nejdříve</string>
 
     <!-- study fields -->
     <!-- 1. faculty -->

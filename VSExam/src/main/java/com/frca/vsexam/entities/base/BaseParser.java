@@ -1,4 +1,4 @@
-package com.frca.vsexam.entities.parsers;
+package com.frca.vsexam.entities.base;
 
 import android.text.TextUtils;
 
@@ -27,14 +27,6 @@ public abstract class BaseParser {
 
     protected Elements tempColumns;
     protected int currentColumn;
-
-    protected void init(Elements tempColumns) {
-
-    }
-
-    protected  void initDone() {
-
-    }
 
     public ParentEntity parse(Elements columns) {
         this.tempColumns = columns;
@@ -105,4 +97,5 @@ public abstract class BaseParser {
             super("Error while parsing element " + String.valueOf(currentColumn)+ ":\n" + error + "\n" + tempColumns.get(currentColumn).html());
         }
     }
+
 }

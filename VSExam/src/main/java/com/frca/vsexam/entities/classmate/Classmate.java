@@ -1,4 +1,6 @@
-package com.frca.vsexam.entities.base;
+package com.frca.vsexam.entities.classmate;
+
+import com.frca.vsexam.entities.base.ParentEntity;
 
 import java.util.Date;
 
@@ -8,8 +10,8 @@ public class Classmate extends ParentEntity {
     private Date registered;
     private String identification;
 
-    public  Classmate() {
-
+    protected Classmate(int id) {
+        super(id);
     }
 
     public String getName() {
