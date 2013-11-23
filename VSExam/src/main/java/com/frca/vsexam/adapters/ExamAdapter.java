@@ -1,7 +1,6 @@
 package com.frca.vsexam.adapters;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -20,8 +20,8 @@ import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ClassmateAdapter;
-import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.classmate.ClassmateList;
+import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;

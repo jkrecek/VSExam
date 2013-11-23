@@ -2,8 +2,6 @@ package com.frca.vsexam.entities.base;
 
 import android.text.TextUtils;
 
-import com.frca.vsexam.entities.base.ParentEntity;
-
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
