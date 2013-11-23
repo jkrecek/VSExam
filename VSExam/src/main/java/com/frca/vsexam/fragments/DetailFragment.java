@@ -294,7 +294,7 @@ public class DetailFragment extends BaseFragment {
         }
 
         private void runUnregistering() {
-            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, false);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
