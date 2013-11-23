@@ -186,6 +186,10 @@ public class DetailFragment extends BaseFragment {
                             return;
                         }
 
+                        if (response.getText() == null) {
+                            return;
+                        }
+
                         Document doc = Jsoup.parse(response.getText());
                         Elements elements = doc.body().select("table#studenti tbody tr");
 
