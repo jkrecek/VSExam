@@ -167,6 +167,16 @@ public class ExamList extends BaseEntityList<Exam> {
         return null;
     }
 
+    public int getAdapterPosition(Exam exam) {
+        int position = indexOf(exam);
+        int[] groupCounts = getGroupCounts();
+        for (int i = 0; i <= exam.getGroup().toInt(); ++i)
+            if (groupCounts[i] > 0)
+                ++position;
+
+        return position;
+    }
+
     public int getAdapterSize() {
         return size() + getGroupsFilled();
     }

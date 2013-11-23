@@ -116,9 +116,8 @@ public class BrowserPaneFragment extends BaseFragment {
                     }
                 });
             } else {
-                adapter.highlightExam(previouslySelected, false);
-                adapter.highlightExam(currentlySelected, true);
-                adapter.highlightView(view, true);
+                adapter.highlightExam(previouslySelected, mList, false);
+                adapter.highlightExam(currentlySelected, mList, true);
             }
         }
     }

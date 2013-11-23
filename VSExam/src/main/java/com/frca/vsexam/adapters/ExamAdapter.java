@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
@@ -94,27 +95,22 @@ public class ExamAdapter extends ArrayAdapter<String> {
         return exams.getFromAdapter(position) instanceof Exam;
     }
 
-    public View getViewForExam(Exam exam) {
+    public View getViewForExam(Exam exam, ListView listView) {
         if (exam == null)
             return null;
 
-        int position = exams.indexOf(exam);
-        int[] groupCounts = exams.getGroupCounts();
-        for (int i = 0; i <= exam.getGroup().toInt(); ++i)
-            if (groupCounts[i] > 0)
-                ++position;
-
-        return getView(position, null, null);
+        int position = exams.getAdapterPosition(exam);
+        return listView.getChildAt(position);
     }
 
-    public void highlightExam(Exam exam, boolean apply) {
+    public void highlightExam(Exam exam, ListView listView, boolean apply) {
         if (apply)
             selectedExam = exam;
 
-        highlightView(getViewForExam(exam), apply);
+        highlightView(getViewForExam(exam, listView), apply);
     }
 
-    public void highlightView(View view, boolean apply) {
+    private void highlightView(View view, boolean apply) {
         if (view == null)
             return;
 
