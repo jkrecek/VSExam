@@ -101,16 +101,12 @@ public abstract class Helper {
                 try {
                     sources[i] = originalListClass.getField(value);
                     break;
-                } catch (NoSuchFieldException e) {
-                    Log.v("extractValues", "No such field `" + value +"`");
-                }
+                } catch (NoSuchFieldException e) { }
 
                 try {
                     sources[i] = originalListClass.getMethod(value);
                     break;
-                } catch (NoSuchMethodException e) {
-                    Log.v("extractValues", "No such method `" + value +"`");
-                }
+                } catch (NoSuchMethodException e) { }
             }
 
             if (sources[i] == null) {
