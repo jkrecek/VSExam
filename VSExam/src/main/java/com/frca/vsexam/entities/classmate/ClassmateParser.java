@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element;
 public class ClassmateParser extends BaseParser {
 
     @Override
-    protected ParentEntity doParse() throws EntityParsingException {
+    protected ParentEntity doParse() {
         Element profile = getLinkFromColumn(2);
         int id = extractParameterFromLink(profile, "id");
 

@@ -1,6 +1,7 @@
 package com.frca.vsexam.entities.base;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -32,67 +33,94 @@ public abstract class BaseParser {
 
         try {
             return doParse();
-        } catch (EntityParsingException e) {
-            e.printStackTrace();
-            return null;
         } finally {
             this.tempColumns = null;
             currentColumn = 0;
         }
     }
 
-    protected abstract ParentEntity doParse() throws EntityParsingException;
+    protected abstract ParentEntity doParse();
 
-    protected String getColumnContent(int column, boolean stripHtml) throws EntityParsingException {
-        currentColumn = column;
-        Element element = getElement(column, "small");
-        if (stripHtml)
-            return element.text().trim();
-        else
-            return element.html().trim();
+    protected String getColumnContent(int column, boolean stripHtml) {
+        try {
+            currentColumn = column;
+            Element element = getElement(column, "small");
+            if (stripHtml)
+                return element.text().trim();
+            else
+                return element.html().trim();
+        } catch(Exception e) {
+            Log.d(getClass().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
-    protected Element getLinkFromColumn(int column) throws EntityParsingException {
+    protected Element getLinkFromColumn(int column) {
         currentColumn = column;
         return getElement(column, "small a");
     }
 
-    protected Element getElement(int column, String select) throws EntityParsingException {
-        Element element = tempColumns.get(column).select(select).first();
-        if (element != null)
-            return element;
-        else
-            throw new EntityParsingException("No such element `" + select + "`" );
-    }
-
-    protected int extractParameterFromLink(Element link, String parameter) throws EntityParsingException {
-        Pattern pattern = Pattern.compile(".*(?:" + parameter+ ")=(\\d*)");
-        String text = link.attr("href");
-        if (TextUtils.isEmpty(text))
-            throw new EntityParsingException("Element does not contain href");
-
-        Matcher matcher = pattern.matcher(text);
-        if (!matcher.find())
-            throw new EntityParsingException("Href doesn't contain such parameter");
-
-        return Integer.parseInt(matcher.group(1));
-    }
-
-    protected Date parseDate(String text) throws EntityParsingException {
+    protected Element getElement(int column, String select){
         try {
-            return PARSING_FORMAT.parse(text);
-        } catch (ParseException e) {
-            throw new EntityParsingException("Error while parsing time string: `"+ text + "`");
+            Element element = tempColumns.get(column).select(select).first();
+            if (element != null)
+                return element;
+            else
+                throw new EntityParsingException("No such element `" + select + "`" );
+        } catch (EntityParsingException e) {
+            Log.d(getClass().getName(), e.getMessage());
+            e.printStackTrace();
         }
+        return null;
     }
 
-    protected int UTCTimestamp(String text) throws EntityParsingException {
+    protected int extractParameterFromLink(Element link, String parameter) {
+        try {
+            Pattern pattern = Pattern.compile(".*(?:" + parameter+ ")=(\\d*)");
+            String text = link.attr("href");
+            if (TextUtils.isEmpty(text))
+                throw new EntityParsingException("Element does not contain href");
+
+            Matcher matcher = pattern.matcher(text);
+            if (!matcher.find())
+                throw new EntityParsingException("Href doesn't contain such parameter");
+
+            return Integer.parseInt(matcher.group(1));
+        } catch (Exception e) {
+            Log.d(getClass().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    protected Date parseDate(String text) {
+        try {
+            if (text.equals("--"))
+                return new Date(0L);
+
+            try {
+                return PARSING_FORMAT.parse(text);
+            } catch (ParseException e) {
+                throw new EntityParsingException("Error while parsing time string: `"+ text + "`");
+            }
+        } catch (Exception e) {
+            Log.d(getClass().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        return new Date(0L);
+    }
+
+    protected int UTCTimestamp(String text) {
         return (int)(parseDate(text).getTime()/1000L);
     }
 
     public class EntityParsingException extends Exception {
         public EntityParsingException(String error) {
-            super("Error while parsing element " + String.valueOf(currentColumn)+ ":\n" + error + "\n" + tempColumns.get(currentColumn).html());
+            super("Error while parsing element " + String.valueOf(currentColumn)+ ":\nError: " + error + "\nElement: " + tempColumns.get(currentColumn).html());
         }
     }
 

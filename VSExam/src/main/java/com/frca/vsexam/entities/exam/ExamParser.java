@@ -20,30 +20,39 @@ public class ExamParser extends BaseParser {
     }
 
     @Override
-    protected Exam doParse() throws EntityParsingException {
-        Element author = getLinkFromColumn(7);
-        String capacityString = getColumnContent(8, true);
-        String[] capacityParts = capacityString.split("/");
-        String registrationDates = getColumnContent(10, false);
-        String[] registrationParts = registrationDates.split("<br />");
-        Element info = getLinkFromColumn(11);
-        Element course = getLinkFromColumn(2);
-        int id = extractParameterFromLink(info, "termin");
+    protected Exam doParse() {
+        int id = extractParameterFromLink(getLinkFromColumn(11), "termin");
 
         Exam exam = parentList.createExam(context, id);
         exam.setCourseCode(getColumnContent(1, true));
+
+        Element course = getLinkFromColumn(2);
         exam.setCourseName(course.text().trim());
         exam.setCourseId(extractParameterFromLink(course, "predmet"));
+
         exam.setExamDate(parseDate(getColumnContent(4, true)));
         exam.setLocation(getColumnContent(5, true));
         exam.setType(getColumnContent(6, true));
+
+        Element author = getLinkFromColumn(7);
         exam.setAuthorId(extractParameterFromLink(author, "id"));
         exam.setAuthorName(author.text().trim());
+
+        String capacityString = getColumnContent(8, true).trim();
+        int idx = capacityString.indexOf(" ", 1);
+        if (idx > 0)
+            capacityString = capacityString.substring(0, idx);
+        String[] capacityParts = capacityString.split("/");
         exam.setCurrentCapacity(Integer.parseInt(capacityParts[0]));
         exam.setMaxCapacity(Integer.parseInt(capacityParts[1]));
+
+        String registrationDates = getColumnContent(10, false);
+        String[] registrationParts = registrationDates.split("<br />");
         exam.setRegisterStart(parseDate(registrationParts[0]));
         exam.setRegisterEnd(parseDate(registrationParts[1]));
         exam.setUnregisterEnd(parseDate(registrationParts[2]));
+
+        Element info = getLinkFromColumn(11);
         exam.setStudyId(extractParameterFromLink(info, "studium"));
         exam.setPeriodId(extractParameterFromLink(info, "obdobi"));
         exam.setGroup(currentGroup);
@@ -52,7 +61,7 @@ public class ExamParser extends BaseParser {
     }
 
     @Override
-    protected Element getElement(int column, String select) throws EntityParsingException {
+    protected Element getElement(int column, String select) {
         if (currentGroup == Exam.Group.CAN_REGISTER)
             ++column;
 

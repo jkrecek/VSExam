@@ -145,6 +145,9 @@ public abstract class Helper {
         if (date == null)
             return "";
 
+        if (date.getTime() == 0L)
+            return "--";
+
         SimpleDateFormat format;
         switch (outputType) {
             case DATE: format = DATE_FORMAT; break;
