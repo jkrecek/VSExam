@@ -89,14 +89,33 @@
 
                         </LinearLayout>
 
-                        <ImageButton android:id="@+id/button_author"
-                                     android:src="@android:drawable/ic_menu_send"
-                                     android:background="@null"
-                                     android:paddingLeft="10dp"
-                                     android:paddingRight="10dp"
-                                     android:layout_marginRight="10dp"
-                                     android:layout_width="wrap_content"
-                                     android:layout_height="match_parent"/>
+                        <View android:layout_height="match_parent"
+                              android:layout_width="1px"
+                              android:layout_marginTop="10dp"
+                              android:layout_marginBottom="10dp"
+                              android:layout_marginRight="5dp"
+                              android:background="@color/divider_light"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp">
+
+                            <ImageButton android:id="@+id/button_author"
+                                         android:src="@drawable/ic_browser"
+                                         android:background="?selectableItemBackground"
+                                         android:layout_width="wrap_content"
+                                         android:layout_height="match_parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:layout_marginLeft="10dp"
+                                android:text="Visit\nwebsite"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

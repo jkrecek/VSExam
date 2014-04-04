@@ -14,8 +14,9 @@ public class Exam extends ParentEntity {
 
     public enum Group {
         IS_REGISTERED(0, R.string.group_title_is_registered),
-        CAN_REGISTER(1, R.string.group_title_can_register),
-        CAN_NOT_REGISTER(2, R.string.group_title_can_not_register);
+        TO_BE_REGISTERED(1, R.string.group_title_to_be_registered),
+        CAN_REGISTER(2, R.string.group_title_can_register),
+        CAN_NOT_REGISTER(3, R.string.group_title_can_not_register);
 
         private int id;
         private int titleRes;
@@ -60,7 +61,6 @@ public class Exam extends ParentEntity {
     Group group;
 
     ClassmateList classmates;
-    private boolean toBeRegistered;
 
     Exam(int id) {
         super(id);
@@ -79,8 +79,9 @@ public class Exam extends ParentEntity {
     }
 
     public void setToBeRegistered(Context context, boolean toBeRegistered) {
-        if (this.toBeRegistered != toBeRegistered) {
-            this.toBeRegistered = toBeRegistered;
+        Group newGroup = toBeRegistered ? Group.TO_BE_REGISTERED : Group.CAN_REGISTER;
+        if (this.group != newGroup) {
+            this.group = newGroup;
             Helper.appendLog("Exam ROT is set to " + String.valueOf(toBeRegistered));
             if (toBeRegistered) {
                 saveToFile(context);
@@ -225,9 +226,9 @@ public class Exam extends ParentEntity {
         this.group = group;
     }
 
-    public boolean isToBeRegistered() {
+    /*public boolean isToBeRegistered() {
         return toBeRegistered;
-    }
+    }*/
 
     public int getCourseId() {
         return courseId;

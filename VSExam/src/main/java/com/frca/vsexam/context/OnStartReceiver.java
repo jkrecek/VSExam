@@ -19,7 +19,7 @@ public class OnStartReceiver extends BroadcastReceiver {
         ExamList examList = new ExamList();
         examList.loadSaved(context);
         for (Exam exam: examList) {
-            if (exam.isToBeRegistered())
+            if (exam.getGroup() == Exam.Group.TO_BE_REGISTERED)
                 RegisteringService.setExamRegister(context, exam);
         }
     }

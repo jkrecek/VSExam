@@ -142,7 +142,7 @@ public class DetailFragment extends BaseFragment {
         long timeUntilRegistration = exam.getRegisterStart().getTime() - currentServerTime;
 
         if (timeUntilRegistration > 0) {
-            if (!exam.isToBeRegistered())
+            if (exam.getGroup() != Exam.Group.TO_BE_REGISTERED)
                 setButton(button_left, new OnRegisterASAPClick(), true);
             else
                 setButton(button_left, new OnCancelRegisterASAPClick(), true);

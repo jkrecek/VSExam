@@ -2,6 +2,7 @@ package com.frca.vsexam.entities.exam;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.frca.vsexam.context.MainActivity;
@@ -18,8 +19,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -35,14 +38,13 @@ public class ExamList extends BaseEntityList<Exam> {
 
     public void parseAndAdd(Context context, Elements elements) {
         ExamParser parser = new ExamParser(context, this);
+        List<Exam.Group> parseGroups = Arrays.asList(Exam.Group.IS_REGISTERED, Exam.Group.CAN_REGISTER, Exam.Group.CAN_NOT_REGISTER);
+
+        Iterator<Exam.Group> iterator = parseGroups.iterator();
         for (Element element : elements) {
             if (element.className().equals("zahlavi")) {
-                if (parser.currentGroup == null)
-                    parser.currentGroup = Exam.Group.IS_REGISTERED;
-                else {
-                    int currentId = parser.currentGroup.toInt();
-                    parser.currentGroup = Exam.Group.fromInt(++currentId);
-                }
+                if (iterator.hasNext())
+                    parser.currentGroup = iterator.next();
                 continue;
             }
 
@@ -84,20 +86,8 @@ public class ExamList extends BaseEntityList<Exam> {
     private void finalizeInit() {
         setGroupCounts();
 
-        if (groupCounts[0] != 0 && groupCounts[1] + groupCounts[2] != 0) {
-            /*for (int i = 0; i < groupCounts[0]; ++i) {
-                Exam exam = get(i);
-                if (!exam.isRegistered())
-                    continue;
-
-                for (int altPos = groupCounts[0]; altPos < size(); ++altPos) {
-                    Exam altExam = get(altPos);
-                    if (altExam.isRegistered())
-                        continue;
-
-                    altExam.setRegisteredOnId(exam.getId());
-                }
-            }*/
+        if (groupCounts[Exam.Group.IS_REGISTERED.toInt()] != 0 &&
+            groupCounts[Exam.Group.CAN_REGISTER.toInt()] + groupCounts[Exam.Group.CAN_NOT_REGISTER.toInt()] != 0) {
 
             for (Exam exam : this) {
                 if (exam.isRegistered())
@@ -200,6 +190,9 @@ public class ExamList extends BaseEntityList<Exam> {
         Exam exam = load(context, id);
         if (exam == null)
             exam = new Exam(id);
+        else {
+            Log.e("LOAD", exam.getGroup().toString());
+        }
 
         return exam;
     }

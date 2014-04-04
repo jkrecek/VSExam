@@ -55,7 +55,9 @@ public class ExamParser extends BaseParser {
         Element info = getLinkFromColumn(11);
         exam.setStudyId(extractParameterFromLink(info, "studium"));
         exam.setPeriodId(extractParameterFromLink(info, "obdobi"));
-        exam.setGroup(currentGroup);
+
+        if (exam.getGroup() == null || exam.getGroup() != Exam.Group.TO_BE_REGISTERED)
+            exam.setGroup(currentGroup);
 
         return exam;
     }

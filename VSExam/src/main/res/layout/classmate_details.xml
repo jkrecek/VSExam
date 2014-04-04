@@ -35,7 +35,7 @@
                           android:layout_marginTop="0dp"
                           android:gravity="center"
                           android:id="@+id/text_name"
-                          android:text="Jan Křeček"/>
+                          tools:text="Jan Křeček"/>
 
                 <TextView style="@style/DataContent"
                           android:gravity="center"
@@ -65,7 +65,7 @@
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_programme"
-                      android:text="@string/p_em"/>
+                      tools:text="@string/p_em"/>
 
         </LinearLayout>
 
@@ -99,14 +99,30 @@
         <LinearLayout android:layout_height="wrap_content"
                       android:layout_width="match_parent"
                       android:orientation="horizontal"
+                      android:layout_marginTop="10dp"
                       android:gravity="center_vertical">
 
-            <ImageButton android:layout_height="wrap_content"
-                         android:layout_width="0dp"
-                         android:layout_weight="1"
-                         android:id="@+id/button_mail"
-                         android:background="?selectableItemBackground"
-                         android:src="@drawable/mail_icon"/>
+            <LinearLayout android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="1"
+                          android:paddingLeft="10dp"
+                          android:layout_gravity="center"
+                          android:gravity="left|center_vertical"
+                          android:orientation="horizontal">
+
+                <ImageButton android:layout_height="match_parent"
+                             android:layout_width="wrap_content"
+                             android:id="@+id/button_mail"
+                             android:background="?selectableItemBackground"
+                             android:src="@drawable/ic_send_mail"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:gravity="center"
+                          android:layout_marginLeft="10dp"
+                          android:text="Send\nmail"/>
+
+            </LinearLayout>
 
             <View android:layout_height="match_parent"
                   android:layout_width="1px"
@@ -114,12 +130,27 @@
                   android:layout_marginBottom="5dp"
                   android:background="@color/divider_light"/>
 
-            <ImageButton android:layout_height="match_parent"
-                         android:layout_width="0dp"
-                         android:layout_weight="1"
-                         android:id="@+id/button_goto"
-                         android:background="?selectableItemBackground"
-                         android:src="@android:drawable/ic_menu_send"/>
+            <LinearLayout android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="1"
+                          android:paddingLeft="10dp"
+                          android:layout_gravity="center"
+                          android:gravity="left|center_vertical"
+                          android:orientation="horizontal">
+
+                <ImageButton android:layout_height="match_parent"
+                             android:layout_width="wrap_content"
+                             android:id="@+id/button_goto"
+                             android:background="?selectableItemBackground"
+                             android:src="@drawable/ic_browser"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:gravity="center"
+                          android:layout_marginLeft="10dp"
+                          android:text="Visit\nwebsite"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

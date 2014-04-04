@@ -16,7 +16,8 @@ import java.util.regex.Pattern;
 
 public class StudyProgramParser {
 
-    private static final Pattern pattern = Pattern.compile("([A-Z]{3}) ([A-Z])-([A-Z]*)-([A-Z]*)(?:-([0-9][A-Z]*))? ([a-z]*) \\[[a-z]* ([0-9]{1,2}), ([A-Z]*)\\]");
+    //private static final Pattern pattern = Pattern.compile("([A-Z]{3}) ([A-Z])-([A-Z]*)-([A-Z]*)(?:-([0-9][A-Z]*))? ([a-z]*) \\[[a-z]* ([0-9]{1,2}), ([A-Z]*)\\]");
+    private static final Pattern pattern = Pattern.compile("([A-Z]{3}) ([A-Z])-([A-Z]+)-([A-Z]+)-?[0-9]?([A-Z]*)? ([a-z]*) \\[[a-z]* ([0-9]{1,2}), ([A-Z]*)\\]");
 
     private static final String EMPTY_STRING = "";
 

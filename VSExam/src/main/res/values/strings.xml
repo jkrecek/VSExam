@@ -16,6 +16,7 @@
     <string name="into_file">Do souboru</string>
 
     <string name="group_title_is_registered">Jste přihlášen</string>
+    <string name="group_title_to_be_registered">Budete přihlášen</string>
     <string name="group_title_can_register">Můžete se registrovat</string>
     <string name="group_title_can_not_register">Nemůžete se registrovat</string>
 
