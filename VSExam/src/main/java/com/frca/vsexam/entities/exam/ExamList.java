@@ -121,12 +121,14 @@ public class ExamList extends BaseEntityList<Exam> {
     }
 
     public AppSparseArray<String> getCourses() {
-        List<ObjectMap> maps = Helper.getValuesMap(this, new String[] { "courseId", "courseName" }, true);
         AppSparseArray<String> sparseArray = new AppSparseArray<String>();
-        for (ObjectMap map : maps) {
-            int id = (Integer)map.get("courseId");
-            String value = (String) map.get("courseName");
-            sparseArray.put(id, value);
+        List<ObjectMap> maps = Helper.getValuesMap(this, new String[] { "courseId", "courseName" }, true);
+        if (maps != null) {
+            for (ObjectMap map : maps) {
+                int id = (Integer)map.get("courseId");
+                String value = (String) map.get("courseName");
+                sparseArray.put(id, value);
+            }
         }
         return sparseArray;
     }

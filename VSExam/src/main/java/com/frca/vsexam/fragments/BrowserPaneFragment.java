@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ExamAdapter;
@@ -31,6 +32,8 @@ public class BrowserPaneFragment extends BaseFragment {
     private SlidingPaneLayout mSlidingLayout;
 
     private ListView mList;
+
+    private TextView mListEmptyText;
 
     private LinearLayout mContent;
 
@@ -55,6 +58,7 @@ public class BrowserPaneFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         mSlidingLayout = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane);
         mList = (ListView) rootView.findViewById(R.id.left_pane);
+        mListEmptyText = (TextView) rootView.findViewById(R.id.left_pane_empty_text);
         mContent = (LinearLayout) rootView.findViewById(R.id.layout_details);
         mActionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
 
@@ -152,14 +156,25 @@ public class BrowserPaneFragment extends BaseFragment {
     }
 
     private void updateActionBarAdapter() {
-        adapter = new ExamAdapter(getActivity(), exams.filter(new ExamList.MatchChecker() {
-            @Override
-            public boolean isMatch(Exam exam) {
-                return currentCourseId == -1 || exam.getCourseId() == currentCourseId;
-            }
-        }), currentlySelected);
+        if (!exams.isEmpty()) {
+            adapter = new ExamAdapter(getActivity(), exams.filter(new ExamList.MatchChecker() {
+                @Override
+                public boolean isMatch(Exam exam) {
+                    return currentCourseId == -1 || exam.getCourseId() == currentCourseId;
+                }
+            }), currentlySelected);
 
-        mList.setAdapter(adapter);
+            mList.setAdapter(adapter);
+            mList.setVisibility(View.VISIBLE);
+            mListEmptyText.setVisibility(View.GONE);
+        } else {
+            mList.setVisibility(View.GONE);
+            mListEmptyText.setVisibility(View.VISIBLE);
+            if (currentCourseId == -1)
+                mListEmptyText.setText("V tomto období zatím nemáte žádné zkoušky.");
+            else
+                mListEmptyText.setText("Zadanému filtru neodpovídají žádné zkoušky.");
+        }
 
         if (mList.getOnItemClickListener() == null) {
             mList.setOnItemClickListener(new ListItemClickListener());

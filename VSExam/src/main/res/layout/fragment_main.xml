@@ -2,17 +2,33 @@
 
 <android.support.v4.widget.SlidingPaneLayout
               xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/sliding_pane"
               android:layout_width="match_parent"
               android:background="@color/standard_grey"
               android:layout_height="match_parent">
 
-    <ListView android:id="@+id/left_pane"
-              android:layout_width="@dimen/sliding_pane_width"
-              android:layout_height="match_parent"
-              android:divider="@color/divider_light"
-              android:dividerHeight="1dp"
-              android:layout_gravity="start" />
+    <FrameLayout
+        android:layout_width="@dimen/sliding_pane_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" >
+
+        <ListView android:id="@+id/left_pane"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:divider="@color/divider_light"
+                  android:dividerHeight="1dp"
+                  tools:visibility="gone"/>
+
+        <TextView android:id="@+id/left_pane_empty_text"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone"
+                  tools:gravity="center"
+                  tools:visibility="visible"
+                  tools:text="Zadanému filtru neodpovídají žádné zkoušky"/>
+
+    </FrameLayout>
 
     <FrameLayout android:id="@+id/container"
                 android:layout_width="400dp"
