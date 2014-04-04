@@ -302,7 +302,7 @@ public class DetailFragment extends BaseFragment {
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
-                    if (getBrowserPaneFragment().getExams().onUngistrationResponse(exam, response)) {
+                    if (getBrowserPaneFragment().getExams().onUnregistrationResponse(exam, response)) {
                         Toast.makeText(getActivity(), "Odhlášení úspěšné", Toast.LENGTH_LONG).show();
                         Helper.appendLog("Unregister success!");
                     } else {

@@ -262,7 +262,7 @@ public class ExamList extends BaseEntityList<Exam> {
         return true;
     }
 
-    public boolean onUngistrationResponse(Exam exam, Response response) {
+    public boolean onUnregistrationResponse(Exam exam, Response response) {
         if (response == null || response.getStatusCode() != 200)
             return false;
 

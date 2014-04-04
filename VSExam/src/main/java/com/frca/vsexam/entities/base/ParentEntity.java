@@ -52,7 +52,7 @@ public class ParentEntity implements Serializable, Cloneable {
                     oos.close();
                 if (fos != null)
                     fos.close();
-                if (keep == false)
+                if (!keep)
                     context.deleteFile(filename);
             } catch (Exception e) {
                 /* do nothing */
