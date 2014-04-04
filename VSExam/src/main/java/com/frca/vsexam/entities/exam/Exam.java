@@ -64,7 +64,6 @@ public class Exam extends ParentEntity {
 
     Exam(int id) {
         super(id);
-        toBeRegistered = false;
         registeredOnId = 0;
     }
 
@@ -81,6 +80,7 @@ public class Exam extends ParentEntity {
 
     public void setToBeRegistered(Context context, boolean toBeRegistered) {
         if (this.toBeRegistered != toBeRegistered) {
+            this.toBeRegistered = toBeRegistered;
             Helper.appendLog("Exam ROT is set to " + String.valueOf(toBeRegistered));
             if (toBeRegistered) {
                 saveToFile(context);
@@ -90,8 +90,6 @@ public class Exam extends ParentEntity {
                 RegisteringService.cancelExamRegister(context, this);
             }
         }
-
-        this.toBeRegistered = toBeRegistered;
     }
 
     @Override
