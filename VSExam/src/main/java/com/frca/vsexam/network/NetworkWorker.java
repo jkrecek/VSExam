@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.text.ParseException;
+import java.util.Date;
 
 /**
  * Created by KillerFrca on 26.10.13.
@@ -53,6 +54,7 @@ public class NetworkWorker {
                 throw new UnsupportedOperationException("Response type must be Text or Bitmap");
 
             response.setServerTime(httpResponse.getFirstHeader("Date").getValue());
+            response.setResponseTime(new Date());
 
         } catch (IOException e) {
             Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`" +

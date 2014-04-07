@@ -30,7 +30,8 @@ public class Response {
     private Type type;
 
     private Date serverTime;
-    private Date localTime;
+    private Date requestTime;
+    private Date responseTime;
     private long contentLength;
 
     private Boolean isValid = null;
@@ -43,7 +44,7 @@ public class Response {
     }
 
     public Response() {
-        localTime = new Date();
+        requestTime = new Date();
     }
 
     public static String parseText(InputStream is, Charset charset) throws IOException {
@@ -140,24 +141,36 @@ public class Response {
         return serverTime;
     }
 
-    public Date getLocalTime() {
-        return localTime;
+    public Date getRequestTime() {
+        return requestTime;
     }
 
-    public void setLocalTime(Date localTime) {
-        this.localTime = localTime;
+    public void setRequestTime(Date requestTime) {
+        this.requestTime = requestTime;
     }
 
     public long getServerLocalTimeDiff() {
         if (serverTime != null)
-            return serverTime.getTime() - localTime.getTime();
+            return serverTime.getTime() - requestTime.getTime();
 
         return 0L;
     }
 
+    public Date getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(Date responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    public long getDuration() {
+        return responseTime.getTime() - requestTime.getTime();
+    }
+
     public boolean isValid() {
         if (isValid == null)
-            isValid = type != null && (text != null || bitmap != null) && localTime != null && serverTime != null;
+            isValid = type != null && (text != null || bitmap != null) && requestTime != null && serverTime != null;
 
         return isValid;
     }

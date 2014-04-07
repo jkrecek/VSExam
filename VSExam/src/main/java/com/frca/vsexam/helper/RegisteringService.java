@@ -36,6 +36,7 @@ public class RegisteringService extends Service {
     public static final String EXTRA_PERFORM_NOW = "perform_now";
 
     public static final int REQUEST_TIME_DIFF_MS = 300;
+    public static final int REQUEST_TIME_SPAM_SPREAD = 10000;
 
     private Exam exam;
     private ExamList examList;
@@ -113,7 +114,6 @@ public class RegisteringService extends Service {
     }
 
     private void runRegistering() throws InterruptedException {
-        long startTime = System.currentTimeMillis();
         Helper.appendLog("Preparing premature request");
         Response response = dataHolder.getNetworkInterface().execute(getRegisterRequest(), Response.Type.TEXT);
         if (examList.onRegistrationResponse(this, exam, response)) {
@@ -123,25 +123,20 @@ public class RegisteringService extends Service {
             return;
         }
 
-        long serverTime = response.getServerTime().getTime();
-        long serverTimeToReg = exam.getRegisterStart().getTime() - serverTime;
-        Helper.appendLog("Actual registering will start in " + String.valueOf(serverTimeToReg / 1000L));
-        if (serverTimeToReg > 0) {
-            long delay = System.currentTimeMillis() - startTime;
-            long timeToReg = serverTimeToReg - delay;
-            if (timeToReg > 5000) {
-                Thread.sleep(timeToReg - 5000);
-            }
+        long msUntilRegistration = exam.getRegisterStart().getTime() - response.getServerTime().getTime() - response.getDuration();
+        Helper.appendLog("Actual registering will start in " + String.valueOf(msUntilRegistration / 1000L) + " (" + msUntilRegistration + "ms) seconds.");
+        long timerReduction = response.getDuration() * 2 + REQUEST_TIME_SPAM_SPREAD;
+        long timeToSleep = msUntilRegistration - timerReduction;
+        if (timeToSleep > 0) {
+            Helper.appendLog("Process will wait for " + String.valueOf(timeToSleep) + " ms now");
+            Thread.sleep(timeToSleep);
         } else
             Helper.appendLog("Request starting should start ASAP");
 
         Helper.appendLog("Actual request sending starting now");
 
-
-        // now spam registering
-        startTime = System.currentTimeMillis();
-        while(!exam.isRegistered() &&
-            System.currentTimeMillis() - startTime < 15000) { // try only for 15 seconds tops
+        long timerExtraDuration = timerReduction + REQUEST_TIME_SPAM_SPREAD;
+        while(!exam.isRegistered()) {
 
             final TextNetworkTask task = new TextNetworkTask(this, getRegisterRequest());
             task.setResponseCallback(new BaseNetworkTask.ResponseCallback() {
@@ -155,12 +150,20 @@ public class RegisteringService extends Service {
                     } else {
                         Helper.appendLog("Register unsuccessful");
                     }
+
+                    if (!thread.isAlive() && tasks.isEmpty())
+                        stopSelf();
                 }
             });
 
+            Helper.appendLog("Starting new task");
+
             tasks.add(task);
             BaseNetworkTask.run(task);
-            Helper.appendLog("Starting new task");
+
+            if (dataHolder.getNetworkInterface().getCurrentServerTime() > (exam.getRegisterStart().getTime() + timerExtraDuration))
+                break;
+
             Thread.sleep(REQUEST_TIME_DIFF_MS);
         }
     }
