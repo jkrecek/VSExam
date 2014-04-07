@@ -141,11 +141,12 @@ public class DetailFragment extends BaseFragment {
         long currentServerTime = DataHolder.getInstance(getActivity()).getNetworkInterface().getCurrentServerTime();
         long timeUntilRegistration = exam.getRegisterStart().getTime() - currentServerTime;
 
+        if (exam.getGroup() == Exam.Group.TO_BE_REGISTERED)
+            setButton(button_left, new OnCancelRegisterASAPClick(), true);
+        else
+            setButton(button_left, new OnRegisterASAPClick(), timeUntilRegistration > 0);
+
         if (timeUntilRegistration > 0) {
-            if (exam.getGroup() != Exam.Group.TO_BE_REGISTERED)
-                setButton(button_left, new OnRegisterASAPClick(), true);
-            else
-                setButton(button_left, new OnCancelRegisterASAPClick(), true);
 
             boolean registrationSoon = timeUntilRegistration - (60 * 1000) < 0;
             setButton(button_right, new OnRegisterClick(), registrationSoon);
@@ -159,8 +160,6 @@ public class DetailFragment extends BaseFragment {
                 }, timeUntilRegistration - (30 * 1000));
             }
         } else {
-            setButton(button_left, new OnRegisterASAPClick(), false);
-
             if (!exam.isRegistered())
                 setButton(button_right, new OnRegisterClick(), true);
             else
