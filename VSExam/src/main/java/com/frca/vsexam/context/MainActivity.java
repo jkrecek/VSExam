@@ -136,26 +136,22 @@ public class MainActivity extends ActionBarActivity {
                             String result;
                             BufferedWriter buf = null;
                             try {
-                                String fileName = "/sdcard/vsexam_data_" + String.valueOf(System.currentTimeMillis() / 1000L) + ".json";
-                                File logFile = new File(fileName);
-                                if (!logFile.exists())
-                                    logFile.createNewFile();
-
+                                File logFile = Helper.getDataDirectoryFile("data", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "json");
                                 buf = new BufferedWriter(new FileWriter(logFile, false));
                                 buf.append(exam_json);
                                 buf.close();
-                                result = "Succesfully dumped into file `" + fileName + "`";
+                                result = "Succesfully dumped into file `" + logFile.getPath() + "`";
                             } catch (Exception e) {
+                                e.printStackTrace();
                                 result = e.getMessage();
                             }
 
                             Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
                         }
                     }).create().show();
-                    break;
-                }
-
-                case R.id.action_refresh: {
+                break;
+            }
+            case R.id.action_refresh: {
                 setFragment(new LoadingFragment());
                 break;
             }
@@ -165,7 +161,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFragment instanceof BaseFragment)
+        if (currentFragment != null)
             if (currentFragment.onBackPressed())
                 return;
 

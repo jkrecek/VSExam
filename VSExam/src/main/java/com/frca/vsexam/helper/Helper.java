@@ -1,5 +1,7 @@
 package com.frca.vsexam.helper;
 
+import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -258,20 +260,15 @@ public abstract class Helper {
 
     private static String logFileName = null;
     public static synchronized void appendLog(String text) {
-        if (logFileName == null)
-            logFileName = "/sdcard/vsexam_" + String.valueOf(System.currentTimeMillis()/1000L) + ".file";
-
-        File logFile = new File(logFileName);
-        if (!logFile.exists()) {
-            try {
-                logFile.createNewFile();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         try {
+            File logFile;
+            if (logFileName == null) {
+                logFile = getDataDirectoryFile("log", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "log");
+                logFileName = logFile.getPath();
+            } else {
+                logFile = new File(logFileName);
+            }
+
             BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
             Log.d("TRACE_DEBUG", text);
             buf.append(getDateOutput(new Date(), DateOutputType.FULL) + ":  " + text);
@@ -281,6 +278,20 @@ public abstract class Helper {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static File getDataDirectoryFile(String subDir, String filename, String fileType) throws IOException {
+        String path = Environment.getExternalStorageDirectory().getPath() + "/VSExam/";
+        if (!TextUtils.isEmpty(subDir))
+            path += subDir + "/";
+
+        path += filename + "." + fileType;
+        File file = new File(path);
+        file.getParentFile().mkdirs();
+        if (file.exists())
+            file.createNewFile();
+
+        return file;
     }
 
 }

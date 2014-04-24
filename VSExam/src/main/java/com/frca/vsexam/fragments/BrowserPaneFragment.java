@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ExamAdapter;
