@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -55,18 +56,23 @@ public class ExamList extends BaseEntityList<Exam> {
             add((Exam)parser.parse(columns));
         }
 
-        /*Random random = new Random();
-        int times[] = new int[] {1383325200, 1383328800, 1383332400, 1383321600, 1383318000 };
-        for (int time : times) {
-            Exam exam = new Exam();
-            Exam.Group group = Exam.Group.fromInt(random.nextInt(2));
-            exam.setGroup(group);
+        finalizeInit();
+    }
+
+    public void addTestExams(Context context) {
+        long day = 86400000;
+        int times[] = new int[5];
+        for (int i = 0; i < times.length; ++i) {
+            Exam exam = createExam(context, 1000 + i);
+
+            exam.setGroup(Exam.Group.CAN_REGISTER);
             exam.setCourseName("Státní zkouška ze studijního oboru");
             exam.setCourseCode("PHM");
             exam.setType("zkouška (ústní)");
-            exam.setExamDate(new Date(time*1000L));
+            exam.setRegisterStart(new Date(System.currentTimeMillis() + (-2 + i) * day));
+            exam.setExamDate(new Date(System.currentTimeMillis() + day));
             add(exam);
-        }*/
+        }
 
         finalizeInit();
     }

@@ -134,7 +134,7 @@ public class MainActivity extends ActionBarActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
                             String result;
-                            BufferedWriter buf = null;
+                            BufferedWriter buf;
                             try {
                                 File logFile = Helper.getDataDirectoryFile("data", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "json");
                                 buf = new BufferedWriter(new FileWriter(logFile, false));
