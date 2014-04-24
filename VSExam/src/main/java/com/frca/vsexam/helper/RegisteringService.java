@@ -176,7 +176,7 @@ public class RegisteringService extends Service {
 
             tasks.add(task);
             BaseNetworkTask.run(task);
-        } while(!exam.isRegistered() && ++loopCounter < 100 && dataHolder.getNetworkInterface().getCurrentServerTime() > endTime);
+        } while(!exam.isRegistered() && ++loopCounter < 100 && dataHolder.getNetworkInterface().getCurrentServerTime() < endTime);
     }
 
     private void notifyUserOnPrepare() {
