@@ -256,7 +256,7 @@ public class RegisteringService extends Service {
         NetworkInterface networkInterface = DataHolder.getInstance(context).getNetworkInterface();
 
         long targetInMillis = exam.getRegisterStart().getTime() - networkInterface.getLastServerLocalTimeDiff();
-        targetInMillis -= 30 * 1000;
+        targetInMillis -= 45 * 1000;
         long startInMillis = targetInMillis - System.currentTimeMillis();
 
         Helper.appendLog("Exam name: " + exam.getCourseName());
