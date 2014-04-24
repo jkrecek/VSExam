@@ -3,15 +3,10 @@ package com.frca.vsexam.entities.base;
 import android.content.Context;
 import android.util.Log;
 
-import com.frca.vsexam.entities.exam.Exam;
-
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-/**
- * Created by KillerFrca on 16.10.13.
- */
 public class ParentEntity implements Serializable, Cloneable {
 
     protected int id;
@@ -39,7 +34,6 @@ public class ParentEntity implements Serializable, Cloneable {
 
         try {
             isKeptLocally = true;
-            Log.e("SAVE", ((Exam)this).getGroup().toString());
             object = (ParentEntity) clone();
             object.removeUnsavedValues();
             fos = context.openFileOutput(filename, Context.MODE_PRIVATE);

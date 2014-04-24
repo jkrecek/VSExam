@@ -2,7 +2,6 @@ package com.frca.vsexam.entities.exam;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.frca.vsexam.context.MainActivity;
@@ -62,6 +61,7 @@ public class ExamList extends BaseEntityList<Exam> {
     public void addTestExams(Context context) {
         long day = 86400000;
         int times[] = new int[5];
+        long ms = System.currentTimeMillis();
         for (int i = 0; i < times.length; ++i) {
             Exam exam = createExam(context, 1000 + i);
 
@@ -69,8 +69,12 @@ public class ExamList extends BaseEntityList<Exam> {
             exam.setCourseName("Státní zkouška ze studijního oboru");
             exam.setCourseCode("PHM");
             exam.setType("zkouška (ústní)");
-            exam.setRegisterStart(new Date(System.currentTimeMillis() + (-2 + i) * day));
-            exam.setExamDate(new Date(System.currentTimeMillis() + day));
+            long regStart = ms + (-2 + i) * day  + 2 * 60 * 1000;
+            regStart /= 60000;
+            regStart *= 60000;
+
+            exam.setRegisterStart(new Date(regStart));
+            exam.setExamDate(new Date(regStart + 2 * day));
             add(exam);
         }
 
@@ -196,9 +200,6 @@ public class ExamList extends BaseEntityList<Exam> {
         Exam exam = load(context, id);
         if (exam == null)
             exam = new Exam(id);
-        else {
-            Log.e("LOAD", exam.getGroup().toString());
-        }
 
         return exam;
     }
