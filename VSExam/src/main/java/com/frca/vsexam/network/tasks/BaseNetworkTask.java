@@ -8,9 +8,6 @@ import com.frca.vsexam.network.Response;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
-/**
- * Created by KillerFrca on 26.10.13.
- */
 public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
     protected final DataHolder dataHolder;
     protected final Response.Type responseType;

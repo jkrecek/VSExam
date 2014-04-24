@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -34,7 +35,8 @@ public class RegisteringService extends Service {
     public static final String EXTRA_ID = "id";
     public static final String EXTRA_PERFORM_NOW = "perform_now";
 
-    public static final int REQUEST_TIME_DIFF_MS = 300;
+    public static final int REQUEST_TIME_MIN_DIFF_MS = 250;
+    public static final int REQUEST_TIME_MAX_DIFF_MS = 500;
     public static final int REQUEST_TIME_SPAM_SPREAD = 10000;
 
     private Exam exam;
@@ -80,6 +82,8 @@ public class RegisteringService extends Service {
                     container.put(exam.getId(), this);
                 }
             }
+
+            notifyUserOnPrepare();
             thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -117,7 +121,7 @@ public class RegisteringService extends Service {
         Helper.appendLog("Preparing premature request");
         Response response = dataHolder.getNetworkInterface().execute(getRegisterRequest(), Response.Type.TEXT);
         if (examList.onRegistrationResponse(this, exam, response)) {
-            notifyUser();
+            notifyUserOnSuccess();
             Helper.appendLog("Register success!");
             stopSelf();
             return;
@@ -136,16 +140,17 @@ public class RegisteringService extends Service {
 
         Helper.appendLog("-- REGISTRATION PROCESS STARTING");
 
-        long timerExtraDuration = timerReduction + REQUEST_TIME_SPAM_SPREAD;
-        final long endTime = exam.getRegisterStart().getTime() + timerExtraDuration;
+        final long endTime = exam.getRegisterStart().getTime() + response.getDuration() * 2;
         long duration = endTime - System.currentTimeMillis();
         Helper.appendLog("Registration process duration: " + String.valueOf(duration / 1000L) + "sec (" + String.valueOf(duration) + "ms).");
         Helper.appendLog("Registration process end: " + Helper.getDateOutput(endTime, Helper.DateOutputType.FULL));
 
+        notifyUserOnStart();
+        final long sleepTimer = Math.max(REQUEST_TIME_MIN_DIFF_MS, Math.min(REQUEST_TIME_MAX_DIFF_MS, response.getDuration() / 10));
         int loopCounter = 0;
         do {
             if (loopCounter > 0)
-                Thread.sleep(REQUEST_TIME_DIFF_MS);
+                Thread.sleep(sleepTimer);
 
             final TextNetworkTask task = new TextNetworkTask(this, getRegisterRequest());
             task.setResponseCallback(new BaseNetworkTask.ResponseCallback() {
@@ -153,15 +158,17 @@ public class RegisteringService extends Service {
                 public void onSuccess(Response response) {
                     tasks.remove(task);
                     if (examList.onRegistrationResponse(RegisteringService.this, exam, response)) {
-                        notifyUser();
                         Helper.appendLog("Register success!");
+                        notifyUserOnSuccess();
                         stopSelf();
                     } else {
                         Helper.appendLog("Register unsuccessful");
+                        if (!thread.isAlive() && tasks.isEmpty()) {
+                            notifyUserOnFailure();
+                            stopSelf();
+                            // TODO add on failure method? maybe remove exam from TO_BE_REGISTERED group
+                        }
                     }
-
-                    if (!thread.isAlive() && tasks.isEmpty())
-                        stopSelf();
                 }
             });
 
@@ -172,27 +179,69 @@ public class RegisteringService extends Service {
         } while(!exam.isRegistered() && ++loopCounter < 100 && dataHolder.getNetworkInterface().getCurrentServerTime() > endTime);
     }
 
-    private void notifyUser() {
+    private void notifyUserOnPrepare() {
+        setNotification(
+            "Počátek registrace",
+            "Během několika vteřin začne registrace předmětu " + exam.getCourseName() +
+                ". Prosíme, aby jste v následujících chvílích nevytěžovali své zařízení, ať zvýšite pravděpodobnost úspěšné registrace."
+        );
+    }
+
+    private void notifyUserOnStart() {
+        setNotification(
+            "Probíhá registrace",
+            "Probíhá registrace předmětu " + exam.getCourseName() +
+                ". Prosíme, udržujte Vaše v klidu, ať zvýšite pravděpodobnost úspěšné registrace."
+        );
+    }
+
+    private void notifyUserOnSuccess() {
+        setNotification(
+            "Příhlášen na termín",
+            "Byl jste přihlášen na termín předmětu " + exam.getCourseName() +
+                " dne " + Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE_TIME) + "."
+        );
+    }
+
+    private void notifyUserOnFailure() {
+        setNotification(
+            "Neúspěšné přihlášení",
+            "Bohužel jste nebyl příhlášen na termín předmětu " + exam.getCourseName() +
+                ". Důvodem bylo značné vytížení školních serverů, které způsobilo špatné zpracování přihlašovacích požadavků. Za způsobené škody se omlouváme."
+        );
+
+    }
+
+    private void setNotification(String title, String message) {
+        setNotification(title, message, 0);
+    }
+
+    private void setNotification(String title, String message, int iconResource) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(iconResource != 0 ? iconResource : R.drawable.ic_launcher);
+        builder.setContentTitle(title);
+        builder.setContentText(message);
+        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT );
+        builder.setContentIntent(resultPendingIntent);
+
+        getNotificationManager().notify(exam.getId(), builder.build());
+
         if (MainActivity.getInstance() != null) {
-            Toast.makeText(getApplicationContext(), "Přihlášení bylo úspěšné", Toast.LENGTH_LONG).show();
-        } else {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-            builder.setSmallIcon(R.drawable.ic_launcher)
-                    .setContentTitle("Příhlášen na termín")
-                    .setContentText("Byl jste přihlášen na termín předmětu " + exam.getCourseName() +
-                        " dne " + Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE_TIME) + ".");
-
-            Intent resultIntent = new Intent(this, MainActivity.class);
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(MainActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT );
-            builder.setContentIntent(resultPendingIntent);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(exam.getId(), builder.build());
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private NotificationManager getNotificationManager() {
+        return (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     private HttpRequestBase getRegisterRequest() {
