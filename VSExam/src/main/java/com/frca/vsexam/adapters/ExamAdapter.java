@@ -14,9 +14,6 @@ import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.helper.Helper;
 
-/**
- * Created by KillerFrca on 5.10.13.
- */
 public class ExamAdapter extends ArrayAdapter<String> {
 
     private ExamList exams;

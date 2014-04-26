@@ -20,18 +20,20 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Created by KillerFrca on 3.10.13.
- */
 public class HttpRequestBuilder {
 
     public final static String KEY_LOGIN = "key_login";
 
     public final static String KEY_PASSWORD = "key_password";
 
-    public final static String BASE_URL = "https://isis.vse.cz/auth/";
+    public final static String AUTH_BASE_URL = "https://isis.vse.cz/auth/";
+
+    public final static String UNAUTH_BASE_URL = "https://isis.vse.cz/";
 
     public final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36";
 
@@ -41,6 +43,8 @@ public class HttpRequestBuilder {
 
     private String partialUrl;
 
+    private boolean authorized;
+
     private AbstractHttpEntity entity;
 
     private HttpRequestBase request = null;
@@ -49,18 +53,29 @@ public class HttpRequestBuilder {
         this(DataHolder.getInstance(context), partialUrl);
     }
 
-    public HttpRequestBuilder(DataHolder dataHolder,  String partialUrl) {
+    private HttpRequestBuilder(DataHolder dataHolder,  String partialUrl) {
         this.dataHolder = dataHolder;
         this.partialUrl = partialUrl;
     }
 
-    public HttpRequestBase build() throws NoAuthException {
+    public static HttpRequestBuilder getAuthorizedRequestBuilder(DataHolder dataHolder,  String partialUrl) {
+        HttpRequestBuilder builder = new HttpRequestBuilder(dataHolder, partialUrl);
+        builder.authorized = true;
+        return builder;
+    }
 
+    public static HttpRequestBuilder getUnAuthorizedRequestBuilder(DataHolder dataHolder,  String partialUrl) {
+        HttpRequestBuilder builder = new HttpRequestBuilder(dataHolder, partialUrl);
+        builder.authorized = false;
+        return builder;
+    }
+
+    public HttpRequestBase build() throws NoAuthException {
         if (request != null)
             return request;
 
         try {
-            request = requestType.getDeclaredConstructor(String.class).newInstance(completeURLString(partialUrl));
+            request = requestType.getDeclaredConstructor(String.class).newInstance(completeURLString(partialUrl, authorized));
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -73,7 +88,8 @@ public class HttpRequestBuilder {
 
         request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         request.setHeader("Host", "isis.vse.cz");
-        request.setHeader("Authorization", getB64Auth());
+        if (authorized)
+            request.setHeader("Authorization", getB64Auth());
         request.setHeader("Accept-Encoding", "gzip,deflate,sdch");
         request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
         request.setHeader("Connection", "keep-alive");
@@ -108,7 +124,7 @@ public class HttpRequestBuilder {
     }
 
     private String getHost() {
-        String host = BASE_URL;
+        String host = authorized ? AUTH_BASE_URL : UNAUTH_BASE_URL;
         if (host.startsWith("https://"))
             host = host.substring(7);
 
@@ -116,23 +132,24 @@ public class HttpRequestBuilder {
         return host;
     }
 
-    public static String completeURLString(String url) {
+    public static String completeURLString(String url, boolean authorized) {
         if (url.startsWith("https://"))
             return url;
 
         boolean slashPartial = (int)url.charAt(0) == 0x2f;
-        if (isBaseUrlSlashEnding() && slashPartial)
-            url = BASE_URL + url.substring(1);
-        else if (isBaseUrlSlashEnding() || slashPartial)
-            url = BASE_URL + url;
+        String prependUrl = authorized ? AUTH_BASE_URL : UNAUTH_BASE_URL;
+        if (isSlashEnding(prependUrl) && slashPartial)
+            url = prependUrl + url.substring(1);
+        else if (isSlashEnding(prependUrl) || slashPartial)
+            url = prependUrl + url;
         else
-            url = BASE_URL + "/" + url;
+            url = prependUrl + "/" + url;
 
         return url;
     }
 
-    public static boolean isBaseUrlSlashEnding() {
-        return (int)BASE_URL.charAt(BASE_URL.length()-1) == 0x2f;
+    public static boolean isSlashEnding(String url) {
+        return (int)url.charAt(url.length()-1) == 0x2f;
     }
 
     public boolean isBuilt() {
@@ -147,7 +164,7 @@ public class HttpRequestBuilder {
             e.printStackTrace();
         }*/
 
-        HttpRequestBuilder builder = new HttpRequestBuilder(holder, "student/terminy_prihlaseni.pl");
+        HttpRequestBuilder builder = HttpRequestBuilder.getAuthorizedRequestBuilder(holder, "student/terminy_prihlaseni.pl");
 
         try {
             List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -178,5 +195,47 @@ public class HttpRequestBuilder {
         }
 
         return null;
+    }
+
+    public void setGetArguments(Map<String, String> urlParameters, char nameValueSeparator, char argSeparator) {
+        StringBuilder sb = new StringBuilder();
+        Iterator itr = urlParameters.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry entry = (Map.Entry) itr.next();
+            sb.append(entry.getKey());
+            sb.append(nameValueSeparator);
+            sb.append(entry.getValue());
+
+            if (itr.hasNext())
+                sb.append(argSeparator);
+        }
+
+        int idx = partialUrl.indexOf("?");
+        if (idx >= 0)
+            partialUrl = partialUrl.substring(0, partialUrl.indexOf("?"));
+
+        partialUrl += "?" + sb.toString();
+    }
+
+    public static Map<String, String> getGetArguments(String url, char nameValueSeparator, char argSeparator) {
+        String args = url.substring(url.indexOf("?")+1);
+        String[] argParts = args.split(String.valueOf(argSeparator));
+        Map<String, String> result = new HashMap<String, String>();
+        for (String part : argParts) {
+            int idx = part.indexOf(nameValueSeparator);
+            result.put(part.substring(0, idx), part.substring(idx+1));
+        }
+
+        return result;
+    }
+
+    public static HttpRequestBase getPlanRequest(DataHolder holder, Map<String, String> urlParameters) {
+        HttpRequestBuilder builder = HttpRequestBuilder.getUnAuthorizedRequestBuilder(holder, "katalog/plany.pl");
+        builder.setGetArguments(urlParameters, '=', ';');
+        try {
+            return builder.build();
+        } catch (NoAuthException e) {
+            return null;
+        }
     }
 }

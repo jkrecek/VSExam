@@ -1,21 +1,17 @@
 package com.frca.vsexam.network;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
+
+import com.frca.vsexam.helper.Helper;
 
 import org.apache.http.Header;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,68 +29,61 @@ public class Response {
     private Date requestTime;
     private Date responseTime;
     private long contentLength;
+    private HttpRequestBase request;
 
-    private Boolean isValid = null;
+    private boolean complete;
 
-    private Map<String, String> headers;
+    private Map<String, String> responseHeaders;
 
     public enum Type {
         TEXT,
         BITMAP
     }
 
-    public Response() {
+    public Response(HttpRequestBase request) {
         requestTime = new Date();
+        complete = false;
+        this.request = request;
     }
 
-    public static String parseText(InputStream is, Charset charset) throws IOException {
-
-        String result;
-        ByteArrayOutputStream baos;
-
-        baos = new ByteArrayOutputStream();
+    public static byte[] readInputStream(InputStream is) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int length;
         try {
             while ((length = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, length);
-                /*Log.e("ParsedBytes", String.valueOf(baos.size()));*/
+                outputStream.write(buffer, 0, length);
             }
         } finally {
             is.close();
         }
 
-        result = baos.toString(charset.name());
-
-        saveToFile(result, "file_" + String.valueOf(new Date().getTime()) + ".txt");
-        saveToFile(result, "file_" + String.valueOf(new Date().getTime()) + ".html");
-
-        return result;
-
+        return outputStream.toByteArray();
     }
 
-    private static void saveToFile(String text, String filename) {
-        FileOutputStream stream = null;
-        try {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
-            stream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream);
-            outputStreamWriter.write(text);
-            outputStreamWriter.close();
+    public void logToFile() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("-- REQUEST\n");
+        builder.append(Helper.outputRequest(request));
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+        builder.append("\n\n-- RESPONSE HEADERS\n");
+        builder.append(Helper.outputResponseHeaders(getResponseHeaders()));
 
-    public static Bitmap parseBitmap(InputStream is) throws IOException {
-        try {
-            return BitmapFactory.decodeStream(is);
-        } finally {
-            is.close();
-        }
+        builder.append("\n\n-- RESPONSE CONTENT\n");
+        if (text != null)
+            builder.append(text);
+        else if (bitmap != null)
+            builder.append("<-- bitmap -->");
+        else
+            builder.append("null");
+
+        String filename = request.getURI().getPath().substring(1).replaceAll("/|\\.", "-");
+        filename += "_" + String.valueOf(System.currentTimeMillis() / 1000L);
+        Helper.writeToFile(
+            builder.toString(),
+            Helper.getDataDirectoryFile("http", filename, "log"),
+            false
+        );
     }
 
     public void setStatusCode(int statusCode) {
@@ -168,13 +157,6 @@ public class Response {
         return responseTime.getTime() - requestTime.getTime();
     }
 
-    public boolean isValid() {
-        if (isValid == null)
-            isValid = type != null && (text != null || bitmap != null) && requestTime != null && serverTime != null;
-
-        return isValid;
-    }
-
     public long getContentLength() {
         return contentLength;
     }
@@ -183,27 +165,32 @@ public class Response {
         this.contentLength = contentLength;
     }
 
-    public void setHeaders(Header[] headers) {
-        this.headers = new HashMap<String, String>();
-        for (Header header : headers) {
-            String value = header.getValue();
-            if (this.headers.containsKey(header.getName()))
-                value = this.headers.get(header.getName()) + " | " + value;
+    public HttpRequestBase getRequest() {
+        return request;
+    }
 
-            this.headers.put(header.getName(), value);
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void markComplete() {
+        this.complete = true;
+    }
+
+    public void setResponseHeaders(Header[] responseHeaders) {
+        this.responseHeaders = new HashMap<String, String>();
+        for (Header header : responseHeaders) {
+            String value = header.getValue();
+            if (this.responseHeaders.containsKey(header.getName()))
+                value = this.responseHeaders.get(header.getName()) + " | " + value;
+
+            this.responseHeaders.put(header.getName(), value);
         }
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
+    public Map<String, String> getResponseHeaders() {
+        return responseHeaders;
     }
 
-    public String getHeadersString() {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : headers.entrySet())
-            sb.append(entry.getKey() + ": " + entry.getValue() + "\n");
-
-        return sb.toString();
-    }
 }
 

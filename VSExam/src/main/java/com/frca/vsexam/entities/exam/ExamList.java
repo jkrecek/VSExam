@@ -25,9 +25,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by KillerFrca on 5.10.13.
- */
 public class ExamList extends BaseEntityList<Exam> {
 
     private int[] groupCounts;

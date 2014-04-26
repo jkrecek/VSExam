@@ -1,6 +1,9 @@
 package com.frca.vsexam.network.tasks;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
@@ -9,11 +12,23 @@ import com.frca.vsexam.network.Response;
 import org.apache.http.client.methods.HttpRequestBase;
 
 public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
+
+    public enum Result {
+        ERROR,
+        CANCELED,
+        SUCCESS
+    }
+
     protected final DataHolder dataHolder;
     protected final Response.Type responseType;
 
     protected ResponseCallback responseCallback;
+    protected FinishCallback finishCallback;
     protected HttpRequestBase request;
+
+    public HttpRequestBase getRequest() {
+        return request;
+    }
 
     public BaseNetworkTask(DataHolder dataHolder, String url, ResponseCallback responseCallback, ExceptionCallback exceptionCallback, Response.Type responseType) {
         this.responseCallback = responseCallback;
@@ -21,7 +36,7 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         this.responseType = responseType;
 
         try {
-            this.request = new HttpRequestBuilder(dataHolder, url).build();
+            this.request = HttpRequestBuilder.getAuthorizedRequestBuilder(dataHolder, url).build();
         } catch (Exception e) {
             exceptionCallback.onException(e);
             cancel(true);
@@ -47,14 +62,24 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         return dataHolder.getNetworkInterface().execute(request, responseType);
     }
 
-    final protected void onPostExecute(Response result) {
-        if (isCancelled())
-            return;
+    final protected void onPostExecute(Response response) {
+         if (!isCancelled()) {
 
-        onFinish(result);
+            onFinish(response);
 
-        if (result != null && responseCallback != null)
-            responseCallback.onSuccess(result);
+            if (response != null && responseCallback != null)
+                responseCallback.onSuccess(response);
+        }
+
+        if (finishCallback != null) {
+            Result result = Result.SUCCESS;
+            if (response == null)
+                result = Result.ERROR;
+            else if (isCancelled())
+                result = Result.CANCELED;
+
+            finishCallback.onFinish(result);
+        }
     }
 
     protected void onFinish(Response result) {
@@ -65,12 +90,21 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         this.request = request;
     }
 
-    public static void run(BaseNetworkTask task) {
-        task.execute();
+    public static void run(final BaseNetworkTask task) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
     }
 
     public void setResponseCallback(ResponseCallback responseCallback) {
         this.responseCallback = responseCallback;
+    }
+
+    public void setFinishCallback(FinishCallback finishCallback) {
+        this.finishCallback = finishCallback;
     }
 
     public static interface ResponseCallback {
@@ -79,5 +113,9 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
 
     public static interface ExceptionCallback {
         abstract void onException(Exception e);
+    }
+
+    public static interface FinishCallback {
+        abstract void onFinish(Result result);
     }
 }

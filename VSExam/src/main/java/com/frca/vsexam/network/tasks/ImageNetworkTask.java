@@ -34,9 +34,8 @@ public class ImageNetworkTask extends BaseNetworkTask {
     }
 
     protected void setBaseRequest(String partialUrl) {
-        String url = HttpRequestBuilder.completeURLString(partialUrl);
         try {
-            request = new HttpRequestBuilder(dataHolder, url).build();
+            request = HttpRequestBuilder.getAuthorizedRequestBuilder(dataHolder, partialUrl).build();
         } catch (NoAuthException e) {
             e.printStackTrace();
         }
@@ -55,7 +54,7 @@ public class ImageNetworkTask extends BaseNetworkTask {
 
     @Override
     protected void onFinish(Response result) {
-        if (result.isValid())
+        if (result.isComplete())
             finishOnViews(result.getBitmap());
     }
 

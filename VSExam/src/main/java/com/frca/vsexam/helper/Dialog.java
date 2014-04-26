@@ -20,9 +20,6 @@ import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 import java.text.ParseException;
 
-/**
- * Created by KillerFrca on 21.10.13.
- */
 public abstract class Dialog {
 
     public static void ClassmateDetails(final Context context, final int userId, String username, String studyDetails) {
@@ -78,7 +75,7 @@ public abstract class Dialog {
             goTo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(userId));
+                    String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(userId), true);
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorUrl));
                     context.startActivity(browserIntent);
                 }

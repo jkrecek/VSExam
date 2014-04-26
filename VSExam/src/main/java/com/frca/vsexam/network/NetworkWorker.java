@@ -1,6 +1,6 @@
 package com.frca.vsexam.network;
 
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.http.AndroidHttpClient;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,14 +12,9 @@ import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
 import java.text.ParseException;
 import java.util.Date;
 
-/**
- * Created by KillerFrca on 26.10.13.
- */
 public class NetworkWorker {
 
     private AndroidHttpClient client;
@@ -33,40 +28,36 @@ public class NetworkWorker {
     }
 
     public Response execute(HttpRequestBase request, Response.Type type) {
-        Response response = new Response();
+        Response response = new Response(request);
         try {
             httpResponse = client.execute(request);
             HttpEntity entity = httpResponse.getEntity();
             response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
             response.setContentLength(entity.getContentLength());
-            Log.d("execute", "Response content length: " + String.valueOf(entity.getContentLength()));
-            response.setHeaders(httpResponse.getAllHeaders());
-
-            if (type == Response.Type.TEXT) {
-                Charset charset = Charset.forName(EntityUtils.getContentCharSet(entity));
-                String text = Response.parseText(entity.getContent(), charset);
-                Log.d("execute", "Parsed response text: " + String.valueOf(text.length()));
-                response.setText(text);
-            } else if (type == Response.Type.BITMAP) {
-                Bitmap bitmap = Response.parseBitmap(entity.getContent());
-                response.setBitmap(bitmap);
-            } else
-                throw new UnsupportedOperationException("Response type must be Text or Bitmap");
-
+            byte[] content = Response.readInputStream(entity.getContent());
+            response.setResponseHeaders(httpResponse.getAllHeaders());
             response.setServerTime(httpResponse.getFirstHeader("Date").getValue());
             response.setResponseTime(new Date());
 
+            if (content.length != response.getContentLength())
+                throw new IOException("Partial content received (" + content.length + " of " + response.getContentLength() + " bytes)");
+
+            if (type == Response.Type.TEXT) {
+                response.setText(new String(content, EntityUtils.getContentCharSet(entity)));
+            } else if (type == Response.Type.BITMAP) {
+                response.setBitmap(BitmapFactory.decodeByteArray(content, 0, content.length));
+            } else
+                throw new UnsupportedOperationException("Response type must be Text or Bitmap");
+
+            response.markComplete();
         } catch (IOException e) {
-            Log.e(getClass().getName(), "Error while executing http request on url `" + request.getURI() + "`" +
-                (TextUtils.isEmpty(e.getMessage()) ? "." : ", error: `" + e.getMessage() + "`"));
-        } catch (IllegalCharsetNameException e) {
-            Log.e(getClass().getName(), "Unknown charset sent `" + e.getMessage() + "`");
+            Log.e(getClass().getName(), "Network error: " + (TextUtils.isEmpty(e.getMessage()) ? "." : "`" + e.getMessage() + "`") + "\n" + request.getURI());
         } catch (ParseException e) {
-            Log.e(getClass().getName(), "Unable to parse Http Date Header, `" + e.getMessage() + "`");
+            Log.e(getClass().getName(), "Unable to parse http date header. " + e.getMessage());
         } catch (DateParseException e) {
-            Log.e(getClass().getName(), "Unable to parse Date, `" + e.getMessage() + "`");
+            Log.e(getClass().getName(), "Unable to parse date. " + e.getMessage());
         } catch (UnsupportedOperationException e) {
-            Log.e(getClass().getName(), "Unsupported operation: , `" + e.getMessage() + "`");
+            Log.e(getClass().getName(), "Unsupported operation. " + e.getMessage());
         }
 
         return response;

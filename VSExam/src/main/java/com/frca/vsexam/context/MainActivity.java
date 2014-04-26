@@ -23,14 +23,13 @@ import com.frca.vsexam.fragments.BaseFragment;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
+import com.frca.vsexam.fragments.TestFragment;
+import com.frca.vsexam.helper.AppConfig;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.google.gson.Gson;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
@@ -48,7 +47,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
-        if (preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD)) {
+        if (AppConfig.LAUNCH_TEST_FRAGMENT) {
+            setFragment(new TestFragment());
+        } else if (preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD)) {
             setFragment(new LoadingFragment());
         } else {
             setFragment(new LoginFragment());
@@ -122,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
                 final String exam_json = sb.toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Exam Jsons")
+                builder.setTitle("Exam output")
                     .setMessage(exam_json)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -133,18 +134,13 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
-                            String result;
-                            BufferedWriter buf;
-                            try {
-                                File logFile = Helper.getDataDirectoryFile("data", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "json");
-                                buf = new BufferedWriter(new FileWriter(logFile, false));
-                                buf.append(exam_json);
-                                buf.close();
-                                result = "Succesfully dumped into file `" + logFile.getPath() + "`";
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                result = e.getMessage();
-                            }
+
+                            String result = Helper.writeToFile(exam_json,
+                                Helper.getDataDirectoryFile("data", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "json"),
+                                false);
+
+                            if (result == null)
+                                result = "Successfully saved into file.";
 
                             Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
                         }
@@ -171,10 +167,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void setActionBarAdapter(List<String> values) {
@@ -185,8 +178,8 @@ public class MainActivity extends ActionBarActivity {
         } else {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            ArrayAdapter<String> aAdpt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
-            actionBar.setListNavigationCallbacks(aAdpt, new ActionBarAdapterClickListener());
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            actionBar.setListNavigationCallbacks(adapter, new ActionBarAdapterClickListener());
         }
 
     }
@@ -210,7 +203,6 @@ public class MainActivity extends ActionBarActivity {
 
         return null;
     }
-
 
     public static ExamList getLoadedExams() {
         BrowserPaneFragment fragment = getBrowserPaneFragment();

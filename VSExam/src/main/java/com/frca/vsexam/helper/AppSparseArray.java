@@ -5,9 +5,6 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by KillerFrca on 18.11.13.
- */
 public class AppSparseArray<E> extends SparseArray<E> {
     public List<E> getValues() {
         List<E> l = new ArrayList<E>();

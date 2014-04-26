@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by KillerFrca on 21.11.13.
- */
 public class BaseEntityList<T extends ParentEntity> extends ArrayList<T> {
 
     protected T getFromFile(Context context, int id) {

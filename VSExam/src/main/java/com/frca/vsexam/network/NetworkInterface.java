@@ -3,7 +3,8 @@ package com.frca.vsexam.network;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.fragments.TestFragment;
+import com.frca.vsexam.helper.AppConfig;
 
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
@@ -19,6 +20,8 @@ public class NetworkInterface {
 
     private final static int CLIENT_COUNT = 5;
 
+    private final static int MAX_ATTEMPTS = 3;
+
     static HttpParams httpClientParams = new BasicHttpParams();
 
     static {
@@ -26,7 +29,6 @@ public class NetworkInterface {
         HttpConnectionParams.setSoTimeout(httpClientParams, TIMEOUT_MS);
         HttpClientParams.setRedirecting(httpClientParams, false);
     }
-
 
     private NetworkWorker[] networkWorkers = new NetworkWorker[CLIENT_COUNT];
 
@@ -76,16 +78,23 @@ public class NetworkInterface {
 
     public Response execute(HttpRequestBase request, Response.Type type) {
         Log.d("Currently Processing", request.getURI().toString());
-        if (type == Response.Type.TEXT)
-            Helper.dumpRequest(request);
 
         NetworkWorker networkWorker = getFreeClient();
+        Response response = null;
+        for (int i = 0; i < MAX_ATTEMPTS && (response == null || !response.isComplete()); ++i) {
+            response = networkWorker.execute(request, type);
+        }
+
         try {
-            Response response = networkWorker.execute(request, type);
-            if (response.getServerTime() != null)
-                lastServerLocalTimeDiff = response.getServerLocalTimeDiff();
             return response;
         } finally {
+            if (response != null) {
+                if (response.getServerTime() != null)
+                    lastServerLocalTimeDiff = response.getServerLocalTimeDiff();
+                if (AppConfig.LOG_HTTP_PACKETS)
+                    response.logToFile();
+            }
+
             freeClient(networkWorker);
         }
     }

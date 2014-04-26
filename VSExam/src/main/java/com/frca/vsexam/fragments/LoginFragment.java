@@ -16,9 +16,6 @@ import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
-/**
- * Created by KillerFrca on 11.10.13.
- */
 public class LoginFragment extends BaseFragment {
     public LoginFragment() {
     }

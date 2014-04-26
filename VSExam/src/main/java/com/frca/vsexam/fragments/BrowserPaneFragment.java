@@ -22,9 +22,6 @@ import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.helper.AppSparseArray;
 
-/**
- * Created by KillerFrca on 11.10.13.
- */
 public class BrowserPaneFragment extends BaseFragment {
 
     private ExamList exams;

@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by KillerFrca on 18.11.13.
- */
 public class ObjectMap extends HashMap<String, Object> {
     @Override
     public boolean equals(Object o) {

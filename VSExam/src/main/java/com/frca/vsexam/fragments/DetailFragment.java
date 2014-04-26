@@ -106,7 +106,7 @@ public class DetailFragment extends BaseFragment {
         button_author.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(exam.getAuthorId()));
+                String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(exam.getAuthorId()), true);
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorUrl));
                 startActivity(browserIntent);
             }

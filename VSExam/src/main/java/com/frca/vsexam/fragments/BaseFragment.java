@@ -6,9 +6,6 @@ import android.util.Log;
 
 import com.frca.vsexam.context.MainActivity;
 
-/**
- * Created by KillerFrca on 14.10.13.
- */
 public abstract class BaseFragment extends Fragment {
 
     @Override

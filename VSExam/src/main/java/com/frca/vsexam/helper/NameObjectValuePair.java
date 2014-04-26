@@ -1,8 +1,5 @@
 package com.frca.vsexam.helper;
 
-/**
- * Created by KillerFrca on 18.11.13.
- */
 public class NameObjectValuePair  {
     private String name;
     private Object value;

@@ -5,9 +5,6 @@ import com.frca.vsexam.entities.base.ParentEntity;
 
 import org.jsoup.nodes.Element;
 
-/**
- * Created by KillerFrca on 29.10.13.
- */
 public class ClassmateParser extends BaseParser {
 
     @Override

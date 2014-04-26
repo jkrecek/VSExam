@@ -57,9 +57,7 @@ public class LoadingFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_loading, container, false);
         messageField = (TextView) rootView.findViewById(R.id.textView);
         if (!TextUtils.isEmpty(message))
@@ -96,7 +94,7 @@ public class LoadingFragment extends BaseFragment {
 
                     @Override
                     public void onSuccess(Response response) {
-                        if (!response.isValid()) {
+                        if (!response.isComplete()) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle("Error").setMessage("Error while accesing exam data, do you want to try again?")
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

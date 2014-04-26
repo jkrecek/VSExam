@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 public abstract class Helper {
@@ -201,9 +202,8 @@ public abstract class Helper {
         return div;
     }
 
-    public static void dumpRequest(HttpRequest request) {
+    public static String outputRequest(HttpRequest request) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Dumping http request\n");
         sb.append(request.getRequestLine().getMethod() + " " + request.getRequestLine().getUri() + " " + request.getRequestLine().getProtocolVersion().toString() + "\n");
 
         for (Header header : request.getAllHeaders())
@@ -220,13 +220,18 @@ public abstract class Helper {
 
             try {
                 sb.append("Content: " + EntityUtils.toString(entity) + "\n");
-            } catch (IOException e) {
-                Log.e("ERROR_DUMPING", "Error:" + e.getMessage());
-                e.printStackTrace();
-            }
+            } catch (IOException e) { }
         }
 
-        Log.d("REQUEST_DUMP", sb.toString());
+        return sb.toString();
+    }
+
+    public static String outputResponseHeaders(Map<String, String> request) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : request.entrySet())
+            sb.append(entry.getKey() + ": " + entry.getValue() + "\n");
+
+        return sb.toString();
     }
 
     private static String[] dayPart = new String[] { "den", "dny", "dní" };
@@ -259,28 +264,38 @@ public abstract class Helper {
     }
 
     private static String logFileName = null;
-    public static synchronized void appendLog(String text) {
-        try {
-            File logFile;
-            if (logFileName == null) {
-                logFile = getDataDirectoryFile("log", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "log");
-                logFileName = logFile.getPath();
-            } else {
-                logFile = new File(logFileName);
-            }
 
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            Log.d("TRACE_DEBUG", text);
-            buf.append(getDateOutput(new Date(), DateOutputType.FULL) + ":  " + text);
-            buf.newLine();
-            buf.close();
+    public static synchronized void appendLog(String text) {
+        File logFile;
+        if (logFileName == null) {
+            logFile = getDataDirectoryFile("log", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "log");
+            logFileName = logFile.getPath();
+        } else {
+            logFile = new File(logFileName);
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Log.d("Log", text);
+        writeToFile(getDateOutput(new Date(), DateOutputType.FULL) + ":  " + text, logFile, true);
     }
 
-    public static File getDataDirectoryFile(String subDir, String filename, String fileType) throws IOException {
+    public static String writeToFile(String content, File file, boolean append) {
+        try {
+            if (file.exists())
+                file.createNewFile();
+
+            BufferedWriter buf = new BufferedWriter(new FileWriter(file, append));
+            buf.append(content);
+            buf.newLine();
+            buf.close();
+            return null;
+        } catch (IOException e) {
+            Log.e("File Write", "Cannot write to file " + file.getPath() + "\nError: " + e.getMessage());
+            return e.getMessage();
+        }
+
+    }
+
+    public static File getDataDirectoryFile(String subDir, String filename, String fileType) {
         String path = Environment.getExternalStorageDirectory().getPath() + "/VSExam/";
         if (!TextUtils.isEmpty(subDir))
             path += subDir + "/";
@@ -288,10 +303,13 @@ public abstract class Helper {
         path += filename + "." + fileType;
         File file = new File(path);
         file.getParentFile().mkdirs();
-        if (file.exists())
-            file.createNewFile();
 
         return file;
     }
 
+    public static void sleepThread(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) { }
+    }
 }

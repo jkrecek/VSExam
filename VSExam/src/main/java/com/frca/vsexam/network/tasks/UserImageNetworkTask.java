@@ -48,7 +48,7 @@ public class UserImageNetworkTask extends ImageNetworkTask {
 
     @Override
     protected void onFinish(Response response) {
-        if (response.isValid()) {
+        if (response.isComplete()) {
             SparseArray<Bitmap> bitmapContainer = dataHolder.getBitmapContainer();
             if (bitmapContainer.get(userId) == null)
                 bitmapContainer.put(userId, response.getBitmap());
@@ -57,4 +57,3 @@ public class UserImageNetworkTask extends ImageNetworkTask {
         super.onFinish(response);
     }
 }
-
