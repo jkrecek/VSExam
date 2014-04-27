@@ -28,7 +28,7 @@ public class HttpRequestBuilder {
 
     public final static String UNAUTH_BASE_URL = "https://isis.vse.cz/";
 
-    public final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36";
+    public final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36";
 
     private final DataHolder dataHolder;
 
