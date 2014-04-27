@@ -55,7 +55,7 @@ public class Response {
                 outputStream.write(buffer, 0, length);
             }
         } finally {
-            is.close();
+            Helper.close(is);
         }
 
         return outputStream.toByteArray();

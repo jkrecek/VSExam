@@ -2,6 +2,8 @@ package com.frca.vsexam.entities.base;
 
 import android.content.Context;
 
+import com.frca.vsexam.helper.Helper;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
@@ -30,8 +32,8 @@ public class BaseEntityList<T extends ParentEntity> extends ArrayList<T> {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            try { fis.close(); } catch (Exception e) { }
-            try { is.close(); } catch (Exception e) { }
+            Helper.close(fis);
+            Helper.close(is);
         }
 
         return object;
