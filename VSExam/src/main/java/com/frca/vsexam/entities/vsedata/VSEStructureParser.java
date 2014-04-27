@@ -1,9 +1,10 @@
-package com.frca.vsexam.helper;
+package com.frca.vsexam.entities.vsedata;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.frca.vsexam.fragments.TestFragment;
+import com.frca.vsexam.helper.DataHolder;
+import com.frca.vsexam.network.HttpRequest;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -22,84 +23,28 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StudyData {
-
-    public static class BaseStudyDataElement {
-        private List<String> codes = new ArrayList<String>();
-        public String name;
-
-        public void addCode(String code) {
-            if (!codes.contains(code))
-                codes.add(code);
-        }
-    }
-
-    public static class Faculty extends BaseStudyDataElement {
-        public int id;
-        public List<StudyType> types = new ArrayList<StudyType>();
-    }
-
-    public static class StudyType extends BaseStudyDataElement {
-        public List<Programme> programmes = new ArrayList<Programme>();
-        public List<Specialization> specializations = new ArrayList<Specialization>();
-    }
-
-    public static class Programme extends BaseStudyDataElement {
-        public List<Field> fields = new ArrayList<Field>();
-    }
-
-    public static class Specialization extends BaseStudyDataElement { }
-
-    public static class Field extends BaseStudyDataElement { }
-
-    enum Plan {
-        OTHERS(5, new int[] {1, 2, 4}),
-        DOC(23, new int[] {3});
-
-        public int mId;
-        public int[] mPlans;
-        private Plan(int id, int[] plans) {
-            mId = id;
-            mPlans = plans;
-        }
-
-        public static Plan getValueForId(int id) {
-            for (Plan plan : values()) {
-                if (plan.mId == id)
-                    return plan;
-            }
-
-            return null;
-        }
-
-
-    }
+public class VSEStructureParser {
 
     private Context mContext;
 
     private OnLoadedCallback mCallback;
 
-    private List<Faculty> mFaculties;
+    private VSEStructure mVSEStructure;
 
     private List<BaseNetworkTask> mRunningTasks = new ArrayList<BaseNetworkTask>();
 
-    public static interface OnLoadedCallback {
-        abstract void loaded(List<Faculty> faculties);
-    }
-
-    private StudyData(Context context, OnLoadedCallback callback) {
+    private VSEStructureParser(Context context, OnLoadedCallback callback) {
         mContext = context;
         mCallback = callback;
     }
 
-    public static List<Faculty> loadData(Context context, OnLoadedCallback callback) {
-        StudyData instance = new StudyData(context, callback);
+    public static VSEStructure loadData(Context context, OnLoadedCallback callback) {
+        VSEStructureParser instance = new VSEStructureParser(context, callback);
         return  instance.loadFaculties();
     }
 
-
-    public List<Faculty> loadFaculties() {
-        mFaculties = new ArrayList<Faculty>();
+    public VSEStructure loadFaculties() {
+        mVSEStructure = new VSEStructure();
         for (int facultyId = 1; facultyId < 7; ++facultyId) {
             final int id = facultyId;
             Map<String, String> args = new HashMap<String, String>() {{
@@ -109,16 +54,16 @@ public class StudyData {
             runTask(args, new OnDocumentLoaded() {
                 @Override
                 public void loaded(Document document) throws Exception {
-                    mFaculties.add(handleBaseFacultyData(id, document));
+                    mVSEStructure.add(handleBaseFacultyData(id, document));
                 }
             });
         }
 
-        return mFaculties;
+        return mVSEStructure;
     }
 
-    private Faculty handleBaseFacultyData(int id, Document doc)  throws Exception  {
-        final Faculty faculty = new Faculty();
+    private VSEStructureElement.Faculty handleBaseFacultyData(int id, Document doc)  throws Exception  {
+        final VSEStructureElement.Faculty faculty = new VSEStructureElement.Faculty();
         faculty.id = id;
 
         Elements tables = doc.body().select("table");
@@ -133,7 +78,7 @@ public class StudyData {
 
             Map<String, String> args = HttpRequestBuilder.getGetArguments(link, '=', ';');
 
-            Plan plan = Plan.getValueForId(Integer.parseInt(args.get("typ_ss")));
+            VSEStructureElement.Plan plan = VSEStructureElement.Plan.getValueForId(Integer.parseInt(args.get("typ_ss")));
 
             if (plan == null)
                 continue;
@@ -171,8 +116,8 @@ public class StudyData {
         return facultyString.substring(facultyString.lastIndexOf(' ') + 1);
     }
 
-    private StudyType handleProgramData(Document doc) throws Exception {
-        StudyType studyType = new StudyType();
+    private VSEStructureElement.StudyType handleProgramData(Document doc) throws Exception {
+        VSEStructureElement.StudyType studyType = new VSEStructureElement.StudyType();
         Elements tables = doc.body().select("table");
         studyType.name = tables.get(0).select("tbody tr").get(3).select("td").get(1).text();
 
@@ -189,7 +134,7 @@ public class StudyData {
 
             String programmeString = cells.get(1).text();
 
-            final Programme programme = new Programme();
+            final VSEStructureElement.Programme programme = new VSEStructureElement.Programme();
             int spaceIdx = programmeString.indexOf(" ");
             String[] codes = programmeString.substring(0, spaceIdx).split("-");
             programme.name = programmeString.substring(spaceIdx + 1);
@@ -216,23 +161,24 @@ public class StudyData {
 
             String specializationString = cells.get(1).text();
             String[] specializationParts = specializationString.split(" ", 2);
-            Specialization specialization = new Specialization();
+            VSEStructureElement specialization = new VSEStructureElement();
             specialization.addCode(specializationParts[0]);
             specialization.name = specializationParts[1];
             studyType.specializations.add(specialization);
         }
+
         return studyType;
     }
 
-    private List<Field> handleFieldsData(Document doc) throws Exception {
+    private VSEStructureElement.List<VSEStructureElement> handleFieldsData(Document doc) throws Exception {
         Elements tables = doc.body().select("table");
         Elements fieldRows = tables.get(1).select("tbody tr");
 
-        List<Field> fields = new ArrayList<Field>();
+        VSEStructureElement.List<VSEStructureElement> fields = new VSEStructureElement.List<VSEStructureElement>();
         for (Element row : fieldRows) {
             Elements cells = row.getElementsByTag("td");
 
-            Field field = new Field();
+            VSEStructureElement field = new VSEStructureElement();
             field.name = cells.get(1).text();
 
             String[] codes = cells.get(0).text().split("-");
@@ -246,7 +192,7 @@ public class StudyData {
     }
 
     private void runTask(Map<String,String> args, final OnDocumentLoaded callback) {
-        final TextNetworkTask task = new TextNetworkTask(mContext, HttpRequestBuilder.getPlanRequest(DataHolder.getInstance(mContext), args), new BaseNetworkTask.ResponseCallback() {
+        final TextNetworkTask task = new TextNetworkTask(mContext, HttpRequest.getPlanRequest(DataHolder.getInstance(mContext), args), new BaseNetworkTask.ResponseCallback() {
             @Override
             public void onSuccess(Response response) {
                 if (response.getStatusCode() == 302)
@@ -267,7 +213,7 @@ public class StudyData {
                 mRunningTasks.remove(task);
                 TestFragment.postMessage(task.getRequest().getURI().toString(), TestFragment.Type.REMOVE);
                 if (mRunningTasks.isEmpty())
-                    mCallback.loaded(mFaculties);
+                    mCallback.loaded(mVSEStructure);
             }
         });
 
@@ -279,5 +225,9 @@ public class StudyData {
 
     private static interface OnDocumentLoaded {
         abstract void loaded(Document document) throws Exception;
+    }
+
+    public static interface OnLoadedCallback {
+        abstract void loaded(VSEStructure vseStructure);
     }
 }

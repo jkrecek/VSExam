@@ -3,7 +3,6 @@ package com.frca.vsexam.network.tasks;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;

@@ -12,11 +12,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.entities.vsedata.VSEStructure;
+import com.frca.vsexam.entities.vsedata.VSEStructureParser;
 import com.frca.vsexam.helper.Helper;
-import com.frca.vsexam.helper.StudyData;
 import com.google.gson.Gson;
-
-import java.util.List;
 
 public class TestFragment extends BaseFragment {
 
@@ -65,13 +64,13 @@ public class TestFragment extends BaseFragment {
 
         instance = this;
 
-        StudyData.loadData(getActivity(), new StudyData.OnLoadedCallback() {
+        VSEStructureParser.loadData(getActivity(), new VSEStructureParser.OnLoadedCallback() {
             @Override
-            public void loaded(List<StudyData.Faculty> faculties) {
-                Gson gson = new Gson();
-                String str = gson.toJson(faculties);
+            public void loaded(VSEStructure vseStructure) {
+                String str = new Gson().toJson(vseStructure);
                 Helper.appendLog(str);
-                setMessage(str, Type.ADD);
+                setMessage(str, Type.CURRENT);
+                vseStructure.save(getActivity());
             }
         });
 
@@ -89,10 +88,10 @@ public class TestFragment extends BaseFragment {
         REMOVE("red", "-");
 
         private String mColor;
-        private String mPrepand;
-        private Type(String color, String prepand) {
+        private String mPrepend;
+        private Type(String color, String prepend) {
             mColor = color;
-            mPrepand = prepand;
+            mPrepend = prepend;
         }
     }
 
@@ -103,7 +102,7 @@ public class TestFragment extends BaseFragment {
                 if (!TextUtils.isEmpty(text))
                     text += "<br/>";
 
-                text += "<font color='" + type.mColor + "'><b>" + type.mPrepand + "</b> " + message + "</font>";
+                text += "<font color='" + type.mColor + "'><b>" + type.mPrepend + "</b> " + message + "</font>";
 
                 textView.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
             }

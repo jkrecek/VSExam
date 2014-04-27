@@ -3,6 +3,8 @@ package com.frca.vsexam.entities.base;
 import android.content.Context;
 import android.util.Log;
 
+import com.frca.vsexam.helper.Helper;
+
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -15,7 +17,6 @@ public class ParentEntity implements Serializable, Cloneable {
 
     protected ParentEntity(int id) {
         this.id = id;
-
     }
 
     protected void removeUnsavedValues() { }
@@ -44,16 +45,10 @@ public class ParentEntity implements Serializable, Cloneable {
             Log.e(getClass().getName(), "Error in saveToFile()");
             e.printStackTrace();
         } finally {
-            try {
-                if (oos != null)
-                    oos.close();
-                if (fos != null)
-                    fos.close();
-                if (!keep)
-                    context.deleteFile(filename);
-            } catch (Exception e) {
-                /* do nothing */
-            }
+            Helper.close(oos);
+            Helper.close(fos);
+            if (!keep)
+                context.deleteFile(filename);
         }
 
         return keep;

@@ -40,17 +40,17 @@
                 <TextView style="@style/DataContent"
                           android:gravity="center"
                           android:id="@+id/text_faculty"
-                          tools:text="@string/faculty_fph"/>
+                          tools:text="Fakulta podnikohospodářská"/>
 
                 <TextView style="@style/DataContent"
                           android:id="@+id/text_form_type"
                           android:gravity="center"
-                          tools:text="Bakalářský typ studia, prezenční forma"/>
+                          tools:text="@string/study_type_form_string"/>
 
                 <TextView style="@style/DataContent"
                           android:id="@+id/text_semester"
                           android:gravity="center"
-                          tools:text="@string/semester_nth"/>
+                          tools:text="@string/nth_semester_study_plan_string"/>
 
             </LinearLayout>
 
@@ -65,7 +65,7 @@
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_programme"
-                      tools:text="@string/p_em"/>
+                      tools:text="Podniková ekonomika a management"/>
 
         </LinearLayout>
 
@@ -79,7 +79,7 @@
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_field"
-                      tools:text="@string/f_pem"/>
+                      tools:text="Podniková ekonomika"/>
 
         </LinearLayout>
 
@@ -92,7 +92,7 @@
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_spec"
-                      tools:text="@string/s_3fi"/>
+                      tools:text="Finanční manažer"/>
 
         </LinearLayout>
 

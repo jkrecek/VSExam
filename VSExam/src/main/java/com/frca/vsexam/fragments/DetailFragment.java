@@ -25,6 +25,7 @@ import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.network.HttpRequest;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -251,7 +252,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         public void onClick() {
-            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
+            HttpRequestBase requestBase = HttpRequest.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, true);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
@@ -297,7 +298,7 @@ public class DetailFragment extends BaseFragment {
         }
 
         private void runUnregistering() {
-            HttpRequestBase requestBase = HttpRequestBuilder.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, false);
+            HttpRequestBase requestBase = HttpRequest.getRegisterRequest(DataHolder.getInstance(getActivity()), exam, false);
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {

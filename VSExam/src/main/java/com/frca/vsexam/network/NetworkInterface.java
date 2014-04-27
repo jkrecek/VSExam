@@ -3,7 +3,6 @@ package com.frca.vsexam.network;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.frca.vsexam.fragments.TestFragment;
 import com.frca.vsexam.helper.AppConfig;
 
 import org.apache.http.client.methods.HttpRequestBase;

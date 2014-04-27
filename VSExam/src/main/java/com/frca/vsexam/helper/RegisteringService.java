@@ -18,7 +18,7 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
-import com.frca.vsexam.network.HttpRequestBuilder;
+import com.frca.vsexam.network.HttpRequest;
 import com.frca.vsexam.network.NetworkInterface;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -245,7 +245,7 @@ public class RegisteringService extends Service {
     }
 
     private HttpRequestBase getRegisterRequest() {
-        return HttpRequestBuilder.getRegisterRequest(dataHolder, exam, true);
+        return HttpRequest.getRegisterRequest(dataHolder, exam, true);
     }
 
     public static AlarmManager getAlarmManager(Context context) {

@@ -16,9 +16,12 @@ import org.apache.http.HttpRequest;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 
 public abstract class Helper {
@@ -292,7 +296,31 @@ public abstract class Helper {
             Log.e("File Write", "Cannot write to file " + file.getPath() + "\nError: " + e.getMessage());
             return e.getMessage();
         }
+    }
 
+    public static String readFromStream(InputStream is) {
+        try {
+            return readFromScanner(new Scanner(is));
+        } finally {
+            Helper.close(is);
+        }
+    }
+
+    public static String readFromFile(File file) {
+        try {
+            return readFromScanner(new Scanner(file));
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
+    private static String readFromScanner(Scanner scanner) {
+        try {
+            scanner.useDelimiter("\\A");
+            return scanner.hasNext() ? scanner.next() : null;
+        } finally {
+            scanner.close();
+        }
     }
 
     public static File getDataDirectoryFile(String subDir, String filename, String fileType) {
@@ -311,5 +339,16 @@ public abstract class Helper {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) { }
+    }
+
+    public static void close(Closeable c) {
+        if (c == null)
+            return;
+
+        try {
+            c.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

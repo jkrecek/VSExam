@@ -19,7 +19,6 @@ public class BaseEntityList<T extends ParentEntity> extends ArrayList<T> {
         FileInputStream fis = null;
         ObjectInputStream is = null;
 
-
         try {
             fis = context.openFileInput(filename);
             is = new ObjectInputStream(fis);
