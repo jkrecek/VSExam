@@ -8,7 +8,10 @@ import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.cookie.DateParseException;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -23,8 +26,16 @@ public class NetworkWorker {
 
     public NetworkWorker() {
         client = AndroidHttpClient.newInstance(HttpRequestBuilder.USER_AGENT);
+
+        setHttpParams(client.getParams());
+
         isUsed = false;
         httpResponse = null;
+    }
+
+    private void setHttpParams(HttpParams params) {
+        HttpConnectionParams.setConnectionTimeout(params, NetworkInterface.TIMEOUT_MS);
+        HttpConnectionParams.setSoTimeout(params, NetworkInterface.TIMEOUT_MS);
     }
 
     public Response execute(HttpRequestBase request, Response.Type type) {

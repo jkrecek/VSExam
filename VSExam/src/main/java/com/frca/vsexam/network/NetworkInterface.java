@@ -6,28 +6,16 @@ import android.util.Log;
 import com.frca.vsexam.helper.AppConfig;
 
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 
 public class NetworkInterface {
 
-    private final static int TIMEOUT_MS = 20000;
+    public final static int TIMEOUT_MS = 20000;
 
     private final static int CLIENT_COUNT = 5;
 
     private final static int MAX_ATTEMPTS = 3;
-
-    static HttpParams httpClientParams = new BasicHttpParams();
-
-    static {
-        HttpConnectionParams.setConnectionTimeout(httpClientParams, TIMEOUT_MS);
-        HttpConnectionParams.setSoTimeout(httpClientParams, TIMEOUT_MS);
-        HttpClientParams.setRedirecting(httpClientParams, false);
-    }
 
     private NetworkWorker[] networkWorkers = new NetworkWorker[CLIENT_COUNT];
 
