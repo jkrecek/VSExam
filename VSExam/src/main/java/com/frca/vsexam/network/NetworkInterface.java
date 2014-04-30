@@ -1,9 +1,9 @@
 package com.frca.vsexam.network;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.frca.vsexam.helper.AppConfig;
+import com.frca.vsexam.helper.Helper;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
@@ -38,11 +38,7 @@ public class NetworkInterface {
                     }
                 }
 
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    Log.e(getClass().getName(), "Error while waiting on HttpClients to finish" + (TextUtils.isEmpty(e.getMessage()) ? "." : ", error: `" + e.getMessage() + "`"));
-                }
+                Helper.sleepThread(50);
             }
         }
     }

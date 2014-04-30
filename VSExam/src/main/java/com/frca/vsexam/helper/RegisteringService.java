@@ -134,7 +134,7 @@ public class RegisteringService extends Service {
         long timeToSleep = msUntilRegistration - timerReduction;
         if (timeToSleep > 0) {
             Helper.appendLog("Registration process will start in: " + String.valueOf(timeToSleep / 1000L) + "sec (" + String.valueOf(timeToSleep) + "ms).");
-            Thread.sleep(timeToSleep);
+            Helper.sleepThread(timeToSleep);
         } else
             Helper.appendLog("Request starting should start ASAP");
 
@@ -150,7 +150,7 @@ public class RegisteringService extends Service {
         int loopCounter = 0;
         do {
             if (loopCounter > 0)
-                Thread.sleep(sleepTimer);
+                Helper.sleepThread(sleepTimer);
 
             final TextNetworkTask task = new TextNetworkTask(this, getRegisterRequest());
             task.setResponseCallback(new BaseNetworkTask.ResponseCallback() {
