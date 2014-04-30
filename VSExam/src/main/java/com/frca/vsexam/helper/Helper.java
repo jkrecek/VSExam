@@ -126,42 +126,35 @@ public abstract class Helper {
     }
 
     public enum DateOutputType {
-        DATE,
-        TIME,
-        DATE_TIME,
-        TIME_DATE,
-        FULL
+        DATE(new SimpleDateFormat("dd.MM.yyyy")),
+        TIME(new SimpleDateFormat("HH:mm")),
+        DATE_TIME(new SimpleDateFormat("dd. MM. yyyy HH:mm")),
+        TIME_DATE(new SimpleDateFormat("HH:mm dd. MM. yyyy")),
+        FULL(new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS"));
+
+        private SimpleDateFormat mFormat;
+        private DateOutputType(SimpleDateFormat format) {
+            mFormat = format;
+        }
+
+        public String format(Date date) {
+            return mFormat.format(date);
+        }
     }
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
-    public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
-    public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd. MM. yyyy HH:mm");
-    public static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("HH:mm dd. MM. yyyy");
-    public static final SimpleDateFormat FULL_FORMAT = new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS");
-
-
-    public static String getDateOutput(long milis, DateOutputType outputType) {
-        return getDateOutput(new Date(milis), outputType);
+    public static String getDateOutput(long milliseconds, DateOutputType outputType) {
+        return getDateOutput(new Date(milliseconds), outputType);
     }
 
     public static String getDateOutput(Date date, DateOutputType outputType) {
         if (date == null)
             return "";
-
-        if (date.getTime() == 0L)
+        else if (date.getTime() == 0L)
             return "--";
-
-        SimpleDateFormat format;
-        switch (outputType) {
-            case DATE: format = DATE_FORMAT; break;
-            case TIME: format = TIME_FORMAT; break;
-            case DATE_TIME: format = DATE_TIME_FORMAT; break;
-            case TIME_DATE: format = TIME_DATE_FORMAT; break;
-            case FULL: format = FULL_FORMAT; break;
-            default: return null;
-        }
-
-        return format.format(date);
+        else if (outputType == null)
+            return String.valueOf(date.getTime()/1000L);
+        else
+            return outputType.format(date);
     }
 
     public static boolean isValid(List list) {
