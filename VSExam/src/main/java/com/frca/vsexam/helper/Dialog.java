@@ -80,7 +80,7 @@ public abstract class Dialog {
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL, new String[]{String.valueOf(userId) + "@vse.com"});
+                i.putExtra(Intent.EXTRA_EMAIL, new String[]{String.valueOf(userId) + "@vse.cz"});
 
                 try {
                     context.startActivity(i);
