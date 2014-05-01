@@ -2,15 +2,40 @@
 <resources>
 
     <string-array name="preference_register_notification_entries" >
-        <item>Vždy</item>
-        <item>Pouze při neaktivní aplikaci</item>
-        <item>Nikdy</item>
+        <item>@string/always</item>
+        <item>@string/when_offline</item>
+        <item>@string/never</item>
     </string-array>
 
     <string-array name="preference_register_notification_values" >
         <item>all_time</item>
         <item>not_active</item>
         <item>never</item>
+    </string-array>
+
+    <!-- LOCALIZED -->
+    <string-array name="day_as_string">
+        <item>day</item>
+        <item>days</item>
+        <item>days</item>
+    </string-array>
+
+    <string-array name="hour_as_string">
+        <item>hour</item>
+        <item>hours</item>
+        <item>hours</item>
+    </string-array>
+
+    <string-array name="minute_as_string">
+        <item>minute</item>
+        <item>minutes</item>
+        <item>minutes</item>
+    </string-array>
+
+    <string-array name="second_as_string">
+        <item>second</item>
+        <item>seconds</item>
+        <item>seconds</item>
     </string-array>
 
 </resources>

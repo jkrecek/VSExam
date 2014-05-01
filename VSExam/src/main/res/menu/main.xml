@@ -4,7 +4,7 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:icon="@drawable/ic_menu_refresh"
-        android:title="@string/menu_refresh"/>
+        android:title="@string/menu_refresh_exams"/>
 
     <item android:id="@+id/action_json"
         android:title="@string/menu_json_format"

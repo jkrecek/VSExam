@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- LOCALIZED -->
+    <string-array name="day_as_string">
+        <item>den</item>
+        <item>dny</item>
+        <item>dní</item>
+    </string-array>
+
+    <string-array name="hour_as_string">
+        <item>hodina</item>
+        <item>hodiny</item>
+        <item>hodin</item>
+    </string-array>
+
+    <string-array name="minute_as_string">
+        <item>minuta</item>
+        <item>minuty</item>
+        <item>minut</item>
+    </string-array>
+
+    <string-array name="second_as_string">
+        <item>vteřina</item>
+        <item>vteřiny</item>
+        <item>vteřin</item>
+    </string-array>
+
+</resources>
