@@ -16,7 +16,7 @@
     <string name="group_title_is_registered">Registered</string>
     <string name="group_title_to_be_registered">Will be registered</string>
     <string name="group_title_can_register">Can register</string>
-    <string name="group_title_can_not_register">Can not register</string>
+    <string name="group_title_can_not_register">Cannot register</string>
 
     <string name="register">Register</string>
     <string name="unregister">Log off</string>
@@ -36,7 +36,7 @@
     <string name="unknown_action">Unknown action</string>
     <string name="loading_with_ellipsis">Loading&#8230;</string>
 
-    <string name="progress_structure_number_format">%1$d items from approx %2$d checked</string>
+    <string name="progress_structure_number_format">%1$d items from approx. %2$d checked</string>
 
     <string name="data_downloaded">Data loaded</string>
     <string name="structure_downloaded_saved">New structure was successfully downloaded and saved.</string>
@@ -88,7 +88,7 @@ We apologize for any damage caused.</string>
     <string name="registration_in_x">Exam will be registered in %1$s</string>
 
     <string name="student_profile_title">Student profile</string>
-    <string name="programme">Programme</string>
+    <string name="programme">Program</string>
     <string name="field">Field of study</string>
     <string name="specialization">Track of study</string>
     <string name="send_mail">Send mail</string>
