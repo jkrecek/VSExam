@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -213,26 +214,32 @@ public class RegisteringService extends Service {
     }
 
     private void setNotification(String title, String message, int iconResource) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(iconResource != 0 ? iconResource : R.drawable.ic_launcher);
-        builder.setContentTitle(title);
-        builder.setContentText(message);
-        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT );
-        builder.setContentIntent(resultPendingIntent);
-
-        getNotificationManager().notify(exam.getId(), builder.build());
-
         if (MainActivity.getInstance() != null) {
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+
+        SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
+        String notificationDisplay = preferences.getString("registerNotification", null);
+        if (notificationDisplay.equals(getString(R.string.always)) ||
+            (notificationDisplay.equals(getString(R.string.when_offline)) && MainActivity.getInstance() == null)) {
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            builder.setSmallIcon(iconResource != 0 ? iconResource : R.drawable.ic_launcher);
+            builder.setContentTitle(title);
+            builder.setContentText(message);
+            builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            Intent resultIntent = new Intent(this, MainActivity.class);
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(resultPendingIntent);
+
+            getNotificationManager().notify(exam.getId(), builder.build());
         }
     }
 

@@ -10,7 +10,8 @@
             android:title="@string/settings_register_notification_title"
             android:dialogTitle="@string/settings_register_notification_dialog"
             android:entries="@array/preference_register_notification_entries"
-            android:entryValues="@array/preference_register_notification_values" />
+            android:entryValues="@array/preference_register_notification_values"
+            android:defaultValue="@string/when_offline" />
 
         <Preference
             android:key="handleLogOff"
