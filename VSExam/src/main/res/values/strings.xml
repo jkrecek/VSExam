@@ -101,7 +101,7 @@ We apologize for any damage caused.</string>
     <string name="exam_date">Date of exam</string>
     <string name="register_start">Registration since</string>
     <string name="register_end">Registration until</string>
-    <string name="unregister_end">Log off until</string>
+    <string name="unregister_end">Logging off until</string>
     <string name="classmates">Classmates</string>
 
     <string name="always">Always</string>
