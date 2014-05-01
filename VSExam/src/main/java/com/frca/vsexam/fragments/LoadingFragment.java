@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +28,6 @@ public class LoadingFragment extends BaseFragment {
 
     private TextView messageField;
 
-    private static ProgressBar progressBar;
-
-    public LoadingFragment() {
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
@@ -42,8 +35,8 @@ public class LoadingFragment extends BaseFragment {
         if (!getMainActivity().isOnline()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            builder.setTitle("No internet connection")
-                .setMessage("To be able to use this app properly, you need to connect the device to the internet. Please do so and try this again.")
+            builder.setTitle(R.string.no_network_connection_title)
+                .setMessage(R.string.no_network_connection_message)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -52,8 +45,9 @@ public class LoadingFragment extends BaseFragment {
                 });
 
             builder.create().show();
+        } else {
+            loadExams();
         }
-        loadExams();
     }
 
     @Override
@@ -62,8 +56,6 @@ public class LoadingFragment extends BaseFragment {
         messageField = (TextView) rootView.findViewById(R.id.textView);
         if (!TextUtils.isEmpty(message))
             setMessage(message);
-
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         getMainActivity().setActionBarAdapter(null);
 
@@ -85,7 +77,7 @@ public class LoadingFragment extends BaseFragment {
     }
 
     private void loadExams() {
-        setMessage("Downloading exams");
+        setMessage(getString(R.string.downloading_exams));
 
         BaseNetworkTask.run(
             new TextNetworkTask(
@@ -95,41 +87,41 @@ public class LoadingFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response response) {
                         if (!response.isComplete()) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("Error").setMessage("Error while accesing exam data, do you want to try again?")
+                            new AlertDialog.Builder(getActivity())
+                                .setTitle(R.string.network_error_exams_title)
+                                .setMessage(R.string.network_error_exams_message)
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();
                                         getMainActivity().setFragment(new LoadingFragment());
                                     }
-                                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            }).create().show();
-                            return;
-                        }
-
-                        if (response.getStatusCode() == 401) {
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .create()
+                                .show();
+                        } else if (response.getStatusCode() == 401) {
                             getMainActivity().setFragment(new LoginFragment());
-                            Toast.makeText(getActivity(), "Invalid access", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(getActivity(), R.string.access_denied, Toast.LENGTH_LONG).show();
+                        } else {
+                            setMessage(getString(R.string.processing_data));
+
+                            Document doc = Jsoup.parse(response.getText());
+                            Elements elements = doc.body().select("table[id] tr");
+
+                            ExamList exams = new ExamList();
+                            if (AppConfig.USE_TEST_EXAMS)
+                                exams.addTestExams(getActivity());
+                            else
+                                exams.parseAndAdd(getActivity(), elements);
+
+                            getMainActivity().setFragment(new BrowserPaneFragment(exams));
                         }
-
-                        setMessage("Processing data");
-
-                        Document doc = Jsoup.parse(response.getText());
-                        Elements elements = doc.body().select("table[id] tr");
-
-                        ExamList exams = new ExamList();
-                        if (AppConfig.USE_TEST_EXAMS)
-                            exams.addTestExams(getActivity());
-                        else
-                            exams.parseAndAdd(getActivity(), elements);
-
-                        getMainActivity().setFragment(new BrowserPaneFragment(exams));
                     }
 
                 },
@@ -137,7 +129,7 @@ public class LoadingFragment extends BaseFragment {
                     @Override
                     public void onException(Exception e) {
                         if (e instanceof NoAuthException) {
-                            Toast.makeText(getActivity(), "No auth data set.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.no_auth_data, Toast.LENGTH_LONG).show();
                             getMainActivity().setFragment(new LoginFragment());
                         }
                     }

@@ -1,8 +1,10 @@
 package com.frca.vsexam.context;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,7 +25,6 @@ import com.frca.vsexam.fragments.BaseFragment;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
-import com.frca.vsexam.fragments.TestFragment;
 import com.frca.vsexam.helper.AppConfig;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
@@ -46,10 +47,17 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
-        if (AppConfig.LAUNCH_TEST_FRAGMENT) {
-            setFragment(new TestFragment());
-        } else if (preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD)) {
+        if (AppConfig.LAUNCH_ON_START != null) {
+            if (Activity.class.isAssignableFrom(AppConfig.LAUNCH_ON_START)) {
+                startActivity(new Intent(this, AppConfig.LAUNCH_ON_START));
+
+            } else if (BaseFragment.class.isAssignableFrom(AppConfig.LAUNCH_ON_START)) {
+                try {
+                    setFragment((BaseFragment) AppConfig.LAUNCH_ON_START.newInstance());
+                } catch (Exception e) { }
+
+            }
+        } else if (hasSavedLoginData()) {
             setFragment(new LoadingFragment());
         } else {
             setFragment(new LoginFragment());
@@ -62,9 +70,13 @@ public class MainActivity extends ActionBarActivity {
 
         instance = this;
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_base);
-        if (!fragment.equals(currentFragment))
-            setFragment(currentFragment);
+        if (!hasSavedLoginData() && (currentFragment == null || !(currentFragment instanceof LoginFragment))) {
+            setFragment(new LoginFragment());
+        } else {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_base);
+            if (fragment != null && !fragment.equals(currentFragment))
+                setFragment(currentFragment);
+        }
     }
 
     @Override
@@ -123,7 +135,7 @@ public class MainActivity extends ActionBarActivity {
                 final String exam_json = sb.toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Exam output")
+                builder.setTitle(R.string.exam_output)
                     .setMessage(exam_json)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -140,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
                                 false);
 
                             if (result == null)
-                                result = "Successfully saved into file.";
+                                result = getString(R.string.successfully_saved_into_file);
 
                             Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
                         }
@@ -149,6 +161,10 @@ public class MainActivity extends ActionBarActivity {
             }
             case R.id.action_refresh: {
                 setFragment(new LoadingFragment());
+                break;
+            }
+            case R.id.action_settings: {
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             }
         }
@@ -210,6 +226,11 @@ public class MainActivity extends ActionBarActivity {
             return fragment.getExams();
 
         return null;
+    }
+
+    private boolean hasSavedLoginData() {
+        SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
+        return preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD);
     }
 
 }

@@ -15,6 +15,7 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.entities.vsedata.VSEStructure;
 import com.frca.vsexam.entities.vsedata.VSEStructureParser;
 import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.google.gson.Gson;
 
 public class TestFragment extends BaseFragment {
@@ -30,8 +31,8 @@ public class TestFragment extends BaseFragment {
         if (!getMainActivity().isOnline()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            builder.setTitle("No internet connection")
-                .setMessage("To be able to use this app properly, you need to connect the device to the internet. Please do so and try this again.")
+            builder.setTitle(R.string.no_network_connection_title)
+                .setMessage(R.string.no_network_connection_message)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -56,13 +57,9 @@ public class TestFragment extends BaseFragment {
         return rootView;
     }
 
-    public static TestFragment instance;
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        instance = this;
 
         VSEStructureParser.loadData(getActivity(), new VSEStructureParser.OnLoadedCallback() {
             @Override
@@ -72,15 +69,14 @@ public class TestFragment extends BaseFragment {
                 setMessage(str, Type.CURRENT);
                 vseStructure.save(getActivity());
             }
+        }, new VSEStructureParser.OnTaskStatusChanged() {
+            @Override
+            public void changed(BaseNetworkTask task, boolean added) {
+                setMessage(task.getRequest().getURI().toString(), added ? Type.ADD : Type.REMOVE);
+            }
         });
-
-
     }
 
-    public static void postMessage(final String message, Type type) {
-        if (instance != null)
-            instance.setMessage(message, type);
-    }
 
     public enum Type {
         ADD("green", "+"),

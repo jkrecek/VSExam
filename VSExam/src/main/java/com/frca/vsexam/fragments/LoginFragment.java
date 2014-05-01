@@ -17,8 +17,6 @@ import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
 public class LoginFragment extends BaseFragment {
-    public LoginFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,10 +35,10 @@ public class LoginFragment extends BaseFragment {
                 String loginPassword = viewPassword.getText().toString();
 
                 if (TextUtils.isEmpty(loginInput))
-                    viewLogin.setError("You must input your xname");
+                    viewLogin.setError(getString(R.string.login_condition_xname));
 
                 if (TextUtils.isEmpty(loginPassword))
-                    viewPassword.setError("You must input your password");
+                    viewPassword.setError(getString(R.string.login_condition_password));
 
                 if (viewLogin.getError() != null)
                     viewLogin.requestFocus();

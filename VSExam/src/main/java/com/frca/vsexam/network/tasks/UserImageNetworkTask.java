@@ -28,18 +28,15 @@ public class UserImageNetworkTask extends ImageNetworkTask {
         if (bitmap != null) {
             finishOnViews(bitmap);
             cancel(true);
-            return;
         } else {
-            SparseArray<UserImageNetworkTask> taskContainer = dataHolder.getDownloadTaskContainer();
-            synchronized (taskContainer) {
-                ImageNetworkTask task = taskContainer.get(userId);
+            synchronized (dataHolder.getDownloadTaskContainer()) {
+                ImageNetworkTask task = dataHolder.getDownloadTaskContainer().get(userId);
                 if (task != null) {
                     for (ImageView imageView : imageViews)
                         task.addImageView(imageView);
                     cancel(true);
-                    return;
                 } else {
-                    taskContainer.put(userId, this);
+                    dataHolder.getDownloadTaskContainer().put(userId, this);
                     super.onPreExecute();
                 }
             }

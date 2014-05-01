@@ -3,9 +3,6 @@
 
     <string name="app_name">VSExam</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="sliding_pane_layout_summary">This activity illustrates the use of sliding panes. The content pane may be slid to one side on narrow devices to reveal the left pane used to select content. Sliding panes can be used to fit a UI intended for wider screens in a smaller space. Tapping the Action Bar\'s Up button at the left side of the bar will navigate up in the hierarchy, represented by the left pane. If you rotate the device to landscape mode, on most devices you will see that both panes fit together side by side with no sliding necessary.</string>
-    <string name="send_mail">Poslat zprávu ...</string>
 
     <string name="registered">Registrován</string>
     <string name="unregistered">Neregistrován</string>
@@ -20,10 +17,10 @@
     <string name="group_title_can_register">Můžete se registrovat</string>
     <string name="group_title_can_not_register">Nemůžete se registrovat</string>
 
-    <string name="action_register">Přihlásit</string>
-    <string name="action_unregister">Odhlásit</string>
-    <string name="action_registerASAP">Přihlásit co nejdříve</string>
-    <string name="action_cancel_registerASAP">Zrušit přihlášení co nejdříve</string>
+    <string name="register">Přihlásit</string>
+    <string name="unregister">Odhlásit</string>
+    <string name="register_asap">Přihlásit co nejdříve</string>
+    <string name="cancel_register_asap">Zrušit přihlášení co nejdříve</string>
 
     <string name="nth_semester_study_plan_string">%1$d. semestr, studíjní plán %2$s</string>
     <string name="study_type_form_string">%1$s typ studia, %2$s</string>
@@ -31,5 +28,109 @@
     <string name="form_full_time">Prezenční studium</string>
     <string name="form_combined">Kombinované studium</string>
     <string name="form_distance">Distanční studium</string>
+
+    <string name="exam_output">Exam output</string>
+    <string name="successfully_saved_into_file">Exam output</string>
+
+    <string name="unknown_action">Unknown action</string>
+    <string name="loading_with_ellipsis">Loading&#8230;</string>
+
+    <string name="progress_structure_number_format">%1$d položek z přibližně %2$d zkontrolováno</string>
+
+    <string name="data_downloaded">Data stažena</string>
+    <string name="structure_downloaded_saved">Nová struktura byla úspěšně stažena a uložena.</string>
+    <string name="last_update_on_x">Last update on %1$s.</string>
+    <string name="no_vse_structure_found">No VŠE Structure found, please download new from settings.</string>
+    <string name="display_all">Zobrazit všechny</string>
+    <string name="no_exams_in_this_period">V tomto období nebyly zatím vypsány žádné zkoušky.</string>
+    <string name="no_exams_with_filter">Zadanému filtru neodpovídají žádné zkoušky.</string>
+    <string name="access_denied">Přístup odepřen!</string>
+    <string name="no_auth_data">Nebyly nastaveny přihlašovací údaje.</string>
+    <string name="register_success">Přihlášení bylo úspěšné</string>
+    <string name="register_failure">Přihlášení bylo neúspšné</string>
+    <string name="unregister_success">Odhlášení bylo úspěšné</string>
+    <string name="unregister_failure">Odhlášení bylo neúspěšné</string>
+    <string name="unregister_confirmation">Opravdu chcete odhlásit z tohoto termínu?</string>
+    <string name="cancel_rot_confirmation">Opravdu chcete zrušit přihlášení co nejdříve?</string>
+    <string name="apply_rot_confirmation">Pomocí této funkce Vás aplikace automaticky přihlásí na vybraný termín ihned, jakmile bude v systému ISIS spuštěno přihlašování.
+Upozornění: Toto zařízení musí být v době registrace zapnuté.</string>
+    <string name="processing_data">Processing data</string>
+    <string name="downloading_exams">Downloading exams</string>
+    <string name="no_network_connection_title">No network connection</string>
+    <string name="no_network_connection_message">To be able to use this app properly, you need to connect your device to the internet. Please do so and try this again.</string>
+    <string name="network_error_exams_title">Network error</string>
+    <string name="network_error_exams_message">Could not download exam list from system ISIS. This is probably due to poor network connection. Do you want to try again?</string>
+    <string name="login_condition_xname">Please, input your xname.</string>
+    <string name="login_condition_password">Please, input your password.</string>
+    <string name="no_email_clients_installed">Žádný e-mailový klient není nainstalován.</string>
+    <string name="student_profile_title">Profil studenta</string>
+    <string name="notification_register_start_title">Počátek registrace</string>
+    <string name="notification_register_start_message">Během několika vteřin začne registrace předmětu %1$s. Prosíme, aby jste v následujících chvílích nevytěžovali své zařízení, ať zvýšite pravděpodobnost úspěšné registrace.</string>
+    <string name="notification_register_progress_title">Probíhá registrace</string>
+    <string name="notification_register_progress_message">Probíhá registrace předmětu %1$s. Prosíme, udržujte Vaše v klidu, ať zvýšite pravděpodobnost úspěšné registrace.</string>
+    <string name="notification_register_success_title">Příhlášen na termín</string>
+    <string name="notification_register_success_message">Byl jste přihlášen na termín předmětu %1$s dne %2$s.</string>
+    <string name="notification_register_failure_title">Neúspěšné přihlášení</string>
+    <string name="notification_register_failure_message">Bohužel jste nebyl příhlášen na termín předmětu %1$s. Důvodem bylo značné vytížení školních serverů, které způsobilo špatné zpracování přihlašovacích požadavků. Za způsobené škody se omlouváme.</string>
+    <string name="registration_soon_message">Předmět bude registrován během několika vteřin</string>
+    <string name="registration_in_x">Předmět bude registrován za %1$s</string>
+    <string name="programme">Program</string>
+    <string name="field">Obor</string>
+    <string name="specialization">Specializace</string>
+    <string name="send_mail">Poslat zprávu</string>
+    <string name="visit_web">Navštívit web</string>
+    <string name="login">Login</string>
+    <string name="exam_info">Informace o termínu</string>
+    <string name="author">Vypsal</string>
+    <string name="exam_type">Druh (forma)</string>
+    <string name="state">Stav</string>
+    <string name="capacity">Kapacita</string>
+    <string name="exam_date">Datum termínu</string>
+    <string name="register_start">Přihlašování od</string>
+    <string name="register_end">Přihlašování do</string>
+    <string name="unregister_end">Přihlašování do</string>
+    <string name="classmates">Spolužáci</string>
+    <string name="input_xname">Uživatelské jméno (xname)</string>
+    <string name="input_password">Heslo</string>
+    <string name="always">Vždy</string>
+    <string name="when_offline">Pouze při neaktivní aplikaci</string>
+    <string name="never">Nikdy</string>
+
+    <string name="settings_register_notification_title">Notifikace při přihlašování</string>
+    <string name="settings_register_notification_dialog">Zobrazo</string>
+    <string name="settings_log_off_title">Odhlásit</string>
+    <string name="settings_log_off_summary">Odhlásí Vaše zařízení ze systému ISIS.</string>
+    <string name="settings_base_title">Základní</string>
+    <string name="settings_vse_study_structure_title">Studijní struktura</string>
+    <string name="view">Zobrazit</string>
+    <string name="settings_view_summary">Pokročilé. Zobrazí studijní strukturu ve formátu JSON.</string>
+    <string name="settings_refresh_data_title">Znova stáhnout strukturu</string>
+    <string name="settings_refresh_data_summary">Touto akcí znova stáhnete data o struktuře studia ze stránek VŠE.</string>
+
+    <string name="logo">Logo</string>
+
+    <string-array name="day_as_string">
+        <item>den</item>
+        <item>dny</item>
+        <item>dní</item>
+    </string-array>
+
+    <string-array name="hour_as_string">
+        <item>hodina</item>
+        <item>hodiny</item>
+        <item>hodin</item>
+    </string-array>
+
+    <string-array name="minute_as_string">
+        <item>minuta</item>
+        <item>minuty</item>
+        <item>minut</item>
+    </string-array>
+
+    <string-array name="second_as_string">
+        <item>vteřina</item>
+        <item>vteřiny</item>
+        <item>vteřin</item>
+    </string-array>
 
 </resources>

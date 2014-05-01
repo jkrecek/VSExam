@@ -141,7 +141,7 @@ public class BrowserPaneFragment extends BaseFragment {
 
     private void setActionBarAdapter() {
         actionBarAdapterData = exams.getCourses();
-        actionBarAdapterData.put(-1, "Zobrazit všechny");
+        actionBarAdapterData.put(-1, getString(R.string.display_all));
         getMainActivity().setActionBarAdapter(actionBarAdapterData.getValues());
     }
 
@@ -168,9 +168,9 @@ public class BrowserPaneFragment extends BaseFragment {
             mList.setVisibility(View.GONE);
             mListEmptyText.setVisibility(View.VISIBLE);
             if (currentCourseId == -1)
-                mListEmptyText.setText("V tomto období zatím nemáte žádné zkoušky.");
+                mListEmptyText.setText(R.string.no_exams_in_this_period);
             else
-                mListEmptyText.setText("Zadanému filtru neodpovídají žádné zkoušky.");
+                mListEmptyText.setText(R.string.no_exams_with_filter);
         }
 
         if (mList.getOnItemClickListener() == null) {
@@ -183,7 +183,7 @@ public class BrowserPaneFragment extends BaseFragment {
 
         DetailFragment fragment = getDetailFragment();
         if (fragment != null) {
-            fragment.updateView();
+            fragment.updateView(null);
         }
     }
 

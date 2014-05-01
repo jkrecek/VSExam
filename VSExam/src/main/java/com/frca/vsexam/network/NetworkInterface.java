@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class NetworkInterface {
 
-    public final static int TIMEOUT_MS = 20000;
+    public final static int TIMEOUT_MS = 15000;
 
     private final static int CLIENT_COUNT = 5;
 

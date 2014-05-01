@@ -1,6 +1,7 @@
 package com.frca.vsexam.network.tasks;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -57,10 +58,12 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         this.responseType = responseType;
     }
 
+    @Override
     protected Response doInBackground(Void... arg) {
         return dataHolder.getNetworkInterface().execute(request, responseType);
     }
 
+    @Override
     final protected void onPostExecute(Response response) {
          if (!isCancelled()) {
 
@@ -93,7 +96,10 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                else
+                    task.execute();
             }
         });
     }

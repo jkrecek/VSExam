@@ -59,26 +59,35 @@ public class DetailFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        layoutView = inflater.inflate(R.layout.exam_list_details, container, false);
+        LinearLayout view = (LinearLayout) inflater.inflate(R.layout.exam_list_details, container, false);
 
-        updateView();
+        Helper.loopThoughLayout(view, new Helper.ViewCallback() {
+            @Override
+            public void call(View view) {
+                if (view instanceof TextView) {
+                    TextView textView = (TextView) view;
+                    if (textView.getTypeface() != null && textView.getTypeface().isBold()) {
+                        textView.setText(textView.getText().toString().toUpperCase());
+                    }
+                }
+            }
+        });
 
-        View returnView = layoutView;
-        layoutView = null;
+        updateView(view);
 
-        return returnView;
+        return view;
     }
 
     @Override
     public void onViewCreated (View view, Bundle savedInstanceState) {
-        layoutView = view;
+        layoutView =  view;
     }
 
-    public void updateView() {
-        View view = getView();
+    public void updateView(View view) {
+        if (view == null)
+            view = getView();
 
         TextView text_courseCode = ((TextView) view.findViewById(R.id.text_courseCode));
         TextView text_courseName = ((TextView) view.findViewById(R.id.text_courseName));
@@ -115,7 +124,7 @@ public class DetailFragment extends BaseFragment {
 
         BaseNetworkTask.run(new UserImageNetworkTask(getActivity(), exam.getAuthorId(), logo_author));
 
-        setupButtons();
+        setupButtons(view);
 
         if (exam.getCurrentCapacity() != 0)
             loadClassmates();
@@ -133,9 +142,7 @@ public class DetailFragment extends BaseFragment {
         }
     }
 
-    private void setupButtons() {
-        View view = getView();
-
+    private void setupButtons(final View view) {
         Button button_left = (Button) view.findViewById(R.id.button_left);
         Button button_right = (Button) view.findViewById(R.id.button_right);
 
@@ -156,7 +163,7 @@ public class DetailFragment extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        setupButtons();
+                        setupButtons(view);
                     }
                 }, timeUntilRegistration - (30 * 1000));
             }
@@ -182,11 +189,11 @@ public class DetailFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Response response) {
                         if (response.getStatusCode() == 401) {
-                            Toast.makeText(getActivity(), "Access denied", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.access_denied, Toast.LENGTH_LONG).show();
                             return;
                         }
 
-                        if (response.getText() == null) {
+                        if (!response.isComplete()) {
                             return;
                         }
 
@@ -204,7 +211,7 @@ public class DetailFragment extends BaseFragment {
                     @Override
                     public void onException(Exception e) {
                         if (e instanceof NoAuthException) {
-                            Toast.makeText(getActivity(), "No auth data set.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.no_auth_data, Toast.LENGTH_LONG).show();
                             getMainActivity().setFragment(new LoginFragment());
                         }
                     }
@@ -257,19 +264,20 @@ public class DetailFragment extends BaseFragment {
                 @Override
                 public void onSuccess(Response response) {
                     if (getBrowserPaneFragment().getExams().onRegistrationResponse(getActivity(), exam, response)) {
-                        Toast.makeText(getActivity(), "Přihlášení úspěšné", Toast.LENGTH_LONG).show();
-                        Helper.appendLog("Register success!");
+                        Toast.makeText(getActivity(), R.string.register_success, Toast.LENGTH_LONG).show();
+                        Helper.appendLog("Register successful.");
                     } else {
-                        Toast.makeText(getActivity(), "Přihlášení nebylo úspěšné", Toast.LENGTH_LONG).show();
-                        Helper.appendLog("Register unsuccessful");
+                        Toast.makeText(getActivity(), R.string.register_failure, Toast.LENGTH_LONG).show();
+                        Helper.appendLog("Register unsuccessful.");
                     }
+
                 }
             }));
         }
 
         @Override
         int getTextResource() {
-            return R.string.action_register;
+            return R.string.register;
         }
     }
 
@@ -280,7 +288,7 @@ public class DetailFragment extends BaseFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(getTextResource())
-                .setMessage("Opravdu chcete odhlásit z tohoto termínu?")
+                .setMessage(R.string.unregister_confirmation)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -302,20 +310,20 @@ public class DetailFragment extends BaseFragment {
             BaseNetworkTask.run(new TextNetworkTask(getActivity(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
-                    if (getBrowserPaneFragment().getExams().onUnregistrationResponse(exam, response)) {
-                        Toast.makeText(getActivity(), "Odhlášení úspěšné", Toast.LENGTH_LONG).show();
-                        Helper.appendLog("Unregister success!");
-                    } else {
-                        Toast.makeText(getActivity(), "Odhlášení nebylo úspěšné", Toast.LENGTH_LONG).show();
-                        Helper.appendLog("Unregister unsuccessful");
-                    }
+                if (getBrowserPaneFragment().getExams().onUnregistrationResponse(exam, response)) {
+                    Toast.makeText(getActivity(), R.string.unregister_success, Toast.LENGTH_LONG).show();
+                    Helper.appendLog("Unregister successful.");
+                } else {
+                    Toast.makeText(getActivity(), R.string.unregister_failure, Toast.LENGTH_LONG).show();
+                    Helper.appendLog("Unregister unsuccessful.");
+                }
                 }
             }));
         }
 
         @Override
         int getTextResource() {
-            return R.string.action_unregister;
+            return R.string.unregister;
         }
     }
 
@@ -327,12 +335,12 @@ public class DetailFragment extends BaseFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(getTextResource())
-                .setMessage("Pomocí této funkce Vás aplikace automaticky přihlásí na vybraný termín ihned, jakmile bude v systému ISIS spuštěno přihlašování. \n Upozornění: Toto zařízení musí být v době registrace zapnuté.")
+                .setMessage(R.string.apply_rot_confirmation)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         exam.setToBeRegistered(getActivity(), true);
-                        updateView();
+                        updateView(null);
                         dialogInterface.dismiss();
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -347,7 +355,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         int getTextResource() {
-            return R.string.action_registerASAP;
+            return R.string.register_asap;
         }
     }
 
@@ -359,12 +367,12 @@ public class DetailFragment extends BaseFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(getTextResource())
-                .setMessage("Opravdu chcete zrušit přihlášení co nejdříve?")
+                .setMessage(R.string.cancel_rot_confirmation)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         exam.setToBeRegistered(getActivity(), false);
-                        updateView();
+                        updateView(null);
                         dialogInterface.dismiss();
                     }
                 }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -379,7 +387,7 @@ public class DetailFragment extends BaseFragment {
 
         @Override
         int getTextResource() {
-            return R.string.action_cancel_registerASAP;
+            return R.string.cancel_register_asap;
         }
     }
 

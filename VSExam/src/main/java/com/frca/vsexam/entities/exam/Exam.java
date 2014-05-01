@@ -84,7 +84,7 @@ public class Exam extends ParentEntity {
         Group newGroup = toBeRegistered ? Group.TO_BE_REGISTERED : Group.CAN_REGISTER;
         if (this.group != newGroup) {
             this.group = newGroup;
-            Helper.appendLog("Exam ROT is set to " + String.valueOf(toBeRegistered));
+            Helper.appendLog("Exam registration on time is set to " + String.valueOf(toBeRegistered));
             if (toBeRegistered) {
                 saveToFile(context);
                 RegisteringService.setExamRegister(context, this);
@@ -230,10 +230,6 @@ public class Exam extends ParentEntity {
     public void setGroup(Group group) {
         this.group = group;
     }
-
-    /*public boolean isToBeRegistered() {
-        return toBeRegistered;
-    }*/
 
     public int getCourseId() {
         return courseId;

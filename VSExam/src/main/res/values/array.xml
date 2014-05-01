@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="preference_register_notification_entries" >
+        <item>Vždy</item>
+        <item>Pouze při neaktivní aplikaci</item>
+        <item>Nikdy</item>
+    </string-array>
+
+    <string-array name="preference_register_notification_values" >
+        <item>all_time</item>
+        <item>not_active</item>
+        <item>never</item>
+    </string-array>
+
+</resources>

@@ -6,8 +6,8 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:textSize="17sp"
-          android:layout_marginTop="10dp"
-          android:text="Dummy"
+          android:paddingTop="10dp"
+          android:text=""
           tools:text="Neco">
 
 </TextView>

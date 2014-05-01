@@ -1,5 +1,7 @@
 package com.frca.vsexam.helper;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 
 public abstract class Helper {
     public static <T> List<T> getValue(List<?> list, String valueName, boolean exclusive) {
@@ -152,7 +153,7 @@ public abstract class Helper {
         else if (date.getTime() == 0L)
             return "--";
         else if (outputType == null)
-            return String.valueOf(date.getTime()/1000L);
+            return String.valueOf(date.getTime() / 1000L);
         else
             return outputType.format(date);
     }
@@ -201,23 +202,28 @@ public abstract class Helper {
 
     public static String outputRequest(HttpRequest request) {
         StringBuilder sb = new StringBuilder();
-        sb.append(request.getRequestLine().getMethod() + " " + request.getRequestLine().getUri() + " " + request.getRequestLine().getProtocolVersion().toString() + "\n");
+        if (request != null) {
+            sb.append(request.getRequestLine().getMethod() + " " + request.getRequestLine().getUri() + " " + request.getRequestLine().getProtocolVersion().toString() + "\n");
 
-        for (Header header : request.getAllHeaders())
-            sb.append(header.getName() + ": " + header.getValue() + "\n");
+            for (Header header : request.getAllHeaders())
+                sb.append(header.getName() + ": " + header.getValue() + "\n");
 
-        if (request instanceof HttpEntityEnclosingRequest) {
-            HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
-            if (entity.getContentEncoding() != null)
-                sb.append(entity.getContentEncoding().getName() + ": " + entity.getContentEncoding().getValue() + "\n");
-            if (entity.getContentLength() != 0L)
-                sb.append("Content-Length: " + String.valueOf(entity.getContentLength()) + "\n");
-            if (entity.getContentType() != null)
-                sb.append(entity.getContentType().getName() + ": " + entity.getContentType().getValue() + "\n");
+            if (request instanceof HttpEntityEnclosingRequest) {
+                HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+                if (entity.getContentEncoding() != null)
+                    sb.append(entity.getContentEncoding().getName() + ": " + entity.getContentEncoding().getValue() + "\n");
+                if (entity.getContentLength() != 0L)
+                    sb.append("Content-Length: " + String.valueOf(entity.getContentLength()) + "\n");
+                if (entity.getContentType() != null)
+                    sb.append(entity.getContentType().getName() + ": " + entity.getContentType().getValue() + "\n");
 
-            try {
-                sb.append("Content: " + EntityUtils.toString(entity) + "\n");
-            } catch (IOException e) { }
+                try {
+                    sb.append("Content: " + EntityUtils.toString(entity) + "\n");
+                } catch (IOException e) {
+                }
+            }
+        } else {
+            sb.append("empty");
         }
 
         return sb.toString();
@@ -225,28 +231,31 @@ public abstract class Helper {
 
     public static String outputResponseHeaders(Map<String, String> request) {
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : request.entrySet())
-            sb.append(entry.getKey() + ": " + entry.getValue() + "\n");
+        if (request != null) {
+            for (Map.Entry<String, String> entry : request.entrySet())
+                sb.append(entry.getKey() + ": " + entry.getValue() + "\n");
+        } else {
+            sb.append("empty");
+        }
 
         return sb.toString();
     }
 
-    private static String[] dayPart = new String[] { "den", "dny", "dní" };
-    private static String[] hourPart = new String[] { "hodina", "hodiny", "hodin" };
-    private static String[] minutePart = new String[] { "minuta", "minuty", "minut" };
-    private static String[] secondPart = new String[] { "vteřina", "vteřiny", "vteřin" };
-
-    public static String secondsCountdown(long milis, boolean show_seconds) {
-        int total_seconds = (int) (milis / 1000L);
+    public static String secondsCountdown(Context context, long milliseconds, boolean show_seconds) {
+        int total_seconds = (int) (milliseconds / 1000L);
         int days    = (int) Math.floor(total_seconds / 86400);
         int hours   = (int) Math.floor((total_seconds - (days * 86400))/ 3600);
         int minutes = (int) Math.floor((total_seconds - (days * 86400) - (hours * 3600)) / 60);
         int seconds = (show_seconds || minutes == 0) ? (int) Math.floor(total_seconds - (days * 86400) - (hours * 3600) - (minutes * 60)) : 0;
 
-        return (getNamedTimeValue(days, dayPart) + " " +
-                getNamedTimeValue(hours, hourPart) + " " +
-                getNamedTimeValue(minutes, minutePart) + " " +
-                getNamedTimeValue(seconds, secondPart)).trim();
+        final Resources resources = context.getResources();
+        return
+            (
+                getNamedTimeValue(days, resources.getStringArray(R.array.day_as_string)) + " " +
+                getNamedTimeValue(hours, resources.getStringArray(R.array.hour_as_string)) + " " +
+                getNamedTimeValue(minutes, resources.getStringArray(R.array.minute_as_string)) + " " +
+                getNamedTimeValue(seconds, resources.getStringArray(R.array.second_as_string))
+            ).trim();
     }
 
     private static String getNamedTimeValue(int unit, String[] parts) {
@@ -342,6 +351,22 @@ public abstract class Helper {
             c.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static interface ViewCallback {
+        abstract void call(View view);
+    }
+
+    public static void loopThoughLayout(ViewGroup layout, ViewCallback callback) {
+        for(int i = 0; i < layout.getChildCount(); ++i) {
+            View v = layout.getChildAt(i);
+            if (v != null) {
+                callback.call(v);
+                if (v instanceof ViewGroup) {
+                    loopThoughLayout((ViewGroup) v, callback);
+                }
+            }
         }
     }
 }

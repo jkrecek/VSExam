@@ -32,6 +32,7 @@ public abstract class Dialog {
             if (structure != null)
                 parser = VSEStringParser.parse(studyDetails, structure);
         } catch (ParseException e) {
+            // TODO error while parsing, redirect to settings ??
             e.printStackTrace();
         }
 
@@ -85,7 +86,7 @@ public abstract class Dialog {
                 try {
                     context.startActivity(i);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.no_email_clients_installed, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -98,7 +99,7 @@ public abstract class Dialog {
             }
         });
 
-        builder.setTitle("Profil studenta")
+        builder.setTitle(R.string.student_profile_title)
             .setView(view)
             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
@@ -108,5 +109,23 @@ public abstract class Dialog {
             });
 
         builder.create().show();
+    }
+
+    public static AlertDialog Ok(Context context, Callback callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        callback.call(builder);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        return dialog;
+    }
+
+    public static interface Callback {
+        abstract void call(AlertDialog.Builder dialog);
     }
 }

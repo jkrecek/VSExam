@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/settings_base_title">
+
+        <ListPreference
+            android:key="registerNotification"
+            android:title="@string/settings_register_notification_title"
+            android:dialogTitle="@string/settings_register_notification_dialog"
+            android:entries="@array/preference_register_notification_entries"
+            android:entryValues="@array/preference_register_notification_values" />
+
+        <Preference
+            android:key="handleLogOff"
+            android:title="@string/settings_log_off_title"
+            android:summary="@string/settings_log_off_summary"/>
+
+        <!-- TODO temporary login -->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_vse_study_structure_title">
+
+        <Preference
+            android:key="handleStructureView"
+            android:title="@string/view"
+            android:summary="@string/settings_view_summary"/>
+
+        <Preference
+            android:key="handleStructureRefresh"
+            android:title="@string/settings_refresh_data_title"
+            android:summary="@string/settings_refresh_data_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

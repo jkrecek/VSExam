@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.widget.Toast;
 
+import com.frca.vsexam.R;
 import com.frca.vsexam.helper.Helper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +25,7 @@ public class VSEStructure extends VSEStructureElement.List<VSEStructureElement.F
 
     public void save(Context context) {
         File file = getFilePath(context);
-        String output = new Gson().toJson(this);
-        Helper.writeToFile(output, file, false);
+        Helper.writeToFile(toJsonString(), file, false);
     }
 
     public static VSEStructure load(Context context) {
@@ -37,12 +38,24 @@ public class VSEStructure extends VSEStructureElement.List<VSEStructureElement.F
                 content = Helper.readFromStream(is);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(context, "No VŠE structure could be found", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.no_vse_structure_found, Toast.LENGTH_LONG).show();
                 return null;
             }
         }
 
-        return new Gson().fromJson(content, VSEStructure.class);
+        return fromString(content);
+    }
+
+    public String toJsonString() {
+        return new Gson().toJson(this);
+    }
+
+    public String toPrettyJsonString() {
+        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+    }
+
+    public static VSEStructure fromString(String string) {
+        return new Gson().fromJson(string, VSEStructure.class);
     }
 
 }

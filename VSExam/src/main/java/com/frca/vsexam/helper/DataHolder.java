@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.preference.PreferenceManager;
 import android.util.SparseArray;
 
-import com.frca.vsexam.R;
 import com.frca.vsexam.network.NetworkInterface;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
@@ -27,7 +27,7 @@ public class DataHolder {
     private final SparseArray<RegisteringService> registeringServiceContainer = new SparseArray<RegisteringService>();
 
     private DataHolder(Context context) {
-        preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         configuration = context.getResources().getConfiguration();
         networkInterface = new NetworkInterface();
     }

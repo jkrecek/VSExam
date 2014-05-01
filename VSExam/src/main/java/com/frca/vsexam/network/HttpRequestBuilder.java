@@ -80,14 +80,17 @@ public class HttpRequestBuilder {
         }
 
         request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        request.setHeader("Host", "isis.vse.cz");
-        if (authorized)
-            request.setHeader("Authorization", getB64Auth());
         request.setHeader("Accept-Encoding", "gzip,deflate,sdch");
         request.setHeader("Accept-Language", dataHolder.getConfiguration().locale.getLanguage() + ",en;q=0.8");
-        request.setHeader("Connection", "keep-alive");
-        request.setHeader("Origin", "https://isis.vse.cz");
         request.setHeader("User-Agent", USER_AGENT);
+
+        if (authorized)
+            request.setHeader("Authorization", getB64Auth());
+
+        request.setHeader("Connection", "keep-alive");
+        request.setHeader("Host", "isis.vse.cz");
+
+        request.setHeader("Origin", "https://isis.vse.cz");
 
         if (request instanceof HttpEntityEnclosingRequestBase)
             ((HttpPost)request).setEntity(entity);

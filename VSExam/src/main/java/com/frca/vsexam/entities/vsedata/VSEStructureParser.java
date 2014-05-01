@@ -2,7 +2,6 @@ package com.frca.vsexam.entities.vsedata;
 
 import android.content.Context;
 
-import com.frca.vsexam.fragments.TestFragment;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequest;
 import com.frca.vsexam.network.HttpRequestBuilder;
@@ -29,18 +28,19 @@ public class VSEStructureParser {
 
     private OnLoadedCallback mCallback;
 
+    private OnTaskStatusChanged mStatusChanged;
+
     private VSEStructure mVSEStructure;
 
     private List<BaseNetworkTask> mRunningTasks = new ArrayList<BaseNetworkTask>();
 
-    private VSEStructureParser(Context context, OnLoadedCallback callback) {
-        mContext = context;
-        mCallback = callback;
-    }
 
-    public static VSEStructure loadData(Context context, OnLoadedCallback callback) {
-        VSEStructureParser instance = new VSEStructureParser(context, callback);
-        return  instance.loadFaculties();
+    public static void loadData(Context context, OnLoadedCallback callback, OnTaskStatusChanged statusChanged) {
+        VSEStructureParser instance = new VSEStructureParser();
+        instance.mContext = context;
+        instance.mCallback = callback;
+        instance.mStatusChanged = statusChanged;
+        instance.loadFaculties();
     }
 
     public VSEStructure loadFaculties() {
@@ -211,16 +211,20 @@ public class VSEStructureParser {
             @Override
             public void onFinish(BaseNetworkTask.Result result) {
                 mRunningTasks.remove(task);
-                TestFragment.postMessage(task.getRequest().getURI().toString(), TestFragment.Type.REMOVE);
-                if (mRunningTasks.isEmpty())
+
+                if (mStatusChanged != null)
+                    mStatusChanged.changed(task, false);
+
+                if (mRunningTasks.isEmpty() && mCallback != null)
                     mCallback.loaded(mVSEStructure);
             }
         });
 
-
-        mRunningTasks.add(task);
-        TestFragment.postMessage(task.getRequest().getURI().toString(), TestFragment.Type.ADD);
         BaseNetworkTask.run(task);
+        mRunningTasks.add(task);
+
+        if (mStatusChanged != null)
+            mStatusChanged.changed(task, true);
     }
 
     private static interface OnDocumentLoaded {
@@ -229,5 +233,9 @@ public class VSEStructureParser {
 
     public static interface OnLoadedCallback {
         abstract void loaded(VSEStructure vseStructure);
+    }
+
+    public static interface OnTaskStatusChanged {
+        abstract void changed(BaseNetworkTask task, boolean added);
     }
 }

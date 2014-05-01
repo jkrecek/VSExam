@@ -181,33 +181,29 @@ public class RegisteringService extends Service {
 
     private void notifyUserOnPrepare() {
         setNotification(
-            "Počátek registrace",
-            "Během několika vteřin začne registrace předmětu " + exam.getCourseName() +
-                ". Prosíme, aby jste v následujících chvílích nevytěžovali své zařízení, ať zvýšite pravděpodobnost úspěšné registrace."
+            getString(R.string.notification_register_start_title),
+            getString(R.string.notification_register_start_message, exam.getCourseName())
         );
     }
 
     private void notifyUserOnStart() {
         setNotification(
-            "Probíhá registrace",
-            "Probíhá registrace předmětu " + exam.getCourseName() +
-                ". Prosíme, udržujte Vaše v klidu, ať zvýšite pravděpodobnost úspěšné registrace."
+            getString(R.string.notification_register_progress_title),
+            getString(R.string.notification_register_progress_message, exam.getCourseName())
         );
     }
 
     private void notifyUserOnSuccess() {
         setNotification(
-            "Příhlášen na termín",
-            "Byl jste přihlášen na termín předmětu " + exam.getCourseName() +
-                " dne " + Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE_TIME) + "."
+            getString(R.string.notification_register_success_title),
+            getString(R.string.notification_register_success_message, exam.getCourseName(), Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE_TIME))
         );
     }
 
     private void notifyUserOnFailure() {
         setNotification(
-            "Neúspěšné přihlášení",
-            "Bohužel jste nebyl příhlášen na termín předmětu " + exam.getCourseName() +
-                ". Důvodem bylo značné vytížení školních serverů, které způsobilo špatné zpracování přihlašovacích požadavků. Za způsobené škody se omlouváme."
+            getString(R.string.notification_register_failure_title),
+            getString(R.string.notification_register_failure_message, exam.getCourseName())
         );
 
     }
@@ -266,12 +262,12 @@ public class RegisteringService extends Service {
         Helper.appendLog("Registering process start delay: " + String.valueOf(startInMillis / 1000L) + " seconds");
 
         if (startInMillis < 0) {
-            Toast.makeText(context, "Předmět bude registrován během několika vteřin.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.registration_soon_message, Toast.LENGTH_LONG).show();
             Helper.appendLog("Exam register time is too soon, registering should start right away.");
             sendPendingIntent(getApproxRegisterPI(context, exam, false));
         } else {
-            Toast.makeText(context, "Exam will be registered in " + Helper.secondsCountdown(startInMillis, true), Toast.LENGTH_LONG).show();
-            Helper.appendLog("Exam registering will start in " + Helper.secondsCountdown(startInMillis, true));
+            Toast.makeText(context, context.getString(R.string.registration_in_x, Helper.secondsCountdown(context, startInMillis, true)), Toast.LENGTH_LONG).show();
+            Helper.appendLog("Exam registering will start in " + Helper.secondsCountdown(context, startInMillis, true));
             getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, targetInMillis, getApproxRegisterPI(context, exam, false));
         }
     }

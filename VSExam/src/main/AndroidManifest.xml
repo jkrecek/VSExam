@@ -30,6 +30,10 @@
             </intent-filter>
         </receiver>
         <service android:name="com.frca.vsexam.helper.RegisteringService" />
+        <activity
+            android:name="com.frca.vsexam.context.SettingsActivity"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:label="@string/action_settings" />
 
     </application>
 

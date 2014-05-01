@@ -10,4 +10,10 @@
         android:title="@string/menu_json_format"
         android:orderInCategory="100"
         android:showAsAction="never" />
+
+    <item android:id="@+id/action_settings"
+          android:title="@string/action_settings"
+          android:icon="@android:drawable/ic_menu_manage"
+          android:orderInCategory="101"
+          android:showAsAction="ifRoom"/>
 </menu>

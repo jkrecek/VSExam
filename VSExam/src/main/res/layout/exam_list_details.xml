@@ -53,6 +53,7 @@
 
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
+                          android:id="@+id/layout_details_data"
                           style="@style/ResponsiveLayout"
                           android:paddingBottom="10dp" >
 
@@ -61,7 +62,7 @@
                               android:layout_marginLeft="@dimen/details_side_margin">
 
                     <TextView style="?android:listSeparatorTextViewStyle"
-                              android:text="INFORMACE O TERMÍNU"
+                              android:text="@string/exam_info"
                               android:layout_marginBottom="10dp"/>
 
                     <LinearLayout android:layout_width="match_parent"
@@ -81,7 +82,7 @@
 
                             <TextView style="@style/DataHeader"
                                       android:layout_marginTop="0dp"
-                                      android:text="VYPSAL"/>
+                                      android:text="@string/author"/>
 
                             <TextView style="@style/DataContent"
                                       android:id="@+id/text_authorName"
@@ -109,60 +110,61 @@
                                          android:layout_height="match_parent"/>
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="80dp"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:layout_marginLeft="10dp"
-                                android:text="Visit\nwebsite"/>
+                                android:lines="2"
+                                android:text="@string/visit_web"/>
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                     <TextView style="@style/DataHeader"
-                              android:text="DRUH (forma)"/>
+                              android:text="@string/exam_type"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_type"
                               tools:text="zkouška (ústní)"/>
 
                     <TextView style="@style/DataHeader"
-                              android:text="STAV"/>
+                              android:text="@string/state"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_isRegistered"
                               tools:text="Přihlášen"/>
 
                     <TextView style="@style/DataHeader"
-                              android:text="KAPACITA"/>
+                              android:text="@string/capacity"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_capacity"
                               tools:text="12/12"/>
 
                     <TextView style="@style/DataHeader"
-                              android:text="DATUM TERMÍNU"/>
+                              android:text="@string/exam_date"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_examDate"
                               tools:text="11. 12. 2013 09:00"/>
 
                     <TextView style="@style/DataHeader"
-                              android:text="PŘIHLAŠOVÁNÍ OD"/>
+                              android:text="@string/register_start"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_registerStart"
                               tools:text="04. 09. 2013 08:00"/>
 
                     <TextView style="@style/DataHeader"
-                              android:text="PŘIHLAŠOVÁNÍ DO"/>
+                              android:text="@string/register_end"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_registerEnd"
                               tools:text="04. 12. 2013 09:00"/>
 
                     <TextView style="@style/DataHeader"
-                              android:text="ODHLAŠOVÁNÍ OD"/>
+                              android:text="@string/unregister_end"/>
 
                     <TextView style="@style/DataContent"
                               android:id="@+id/text_unregisterEnd"
@@ -176,7 +178,7 @@
                               android:layout_marginRight="@dimen/details_side_margin">
 
                     <TextView style="?android:listSeparatorTextViewStyle"
-                              android:text="SPOLUŽÁCI"
+                              android:text="@string/classmates"
                               android:layout_marginBottom="10dp" />
 
                     <ProgressBar android:id="@+id/classmates_progress"
@@ -219,7 +221,7 @@
                 android:layout_weight="1"
                 android:id="@+id/button_left"
                 android:background="?selectableItemBackground"
-                android:text="Register ASAP" />
+                android:text="" />
 
 
         <!--<View android:layout_height="match_parent"
@@ -232,7 +234,7 @@
                 android:background="?selectableItemBackground"
                 android:layout_weight="1"
                 android:id="@+id/button_right"
-                android:text="Deregister" />
+                android:text="" />
 
     </LinearLayout>
 

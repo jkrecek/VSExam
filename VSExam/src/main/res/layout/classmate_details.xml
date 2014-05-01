@@ -16,6 +16,7 @@
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
+                      android:baselineAligned="true"
                       android:layout_marginBottom="5dp"
                       android:orientation="horizontal">
 
@@ -61,7 +62,7 @@
                       android:gravity="center_vertical">
 
             <TextView style="@style/DataHeader.Classmate"
-                      android:text="Program"/>
+                      android:text="@string/programme"/>
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_programme"
@@ -75,7 +76,7 @@
                       android:gravity="center_vertical">
 
             <TextView style="@style/DataHeader.Classmate"
-                      android:text="Obor"/>
+                      android:text="@string/field"/>
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_field"
@@ -88,7 +89,7 @@
                       android:gravity="center_vertical">
 
             <TextView style="@style/DataHeader.Classmate"
-                      android:text="Specializace"/>
+                      android:text="@string/specialization"/>
 
             <TextView style="@style/DataContent.Classmate"
                       android:id="@+id/text_spec"
@@ -120,7 +121,7 @@
                           android:layout_height="wrap_content"
                           android:gravity="center"
                           android:layout_marginLeft="10dp"
-                          android:text="Send\nmail"/>
+                          android:text="@string/send_mail"/>
 
             </LinearLayout>
 
@@ -148,7 +149,7 @@
                           android:layout_height="match_parent"
                           android:gravity="center"
                           android:layout_marginLeft="10dp"
-                          android:text="Visit\nwebsite"/>
+                          android:text="@string/visit_web"/>
 
             </LinearLayout>
 
