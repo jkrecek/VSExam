@@ -11,6 +11,8 @@ import com.frca.vsexam.network.Response;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import java.util.concurrent.Executor;
+
 public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
 
     public enum Result {
@@ -25,6 +27,18 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
     protected ResponseCallback responseCallback;
     protected FinishCallback finishCallback;
     protected HttpRequestBase request;
+
+    private static Executor executor = new Executor() {
+        @Override
+        public void execute(final Runnable runnable) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runnable.run();
+                }
+            }).start();
+        }
+    };
 
     public HttpRequestBase getRequest() {
         return request;
@@ -97,7 +111,7 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    task.executeOnExecutor(executor);
                 else
                     task.execute();
             }
