@@ -220,20 +220,23 @@ public class DetailFragment extends BaseFragment {
 
     private void onClassmatesLoaded(ClassmateList classmates) {
         ClassmateAdapter classmateAdapter = new ClassmateAdapter(getActivity(), classmates);
-        View classmateProgress = getView().findViewById(R.id.classmates_progress);
+        View classmateView = getView();
+        if (classmateView != null) {
+            View classmateProgress = classmateView.findViewById(R.id.classmates_progress);
 
-        LinearLayout classmateLayout = (LinearLayout) getView().findViewById(R.id.layout_classmates);
+            LinearLayout classmateLayout = (LinearLayout) classmateView.findViewById(R.id.layout_classmates);
 
-        for (int i = 0; i < classmateAdapter.getCount(); ++i) {
-            View view = classmateAdapter.getView(i, null, null);
-            classmateLayout.addView(view);
+            for (int i = 0; i < classmateAdapter.getCount(); ++i) {
+                View view = classmateAdapter.getView(i, null, null);
+                classmateLayout.addView(view);
 
-            if (i != classmateAdapter.getCount() - 1)
-                classmateLayout.addView(Helper.getDivider(getLayoutInflater(), Helper.Orientation.VERTICAL));
+                if (i != classmateAdapter.getCount() - 1)
+                    classmateLayout.addView(Helper.getDivider(getLayoutInflater(), Helper.Orientation.VERTICAL));
+            }
+
+            classmateProgress.setVisibility(View.GONE);
+            classmateLayout.setVisibility(View.VISIBLE);
         }
-
-        classmateProgress.setVisibility(View.GONE);
-        classmateLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
