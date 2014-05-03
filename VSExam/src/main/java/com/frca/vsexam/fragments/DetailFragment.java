@@ -265,6 +265,7 @@ public class DetailFragment extends BaseFragment {
                 public void onSuccess(Response response) {
                     if (getBrowserPaneFragment().getExams().onRegistrationResponse(getActivity(), exam, response)) {
                         Toast.makeText(getActivity(), R.string.register_success, Toast.LENGTH_LONG).show();
+                        getBrowserPaneFragment().updateView();
                         Helper.appendLog("Register successful.");
                     } else {
                         Toast.makeText(getActivity(), R.string.register_failure, Toast.LENGTH_LONG).show();
@@ -312,6 +313,7 @@ public class DetailFragment extends BaseFragment {
                 public void onSuccess(Response response) {
                 if (getBrowserPaneFragment().getExams().onUnregistrationResponse(exam, response)) {
                     Toast.makeText(getActivity(), R.string.unregister_success, Toast.LENGTH_LONG).show();
+                    getBrowserPaneFragment().updateView();
                     Helper.appendLog("Unregister successful.");
                 } else {
                     Toast.makeText(getActivity(), R.string.unregister_failure, Toast.LENGTH_LONG).show();
