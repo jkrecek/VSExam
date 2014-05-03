@@ -41,7 +41,7 @@
     <string name="data_downloaded">Data načtena</string>
     <string name="structure_downloaded_saved">Základní data o studiu byla znovu stažena.</string>
     <string name="last_update_on_x">Naposledy upraveno dne %1$s.</string>
-    <string name="no_vse_structure_found">Nebyla nalezena základní data o studiu. Stáhněte je znova z natavení.</string>
+    <string name="no_vse_structure_found">Nebyla nalezena základní data o studiu. Stáhněte je znovu v natavení.</string>
     <string name="display_all">Zobrazit vše</string>
     <string name="no_exams_in_this_period">V tomto období nebyly nalezeny žádné zkoušky.</string>
     <string name="no_exams_with_filter">Zadanému filtru neodpovídají žádné zkoušky.</string>
@@ -74,7 +74,7 @@ Chcete to zkusit znovu?</string>
     <string name="notification_register_start_title">Začátek přihlašování</string>
     <string name="notification_register_start_message">Přihlašování na zkoušku %1$s začne během několika vteřin.
 Berte na vědomí, že udržení Vašeho zařízení v klidu zvýší šance na úspěšné přihlášení.</string>
-    <string name="notification_register_progress_title">Probíhá registrace</string>
+    <string name="notification_register_progress_title">Probíhá přihlašování</string>
     <string name="notification_register_progress_message">Přihlašování na zkoušku %1$s právě probíhá.
 Berte na vědomí, že udržení Vašeho zařízení v klidu zvýší šance na úspěšné přihlášení.</string>
     <string name="notification_register_success_title">Přihlášení bylo úspěšné!</string>

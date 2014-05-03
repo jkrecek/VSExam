@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">VŠExam</string>
+    <string name="action_settings">Nastavenie</string>
+
+    <string name="registered">Prihlásený</string>
+    <string name="unregistered">Neprihlásený</string>
+
+    <string name="menu_refresh_exams">Obnoviť skúšky</string>
+    <string name="menu_json_format">Zobraziť vo formáte JSON</string>
+
+    <string name="into_file">Do súboru</string>
+    <string name="logo">Logo</string>
+
+    <string name="group_title_is_registered">Prihlásený</string>
+    <string name="group_title_to_be_registered">Budete prihlásený</string>
+    <string name="group_title_can_register">Môžete sa prihlásiť</string>
+    <string name="group_title_can_not_register">Nemôžete sa prihlásiť</string>
+
+    <string name="register">Prihlásiť</string>
+    <string name="unregister">Odhlásiť</string>
+    <string name="register_asap">Naplánovať prihlásenie</string>
+    <string name="cancel_register_asap">Zrušiť plánované prihlásenie</string>
+
+    <string name="nth_semester_study_plan_string">%1$d semester, študijný plán %2$s</string>
+    <string name="study_type_form_string">%1$s typ štúdia, %2$s</string>
+
+    <string name="form_full_time">Prezenčné štúdium</string>
+    <string name="form_combined">Kombinované štúdium</string>
+    <string name="form_distance">Dištančné štúdium</string>
+
+    <string name="exam_output">Zoznam termínov</string>
+    <string name="successfully_saved_into_file">Úspešne uložené do súboru.</string>
+
+    <string name="unknown_action">Neznáma akcia</string>
+    <string name="loading_with_ellipsis">Načítanie&#8230;</string>
+
+    <string name="progress_structure_number_format">%1$d položiek z približne %2$d skontrolované</string>
+
+    <string name="data_downloaded">Dáta načítaná</string>
+    <string name="structure_downloaded_saved">Základné údaje o štúdiu bola znovu stiahnutá .</string>
+    <string name="last_update_on_x">Naposledy upravené dňa %1$s.</string>
+    <string name="no_vse_structure_found">Neboli nájdené základné dáta o štúdiu. Stiahnite je znovu v nastavení.</string>
+    <string name="display_all">Zobraziť všetko</string>
+    <string name="no_exams_in_this_period">V tomto období neboli nájdené žiadne skúšky.</string>
+    <string name="no_exams_with_filter">Zadanému filtru nezodpovedajú žiadne skúšky.</string>
+    <string name="access_denied">Prístup zamietnutý!</string>
+    <string name="no_email_clients_installed">Žiadny e-mailový klient nie je nainštalovaný.</string>
+    <string name="no_auth_data">Neboli nastavené prihlasovacie údaje.</string>
+    <string name="register_success">Prihlásenie bolo úspešné</string>
+    <string name="register_failure">Prihlásenie bolo neúspešné</string>
+    <string name="unregister_success">Odhlásenie bolo úspešné</string>
+    <string name="unregister_failure">Odhlásenia bolo neúspešné</string>
+    <string name="unregister_confirmation">Naozaj chcete odhlásiť z tohto termínu?</string>
+    <string name="cancel_rot_confirmation">Naozaj chcete zrušiť prihlásenie čo najskôr?</string>
+    <string name="apply_rot_confirmation">Táto funkcia umožňuje naplánovať prihlásenie na skúšku ihneď na začiatku prihlasovania.
+Berte na vedomie, že Vaše zariadenie musí byť v čase registrácie zapnuté, a že táto funkcia nemusí zaručiť prihlásenie na vybraný termín (hlavne v prípade vysokej záťaže školských serverov).</string>
+    <string name="processing_data">Spracovanie dát</string>
+    <string name="downloading_exams">Sťahovanie skúšok</string>
+    <string name="no_network_connection_title">Žiadne pripojenie k sieti</string>
+    <string name="no_network_connection_message">Na použitie tejto aplikácie musí byť Vaša zariadenie pripojené k internetu.
+Pripojte svoje zariadenie k internetu a skúste to znova.</string>
+    <string name="network_error_exams_title">Chyba siete</string>
+    <string name="network_error_exams_message">Stiahnutie údajov o skúškach zlyhalo, pravdepodobne z dôvodu nekvalitného sieťového pripojenia.
+Chcete to skúsiť znova?</string>
+
+    <string name="input_xname">Užívateľské meno (x-name)</string>
+    <string name="input_password">Heslo</string>
+    <string name="login_condition_xname">Zadajte Váš x-name</string>
+    <string name="login_condition_password">Zadajte Vaše heslo</string>
+    <string name="login">Prihlásiť</string>
+
+    <string name="notification_register_start_title">Začiatok prihlasovanie</string>
+    <string name="notification_register_start_message">Prihlasovanie na skúšku %1$s začne v priebehu niekoľkých sekúnd.
+Berte na vedomie, že udržanie Vášho zariadenia v pokoji zvýši šanca na úspešné prihlásenie.</string>
+    <string name="notification_register_progress_title">Prebieha prihlasovanie</string>
+    <string name="notification_register_progress_message">Prihlasovanie na skúšku %1$ s práve prebieha.
+Berte na vedomie, že udržanie Vášho zariadenia v pokoji zvýši šanca na úspešné prihlásenie.</string>
+    <string name="notification_register_success_title">Prihlásenie bolo úspešné!</string>
+    <string name="notification_register_success_message">Bol ste úspešne prihlásený na skúšku %1$s dňa %2$s.</string>
+    <string name="notification_register_failure_title">Neúspešné prihlásenie</string>
+    <string name="notification_register_failure_message">Prihlásenie na skúšku %1$s sa bohužiaľ nepodarilo.
+Vysoké vyťaženie školských serverov spôsobilo zlé spracovanie prihlasovacích požiadaviek.
+Za spôsobené komplikácie sa ospravedlňujeme.</string>
+
+    <string name="registration_soon_message">Na skúšku budete prihlásený priebehu niekoľkých sekúnd.</string>
+    <string name="registration_in_x">Na skúšku budete prihlásený za %1$s</string>
+
+    <string name="student_profile_title">Profil študenta</string>
+    <string name="programme">Program</string>
+    <string name="field">Študijný odbor</string>
+    <string name="specialization">Špecializácie</string>
+    <string name="send_mail">Poslať správu</string>
+    <string name="visit_web">Navštívit web</string>
+    <string name="exam_info">O termíne</string>
+    <string name="author">Vypísal</string>
+    <string name="exam_type">Druh (forma)</string>
+    <string name="state">Stav</string>
+    <string name="capacity">Kapacita</string>
+    <string name="exam_date">Dátum termínu</string>
+    <string name="register_start">Prihlasovanie od</string>
+    <string name="register_end">Prihlasovanie do</string>
+    <string name="unregister_end">Prihlasovanie do</string>
+    <string name="classmates">Spolužiaci</string>
+
+    <string name="always">Vždy</string>
+    <string name="when_offline">Iba pri neaktivite</string>
+    <string name="never">Nikdy</string>
+
+    <string name="settings_register_notification_title">Prihlasovacie notifikácia</string>
+    <string name="settings_register_notification_dialog">Kedy upozorňovať</string>
+    <string name="settings_log_off_title">Odhlásiť</string>
+    <string name="settings_log_off_summary">Odhlási toto zariadenie zo systému ISIS.</string>
+    <string name="settings_base_title">Základné</string>
+    <string name="settings_vse_study_structure_title">Základné informácie o štúdiu</string>
+    <string name="view">Zobraziť</string>
+    <string name="settings_view_summary">Pokročilé. Zobrazia základné informácie o štúdiu vo formáte JSON.</string>
+    <string name="settings_refresh_data_title">Znovu stiahnuť základné informácie o štúdiu</string>
+    <string name="settings_refresh_data_summary">Základné informácie o štúdiu budú znovu stiahnuté z webu VŠE.</string>
+
+</resources>

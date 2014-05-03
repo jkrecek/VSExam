@@ -3,27 +3,27 @@
 
     <!-- LOCALIZED -->
     <string-array name="day_as_string">
-        <item>den</item>
-        <item>dny</item>
-        <item>dnů</item>
+        <item>deň</item>
+        <item>dni</item>
+        <item>dní</item>
     </string-array>
 
     <string-array name="hour_as_string">
         <item>hodina</item>
         <item>hodiny</item>
-        <item>hodin</item>
+        <item>hodín</item>
     </string-array>
 
     <string-array name="minute_as_string">
-        <item>minuta</item>
-        <item>minuty</item>
-        <item>minut</item>
+        <item>minúta</item>
+        <item>minúty</item>
+        <item>minút</item>
     </string-array>
 
     <string-array name="second_as_string">
-        <item>vteřina</item>
-        <item>vteřiny</item>
-        <item>vteřin</item>
+        <item>sekunda</item>
+        <item>sekundy</item>
+        <item>sekúnd</item>
     </string-array>
 
 </resources>
