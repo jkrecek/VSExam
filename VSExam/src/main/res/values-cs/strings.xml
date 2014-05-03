@@ -30,7 +30,7 @@
     <string name="form_combined">Kombinované studium</string>
     <string name="form_distance">Distanční studium</string>
 
-    <string name="exam_output">Výpis termínů</string>
+    <string name="exam_output">Seznam termínů</string>
     <string name="successfully_saved_into_file">Úspěšně uloženo do souboru.</string>
 
     <string name="unknown_action">Neznámá akce</string>
@@ -39,9 +39,9 @@
     <string name="progress_structure_number_format">%1$d položek z přibližně %2$d zkontrolováno</string>
 
     <string name="data_downloaded">Data načtena</string>
-    <string name="structure_downloaded_saved">Nová struktura byla úspěšně stažena a uložena.</string>
+    <string name="structure_downloaded_saved">Základní data o studiu byla znovu stažena.</string>
     <string name="last_update_on_x">Naposledy upraveno dne %1$s.</string>
-    <string name="no_vse_structure_found">Nenalezena školní studijní struktura, prosím, stáhněte ji znova.</string>
+    <string name="no_vse_structure_found">Nebyla nalezena základní data o studiu. Stáhněte je znova z natavení.</string>
     <string name="display_all">Zobrazit vše</string>
     <string name="no_exams_in_this_period">V tomto období nebyly nalezeny žádné zkoušky.</string>
     <string name="no_exams_with_filter">Zadanému filtru neodpovídají žádné zkoušky.</string>
@@ -54,35 +54,35 @@
     <string name="unregister_failure">Odhlášení bylo neúspěšné</string>
     <string name="unregister_confirmation">Opravdu chcete odhlásit z tohoto termínu?</string>
     <string name="cancel_rot_confirmation">Opravdu chcete zrušit přihlášení co nejdříve?</string>
-    <string name="apply_rot_confirmation">Tato funkce Vám umožňuje naplánovat přihlášení na zkoušku v systému ISIS ihned na začátku přihlašování.
-Vezměte prosím na vědomí, že Vaše zařízení musí být zapnuté v době registrace, a že tato funkce Vám nemusí zaručit přihlášení na vybraný termín (hlavně v případě vysoké zátěže školních serverů).</string>
+    <string name="apply_rot_confirmation">Tato funkce umožňuje naplánovat přihlášení na zkoušku ihned na začátku přihlašování.
+Berte vědomí, že Vaše zařízení musí být v době přihlašování zapnuté, a že tato funkce nemusí zaručit přihlášení na vybraný termín (hlavně v případě vysoké zátěže školních serverů).</string>
     <string name="processing_data">Zpracování dat</string>
     <string name="downloading_exams">Stahování zkoušek</string>
     <string name="no_network_connection_title">Žádné připojení k síti</string>
-    <string name="no_network_connection_message">Abyste mohli řádně využívat tuto aplikaci, musí být Vaše zařízení připojeno k internetu.
-Prosíme, připojte Vaše zařízení a zkuste to znova.</string>
-    <string name="network_error_exams_title">Síťová chyba</string>
-    <string name="network_error_exams_message">Nemohly být staženy údaje o zkouškách ze systému ISIS, pravděpodobně z důvodu nekvalitního síťového připojení.
+    <string name="no_network_connection_message">K použití této aplikace musí být Vaše zařízení připojeno k internetu.
+Připojte své zařízení k internetu a zkuste to znovu.</string>
+    <string name="network_error_exams_title">Chyba sítě</string>
+    <string name="network_error_exams_message">Stažení zkoušek se nezdařilo, pravděpodobně z důvodu nekvalitního síťového připojení.
 Chcete to zkusit znovu?</string>
 
     <string name="input_xname">Uživatelské jméno (x-name)</string>
     <string name="input_password">Heslo</string>
-    <string name="login_condition_xname">Vložte Váš x-name</string>
-    <string name="login_condition_password">Vložte Vaše heslo</string>
+    <string name="login_condition_xname">Zadejte Váš x-name</string>
+    <string name="login_condition_password">Zadejte Vaše heslo</string>
     <string name="login">Přihlásit</string>
 
     <string name="notification_register_start_title">Začátek přihlašování</string>
     <string name="notification_register_start_message">Přihlašování na zkoušku %1$s začne během několika vteřin.
-Vezměte prosím na vědomí, že udržení Vašeho zařízení v klidu zvýší šance na úspěšné přihlášení.</string>
+Berte na vědomí, že udržení Vašeho zařízení v klidu zvýší šance na úspěšné přihlášení.</string>
     <string name="notification_register_progress_title">Probíhá registrace</string>
     <string name="notification_register_progress_message">Přihlašování na zkoušku %1$s právě probíhá.
-Vezměte prosím na vědomí, že udržení Vašeho zařízení v klidu zvýší šance na úspěšné přihlášení.</string>
+Berte na vědomí, že udržení Vašeho zařízení v klidu zvýší šance na úspěšné přihlášení.</string>
     <string name="notification_register_success_title">Přihlášení bylo úspěšné!</string>
     <string name="notification_register_success_message">Byl jste úspěšně přihlášen na zkoušku %1$s dne %2$s.</string>
     <string name="notification_register_failure_title">Neúspěšné přihlášení</string>
     <string name="notification_register_failure_message">Přihlášení na zkoušku %1$s se bohužel nezdařilo.
 Vysoké vytížení školních serverů způsobilo špatné zpracování přihlašovacích požadavků.
-Za způsobené škody se omlouváme.</string>
+Za způsobené komplikace se omlouváme.</string>
 
     <string name="registration_soon_message">Na zkoušku budete přihlášen během několika vteřin.</string>
     <string name="registration_in_x">Na zkoušku budete přihlášen za %1$s</string>
@@ -113,10 +113,10 @@ Za způsobené škody se omlouváme.</string>
     <string name="settings_log_off_title">Odhlásit</string>
     <string name="settings_log_off_summary">Odhlásí toto zařízení ze systému ISIS.</string>
     <string name="settings_base_title">Základní</string>
-    <string name="settings_vse_study_structure_title">Studijní struktura</string>
+    <string name="settings_vse_study_structure_title">Základní informace o studiu</string>
     <string name="view">Zobrazit</string>
-    <string name="settings_view_summary">Pokročilé. Zobrazí školní studijní strukturu ve formátu JSON.</string>
-    <string name="settings_refresh_data_title">Znova stáhnout strukturu</string>
-    <string name="settings_refresh_data_summary">Studijní struktura bude znova stažena ze stránek VŠE.</string>
+    <string name="settings_view_summary">Pokročilé. Zobrazí základní informace o studiu ve formátu JSON.</string>
+    <string name="settings_refresh_data_title">Znovu stáhnout základní informace o studiu</string>
+    <string name="settings_refresh_data_summary">Základní informace o studiu budou znovu staženy z webu VŠE.</string>
 
 </resources>
