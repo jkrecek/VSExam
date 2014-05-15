@@ -18,12 +18,14 @@
                   android:layout_height="match_parent"
                   android:divider="@color/divider_light"
                   android:dividerHeight="1dp"
-                  tools:visibility="gone"/>
+                  tools:visibility="visible"/>
 
         <TextView android:id="@+id/left_pane_empty_text"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:visibility="gone"
+                  android:textSize="14sp"
+                  android:padding="20dp"
                   tools:gravity="center"
                   tools:visibility="visible"
                   tools:text="Zadanému filtru neodpovídají žádné zkoušky"/>

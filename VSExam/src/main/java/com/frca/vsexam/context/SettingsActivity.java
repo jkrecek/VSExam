@@ -35,10 +35,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onCreate(savedInstanceState);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+            new ActionBarUpdater().update();
         }
 
         addPreferencesFromResource(R.xml.settings);
@@ -82,7 +79,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     .getMethod(key, Preference.class)
                     .invoke(this, preference);
                 return true;
-            } catch (ReflectiveOperationException e) {
+            } catch (Exception e) {
                 Toast.makeText(this, R.string.unknown_action, Toast.LENGTH_LONG).show();
                 e.printStackTrace();
                 return false;
@@ -112,9 +109,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             summary = editTextPreference.getText();
 
             int variation = editTextPreference.getEditText().getInputType() & InputType.TYPE_MASK_VARIATION;
-            if (variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD ||
-                variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
-                variation == InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD) {
+            if (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
                 summary = summary.replaceAll(".", "*");
             }
         } else if (preference.getClass() == Preference.class) {
@@ -157,7 +152,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setCancelable(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            dialog.setProgressNumberFormat(getString(R.string.progress_structure_number_format));
+            new ProgressNumberUpdater().update(dialog);
         dialog.show();
 
         final MinimalMax max = new MinimalMax(50);
@@ -207,6 +202,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             .commit();
 
         finish();
+    }
+
+    private class ActionBarUpdater {
+        void update() {
+            final ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+        }
+    }
+
+    private class ProgressNumberUpdater {
+        void update(ProgressDialog dialog) {
+            dialog.setProgressNumberFormat(getString(R.string.progress_structure_number_format));
+        }
     }
 
 
