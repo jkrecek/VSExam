@@ -9,7 +9,7 @@
 
     <LinearLayout style="@style/ShadowBox"
                   android:layout_marginBottom="7dp"
-                  android:paddingBottom="5dp"
+                  android:paddingBottom="@dimen/exam_detail_top_padding_bottom"
                   android:orientation="vertical">
 
         <LinearLayout android:layout_width="match_parent"
