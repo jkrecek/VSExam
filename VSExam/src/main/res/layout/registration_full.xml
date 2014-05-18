@@ -4,21 +4,23 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical">
+              android:orientation="horizontal">
 
     <LinearLayout style="@style/RegistrationBoxLayout"
-                  android:gravity="bottom">
+                  android:gravity="top">
 
         <FrameLayout style="@style/RegistrationBoxFrame">
 
             <LinearLayout style="@style/RegistrationBoxContent"
-                          android:layout_gravity="left|bottom">
+                          android:layout_gravity="right|center_vertical">
 
                 <TextView android:id="@+id/text_header_1"
-                          style="@style/RegistrationBoxTextHeader"/>
+                          style="@style/RegistrationBoxTextHeader"
+                          tools:text="Přihlašování od"/>
 
                 <TextView android:id="@+id/text_content_1"
-                          style="@style/RegistrationBoxTextContent"/>
+                          style="@style/RegistrationBoxTextContent"
+                          tools:text="středa\n25. prosince 2015\n13:30"/>
 
             </LinearLayout>
 
@@ -28,13 +30,15 @@
 
             <LinearLayout android:id="@+id/layout_top_last"
                           style="@style/RegistrationBoxContent"
-                          android:layout_gravity="center_horizontal|bottom">
+                          android:layout_gravity="right|center_vertical">
 
                 <TextView android:id="@+id/text_header_3"
-                          style="@style/RegistrationBoxTextHeader"/>
+                          style="@style/RegistrationBoxTextHeader"
+                          tools:text="Přihlašování od"/>
 
                 <TextView android:id="@+id/text_content_3"
-                          style="@style/RegistrationBoxTextContent"/>
+                          style="@style/RegistrationBoxTextContent"
+                          tools:text="středa\n25. prosince 2015\n13:30"/>
 
             </LinearLayout>
 
@@ -42,7 +46,8 @@
 
     </LinearLayout>
 
-    <LinearLayout style="@style/RegistrationTimeLineBlock">
+    <LinearLayout style="@style/RegistrationTimeLineBlock"
+        android:layout_height="200dp">
 
         <RelativeLayout style="@style/RegistrationTimeLineBox">
 
@@ -55,7 +60,8 @@
 
                 <View style="@style/RegistrationPointSpace"/>
 
-                <View style="@style/RegistrationPoint"/>
+                <View style="@style/RegistrationPoint"
+                      tools:background="@color/register_now"/>
 
                 <View style="@style/RegistrationPointSpace"/>
 
@@ -72,18 +78,22 @@
     </LinearLayout>
 
     <LinearLayout style="@style/RegistrationBoxLayout"
-                  android:gravity="right|top" >
+                  android:gravity="bottom" >
 
         <FrameLayout style="@style/RegistrationBoxFrame">
 
             <LinearLayout style="@style/RegistrationBoxContent"
-                          android:layout_gravity="center_horizontal|top">
+                          android:layout_gravity="left|center_vertical">
 
                 <TextView android:id="@+id/text_header_2"
-                          style="@style/RegistrationBoxTextHeader"/>
+                          style="@style/RegistrationBoxTextHeader"
+                          tools:textColor="@color/register_now"
+                          tools:text="Nyní"/>
 
                 <TextView android:id="@+id/text_content_2"
-                          style="@style/RegistrationBoxTextContent"/>
+                          style="@style/RegistrationBoxTextContent"
+                          tools:text="středa\n25. prosince 2015\n13:30"
+                          tools:visibility="gone"/>
 
             </LinearLayout>
 
@@ -92,13 +102,15 @@
         <FrameLayout style="@style/RegistrationBoxFrame">
 
             <LinearLayout style="@style/RegistrationBoxContent"
-                          android:layout_gravity="right|top">
+                          android:layout_gravity="left|center_vertical">
 
                 <TextView android:id="@+id/text_header_4"
-                          style="@style/RegistrationBoxTextHeader"/>
+                          style="@style/RegistrationBoxTextHeader"
+                          tools:text="Přihlašování od"/>
 
                 <TextView android:id="@+id/text_content_4"
-                          style="@style/RegistrationBoxTextContent"/>
+                          style="@style/RegistrationBoxTextContent"
+                          tools:text="středa\n25. prosince 2015\n13:30"/>
 
             </LinearLayout>
 

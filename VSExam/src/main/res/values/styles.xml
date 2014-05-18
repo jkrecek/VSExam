@@ -94,23 +94,27 @@
     </style>
 
     <style name="RegistrationBoxLayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:gravity">left</item>
-        <item name="android:weightSum">7</item>
+        <item name="android:weightSum">5</item>
         <item name="android:baselineAligned">false</item>
+        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="RegistrationBoxFrame">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">3</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">2</item>
+
 </style>
 
     <style name="RegistrationBoxContent">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
 
     <style name="RegistrationBoxTextHeader">
@@ -127,8 +131,8 @@
     </style>
 
     <style name="RegistrationPoint">
-        <item name="android:layout_width">2dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
         <item name="android:background">@color/standard_grey</item>
     </style>
 
@@ -140,26 +144,25 @@
     </style>
 
     <style name="RegistrationTimeLineBlock">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:weightSum">3</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
     </style>
 
     <style name="RegistrationTimeLineBox">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">2</item>
     </style>
 
     <style name="RegistrationTimeLineBase">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:background">@color/standard_grey</item>
     </style>
 
@@ -167,6 +170,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_centerInParent">true</item>
+        <item name="android:orientation">vertical</item>
     </style>
 
 </resources>
