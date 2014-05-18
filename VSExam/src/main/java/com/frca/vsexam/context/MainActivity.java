@@ -1,11 +1,8 @@
 package com.frca.vsexam.context;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,10 +13,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
@@ -29,7 +24,6 @@ import com.frca.vsexam.helper.AppConfig;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.HttpRequestBuilder;
-import com.google.gson.Gson;
 
 import java.util.List;
 

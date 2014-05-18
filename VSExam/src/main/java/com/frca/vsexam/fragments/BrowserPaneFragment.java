@@ -24,8 +24,12 @@ import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.fragments.base.ContentFragment;
 import com.frca.vsexam.fragments.exam_detail.DetailFragment;
 import com.frca.vsexam.helper.AppSparseArray;
+import com.frca.vsexam.helper.DataHolder;
+import com.frca.vsexam.helper.Helper;
 
 public class BrowserPaneFragment extends BaseFragment {
+
+    public static final String KEY_LAST_EXAM = "key_last_exam";
 
     private ExamList exams;
 
@@ -35,11 +39,8 @@ public class BrowserPaneFragment extends BaseFragment {
 
     private TextView mListEmptyText;
 
-    private LinearLayout mContent;
-
     private ActionBar mActionBar;
 
-    //private View lastHighlighted;
     private Exam currentlySelected;
 
     private ExamAdapter adapter;
@@ -59,14 +60,10 @@ public class BrowserPaneFragment extends BaseFragment {
         mSlidingLayout = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane);
         mList = (ListView) rootView.findViewById(R.id.left_pane);
         mListEmptyText = (TextView) rootView.findViewById(R.id.left_pane_empty_text);
-        mContent = (LinearLayout) rootView.findViewById(R.id.layout_details);
         mActionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-
         mSlidingLayout.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
             @Override
-            public void onPanelSlide(View view, float v) {
-
-            }
+            public void onPanelSlide(View view, float v) { }
 
             @Override
             public void onPanelOpened(View view) {
@@ -103,9 +100,7 @@ public class BrowserPaneFragment extends BaseFragment {
             if (exam == null)
                 return;
 
-            highlightExam(exam);
-
-            replaceFragment(DetailFragment.newInstance(exam));
+            openExam(exam);
 
             if (mSlidingLayout.isSlideable()) {
                 new Handler().post(new Runnable() {
@@ -116,6 +111,12 @@ public class BrowserPaneFragment extends BaseFragment {
                 });
             }
         }
+    }
+
+    public void openExam(Exam exam) {
+        highlightExam(exam);
+        replaceFragment(DetailFragment.newInstance(exam));
+        DataHolder.getInstance(getActivity()).getPreferences().edit().putInt(KEY_LAST_EXAM, exam.getId()).commit();
     }
 
     public void replaceFragment(ContentFragment fragment) {
@@ -176,6 +177,18 @@ public class BrowserPaneFragment extends BaseFragment {
             mList.setAdapter(adapter);
             mList.setVisibility(View.VISIBLE);
             mListEmptyText.setVisibility(View.GONE);
+
+            if (currentlySelected == null) {
+                int lastExamId = DataHolder.getInstance(getActivity()).getPreferences().getInt(KEY_LAST_EXAM, 0);
+                if (lastExamId != 0)
+                    currentlySelected = exams.find(lastExamId);
+
+                if (currentlySelected == null && Helper.isValid(exams))
+                    currentlySelected = exams.get(0);
+
+                if (currentlySelected != null)
+                    openExam(currentlySelected);
+            }
         } else {
             mList.setVisibility(View.GONE);
             mListEmptyText.setVisibility(View.VISIBLE);

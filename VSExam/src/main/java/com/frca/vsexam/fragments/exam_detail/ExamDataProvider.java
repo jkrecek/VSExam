@@ -1,8 +1,5 @@
 package com.frca.vsexam.fragments.exam_detail;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +13,11 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
-import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class ExamDataProvider extends DetailFragment.BaseExamProvider {
 

@@ -129,16 +129,9 @@ public class ExamAdapter extends ArrayAdapter<String> {
 
         if (apply) {
             view.setBackgroundResource(R.color.highlighted);
-            /*view.findViewById(R.id.layout_datetime).setBackgroundResource(R.drawable.invert_arrow_right_pos_right);*/
         } else {
             view.setBackgroundResource(R.color.standard_grey);
-            /*viewfindViewById(R.id.layout_datetime).setBackgroundResource(0);*/
         }
     }
 
-    /*@Override
-    public void notifyDataSetChanged() {
-        existingViews.clear();
-        super.notifyDataSetChanged();
-    }*/
 }
