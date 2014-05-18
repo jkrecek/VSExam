@@ -71,6 +71,10 @@ public class ExamClassmatesProvider extends DetailFragment.BaseExamProvider {
     }
 
     private void setUpView() {
+
+        if (getContext() == null)
+            return;
+
         ClassmateAdapter classmateAdapter = new ClassmateAdapter(getContext(), mExam.getClassmates(), new ClassmateAdapter.OnClassmateClicked() {
             @Override
             public void onClick(Classmate classmate) {
