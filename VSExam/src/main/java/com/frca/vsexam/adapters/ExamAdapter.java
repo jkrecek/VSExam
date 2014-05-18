@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
+import com.frca.vsexam.fragments.exam_detail.ExamDataProvider;
 import com.frca.vsexam.helper.Helper;
 
 import java.text.DateFormatSymbols;
@@ -80,6 +81,9 @@ public class ExamAdapter extends ArrayAdapter<String> {
                 text_name.setText(exam.getCourseName());
                 text_type.setText(exam.getType());
                 text_capacity.setText(String.valueOf(exam.getCurrentCapacity()) + "/" + String.valueOf(exam.getMaxCapacity()));
+                text_capacity.setTextColor(getContext().getResources().getColor(
+                    ExamDataProvider.getColorForCapacity(exam.getCurrentCapacity(), exam.getMaxCapacity())
+                ));
 
                 if (selectedExam == exam)
                     highlightView(view, true);

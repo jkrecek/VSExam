@@ -1,7 +1,9 @@
 package com.frca.vsexam.helper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.network.HttpRequestBuilder;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -397,5 +400,11 @@ public abstract class Helper {
             result.put( entry.getKey(), entry.getValue() );
 
         return result;
+    }
+
+    public static void openPartialUrl(Context context, String url) {
+        String authorUrl = HttpRequestBuilder.completeURLString(url, true);
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorUrl));
+        context.startActivity(browserIntent);
     }
 }

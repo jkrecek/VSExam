@@ -103,7 +103,6 @@ We apologize for any damage caused.</string>
     <string name="exam_type">Type (form)</string>
     <string name="state">State</string>
     <string name="capacity">Capacity</string>
-    <string name="exam_date">Date of exam</string>
     <string name="register_start">Registration since</string>
     <string name="register_end">Registration until</string>
     <string name="unregister_end">Logging off until</string>
@@ -129,5 +128,15 @@ We apologize for any damage caused.</string>
 
     <string name="now">Now</string>
     <string name="registration">Registration</string>
+    <string name="registration_dates">Registration dates</string>
+    <string name="capacity_free">Free capacity</string>
+    <string name="capacity_occupied">Occupied capacity</string>
+    <string name="capacity_total">Total capacity</string>
+
+    <string name="following_events">Following events</string>
+    <string name="registering_starts">Registering starts</string>
+    <string name="unregistering_ends">Logging off ends</string>
+    <string name="registering_ends">Registering ends</string>
+    <string name="exam_date">Exam date</string>
 
 </resources>

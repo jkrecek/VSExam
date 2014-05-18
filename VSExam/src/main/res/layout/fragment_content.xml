@@ -40,10 +40,9 @@
 
         </LinearLayout>
 
-
     </ScrollView>
 
-    <View android:layout_height="1dp"
+    <View android:layout_height="3dp"
           android:layout_width="match_parent"
           android:background="@color/standard_grey"/>
 

@@ -47,6 +47,27 @@
         <item name="android:textAppearance">?android:textAppearance</item>
     </style>
 
+    <style name="DataContent.Small">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+    <style name="EventsTableRow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+    </style>
+
+    <style name="DataContent.Small.TableCellHeader">
+        <item name="android:paddingRight">7dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="DataContent.Small.TableCellContent">
+        <item name="android:gravity">right</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <style name="DataLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -100,7 +100,6 @@ Za spôsobené komplikácie sa ospravedlňujeme.</string>
     <string name="exam_type">Druh (forma)</string>
     <string name="state">Stav</string>
     <string name="capacity">Kapacita</string>
-    <string name="exam_date">Dátum termínu</string>
     <string name="register_start">Prihlasovanie od</string>
     <string name="register_end">Prihlasovanie do</string>
     <string name="unregister_end">Odhlasovanie do</string>
@@ -126,5 +125,15 @@ Za spôsobené komplikácie sa ospravedlňujeme.</string>
 
     <string name="now">Teraz</string>
     <string name="registration">Prihlasovanie</string>
+    <string name="registration_dates">Termíny prihlasovanie</string>
+    <string name="capacity_free">Voľných miest</string>
+    <string name="capacity_occupied">Obsadených miest</string>
+    <string name="capacity_total">Celková kapacita</string>
+
+    <string name="following_events">Nasledujúce udalosti</string>
+    <string name="registering_starts">Prihlasovanie začína</string>
+    <string name="unregistering_ends">Odhlasovanie končí</string>
+    <string name="registering_ends">Prihlasovanie končí</string>
+    <string name="exam_date">Dátum skúšky</string>
 
 </resources>

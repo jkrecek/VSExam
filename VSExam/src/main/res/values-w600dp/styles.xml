@@ -28,6 +28,10 @@
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
+    <style name="DataContent.Small">
+        <item name="android:textAppearance">?android:textAppearance</item>
+    </style>
+
     <style name="LargeResponsive">
         <item name="android:textAppearance">?android:textAppearanceLarge</item>
     </style>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="dark">#333333</color>
     <color name="dark_lighter">#646464</color>
     <color name="almost_white">#f2f2f2</color>
@@ -9,10 +10,16 @@
     <color name="dark_text">#585858</color>
     <color name="divider_light">#cccccc</color>
     <color name="highlighted">#9ed8ee</color>
-    <color name="register_now">#b00006</color>
 
-    <color name="registered">#28921f</color>
+    <color name="green">#28921f</color>
+    <color name="red">#b00006</color>
+    <color name="orange">#cc823f</color>
+
+    <color name="register_now">@color/red</color>
+
+    <color name="registered">@color/green</color>
     <color name="to_be_registered">#13aaaf</color>
     <color name="can_register">#1e51be</color>
-    <color name="can_not_register">#b00006</color>
+    <color name="can_not_register">@color/register_now</color>
+
 </resources>

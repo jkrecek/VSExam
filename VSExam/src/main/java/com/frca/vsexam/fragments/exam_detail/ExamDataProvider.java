@@ -2,12 +2,15 @@ package com.frca.vsexam.fragments.exam_detail;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
@@ -67,17 +70,35 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
         setViewText(R.id.text_group, mExam.getGroup().getTitleRes());
 
         setViewText(R.id.text_capacity, String.valueOf(mExam.getCurrentCapacity()) + "/" + String.valueOf(mExam.getMaxCapacity()));
+
+        TextView freeCapacityView = (TextView) findViewById(R.id.text_capacity_free);
+        freeCapacityView.setText(String.valueOf(mExam.getMaxCapacity() - mExam.getCurrentCapacity()));
+        freeCapacityView.setTextColor(getContext().getResources().getColor(
+            getColorForCapacity(mExam.getCurrentCapacity(), mExam.getMaxCapacity())
+        ));
+        setViewText(R.id.text_capacity_occupied, String.valueOf(mExam.getCurrentCapacity()));
+        setViewText(R.id.text_capacity_total, String.valueOf(mExam.getMaxCapacity()));
+
         setViewText(R.id.text_examDate, Helper.getDateOutput(mExam.getExamDate(), Helper.DateOutputType.FULL_WITH_DAY_ONELINE));
-        /*setViewText(R.id.text_registerStart, Helper.getDateOutput(mExam.getRegisterStart(), Helper.DateOutputType.DATE_TIME));
-        setViewText(R.id.text_registerEnd, Helper.getDateOutput(mExam.getRegisterEnd(), Helper.DateOutputType.DATE_TIME));
-        setViewText(R.id.text_unregisterEnd, Helper.getDateOutput(mExam.getUnregisterEnd(), Helper.DateOutputType.DATE_TIME));*/
 
         setOnClickListener(R.id.button_author, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String authorUrl = HttpRequestBuilder.completeURLString("lide/clovek.pl?id=" + String.valueOf(mExam.getAuthorId()), true);
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorUrl));
-                getContext().startActivity(browserIntent);
+                Helper.openPartialUrl(getContext(), "lide/clovek.pl?id=" + String.valueOf(mExam.getAuthorId()));
+            }
+        });
+
+        setOnClickListener(R.id.button_syllabus, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.openPartialUrl(getContext(), "katalog/syllabus.pl?predmet=" + String.valueOf(mExam.getCourseId()));
+            }
+        });
+
+        setOnClickListener(R.id.button_web, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.openPartialUrl(getContext(), "student/terminy_info.pl?termin=" + mExam.getId() + ";studium=" + mExam.getStudyId() + ";obdobi=" + mExam.getPeriodId());
             }
         });
 
@@ -114,12 +135,13 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
     };
 
     private void setUpRegistrationLayout(FrameLayout parent) {
+        long now = System.currentTimeMillis();
         Map<Integer, Long> headerTimeValues = new HashMap<Integer, Long>();
         headerTimeValues.put(R.string.register_start, mExam.getRegisterStart().getTime());
         headerTimeValues.put(R.string.unregister_end, mExam.getUnregisterEnd().getTime());
         if (mExam.getUnregisterEnd().getTime() != mExam.getRegisterEnd().getTime())
             headerTimeValues.put(R.string.register_end, mExam.getRegisterEnd().getTime());
-        headerTimeValues.put(R.string.now, System.currentTimeMillis());
+        headerTimeValues.put(R.string.now, now);
 
         headerTimeValues = Helper.sortByValue(headerTimeValues);
 
@@ -130,9 +152,8 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
         if (inflatedLayout == null)
             return;
 
-        Set<Map.Entry<Integer, Long>> entrySet = headerTimeValues.entrySet();
         int loopCounter = 0;
-        int nowPosition = 0;
+        int nowPosition = -1;
         for (Map.Entry<Integer, Long> entry : headerTimeValues.entrySet()) {
             TextView textHeader = (TextView) inflatedLayout.findViewById(TEXT_HEADER_IDS[loopCounter]);
             TextView textContent = (TextView) inflatedLayout.findViewById(TEXT_CONTENT_IDS[loopCounter]);
@@ -159,28 +180,35 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
         if (nowView != null)
             nowView.setBackgroundResource(R.color.register_now);
 
-        /*LinearLayout layoutTop = (LinearLayout) findViewById(R.id.layout_top);
-        LinearLayout layoutTopLast = (LinearLayout) layoutTop.findViewById(R.id.layout_top_last);
-        LinearLayout layoutBottom = (LinearLayout) findViewById(R.id.layout_bottom);
-        FrameLayout layoutBottomLast = (FrameLayout) layoutBottom.findViewById(R.id.layout_bottom_last);
+        TableLayout table = (TableLayout) findViewById(R.id.layout_table);
+        long examTimes[] = {
+            mExam.getRegisterStart().getTime(),
+            mExam.getUnregisterEnd().getTime(),
+            mExam.getRegisterEnd().getTime(),
+            mExam.getExamDate().getTime()
+        };
 
-        View lastSpace = findViewById(R.id.layout_last_space);
-        View lastPoint = findViewById(R.id.layout_last_point);
+        for (int i = 0; i < examTimes.length; ++i) {
+            TableRow row = (TableRow) table.getChildAt(i);
+            if (row != null) {
+                long timeDiff = examTimes[i] - now;
+                if (timeDiff < 0)
+                    row.setVisibility(View.GONE);
+                else {
+                    TextView textView = (TextView) row.getChildAt(1);
+                    if (textView != null)
+                        textView.setText(Helper.secondsCountdown(getContext(), timeDiff, false));
+                }
+            }
 
-        layoutTop.setWeightSum(4);
-        FrameLayout.LayoutParams paramsTopLast = (FrameLayout.LayoutParams)layoutTopLast.getLayoutParams();
-        if (paramsTopLast != null)
-            paramsTopLast.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        }
 
-        layoutBottom.setWeightSum(2);
-        LinearLayout.LayoutParams paramsBottom = (LinearLayout.LayoutParams)layoutBottom.getLayoutParams();
-        if (paramsBottom != null)
-            paramsBottom.gravity = Gravity.CENTER_HORIZONTAL;
+    }
 
-        layoutBottomLast.setVisibility(View.GONE);
-
-        lastSpace.setVisibility(View.GONE);
-        lastPoint.setVisibility(View.GONE);*/
+    public static int getColorForCapacity(int current, int max) {
+        return current == max ? R.color.red :
+               current > (int) Math.min(max * 0.8f, max - 5f) ? R.color.orange :
+               R.color.green;
     }
 
 }
