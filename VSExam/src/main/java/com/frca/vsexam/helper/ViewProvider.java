@@ -41,14 +41,21 @@ public abstract class ViewProvider {
 
     public final void load() {
         invalidateView();
-        Result result = doLoad();
+        final Result result = doLoad();
         if (result != Result.DELAYED) {
             if (result == Result.HIDE) {
                 mView = null;
             }
 
-            validateView();
-            mBaseFragment.notifyResult(this, result);
+            Helper.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        validateView();
+                        mBaseFragment.notifyResult(ViewProvider.this, result);
+                    }
+                }
+            );
         }
     }
 
@@ -67,7 +74,7 @@ public abstract class ViewProvider {
     protected void invalidateView() {
         validated = false;
         if (mInflater != null && mResourceId != 0)
-            mView = mInflater.inflate(mResourceId, null);
+            mView = mInflater.inflate(mResourceId, null, false);
     }
 
     protected void setViewText(int id, CharSequence sequence) {

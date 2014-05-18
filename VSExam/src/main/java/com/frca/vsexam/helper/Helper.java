@@ -3,6 +3,8 @@ package com.frca.vsexam.helper;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -137,8 +139,8 @@ public abstract class Helper {
         TIME_DATE(new SimpleDateFormat("HH:mm dd. MM. yyyy")),
         FULL(new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS")),
         DAY(new SimpleDateFormat("dd")),
-        FULL_WITH_DAY_ONELINE(new SimpleDateFormat("EEEE, dd. LLLL yyyy HH:mm")),
-        FULL_WITH_DAY_MULTILINE(new SimpleDateFormat("EEEE\ndd. LLLL yyyy\nHH:mm"));
+        FULL_WITH_DAY_ONELINE(new SimpleDateFormat("EEEE, d.\u00A0LLLL\u00A0yyyy H:mm")),
+        FULL_WITH_DAY_MULTILINE(new SimpleDateFormat("EEEE\nd. LLLL yyyy\nH:mm"));
 
         private SimpleDateFormat mFormat;
         private DateOutputType(SimpleDateFormat format) {
@@ -348,6 +350,10 @@ public abstract class Helper {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) { }
+    }
+
+    public static void runOnUiThread(Runnable runnable) {
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
     public static void close(Closeable c) {

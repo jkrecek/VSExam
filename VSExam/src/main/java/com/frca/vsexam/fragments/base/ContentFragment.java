@@ -2,6 +2,8 @@ package com.frca.vsexam.fragments.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,13 @@ public abstract class ContentFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        loadToView();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadToView();
+            }
+        }, 50);
+
     }
 
     @Override
@@ -53,15 +61,22 @@ public abstract class ContentFragment extends BaseFragment {
     }*/
 
     private void loadToView() {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup layouts[] = {
+        final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final ViewGroup layouts[] = {
             (ViewGroup) getView().findViewById(R.id.layout_first),
             (ViewGroup) getView().findViewById(R.id.layout_second),
             (ViewGroup) getView().findViewById(R.id.layout_buttons)
         };
 
-        for (int i = 0; i < mProviderClasses.length; ++i)
-            getProvider(mProviderClasses[i], layouts[i], inflater).load();
+        for (int i = 0; i < mProviderClasses.length; ++i) {
+            final int idx = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getProvider(mProviderClasses[idx], layouts[idx], inflater).load();
+                }
+            }).start();
+        }
     }
 
     public void reload() {
