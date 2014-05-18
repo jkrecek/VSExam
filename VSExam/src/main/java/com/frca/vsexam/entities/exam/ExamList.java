@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -263,6 +264,11 @@ public class ExamList extends BaseEntityList<Exam> {
 
         sort();
 
+        SharedPreferences preferences = DataHolder.getInstance(context).getPreferences();
+        if (preferences.getBoolean("autoEventCreate", false)) {
+            putExamToCalendar(exam, context);
+        }
+
         BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
         if (browserPaneFragment != null)
             browserPaneFragment.updateView();
@@ -279,7 +285,7 @@ public class ExamList extends BaseEntityList<Exam> {
         return true;
     }
 
-    public boolean onUnregistrationResponse(Exam exam, Response response) {
+    public boolean onUnregistrationResponse(Context context, Exam exam, Response response) {
         if (response == null || response.getStatusCode() != 200)
             return false;
 
@@ -290,6 +296,11 @@ public class ExamList extends BaseEntityList<Exam> {
         setGroupCounts();
 
         sort();
+
+        SharedPreferences preferences = DataHolder.getInstance(context).getPreferences();
+        if (preferences.getBoolean("autoEventCreate", false)) {
+            removeExamFromCalendar(exam, context);
+        }
 
         BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
         if (browserPaneFragment != null)

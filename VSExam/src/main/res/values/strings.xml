@@ -139,4 +139,6 @@ We apologize for any damage caused.</string>
     <string name="registering_ends">Registering ends</string>
     <string name="exam_date">Exam date</string>
 
+    <string name="settings_auto_calendar_title">Add to calendar</string>
+    <string name="settings_auto_calendar_summary">All exams will be automatically added to your calendar when registered</string>
 </resources>

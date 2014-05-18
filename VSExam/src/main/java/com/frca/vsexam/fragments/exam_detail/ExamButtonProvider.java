@@ -139,7 +139,7 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
             BaseNetworkTask.run(new TextNetworkTask(getContext(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
-                    if (getMainFragment().getExams().onUnregistrationResponse(mExam, response)) {
+                    if (getMainFragment().getExams().onUnregistrationResponse(getContext(), mExam, response)) {
                         Toast.makeText(getContext(), R.string.unregister_success, Toast.LENGTH_LONG).show();
                         getMainFragment().updateView();
                         Helper.appendLog("Unregister successful.");

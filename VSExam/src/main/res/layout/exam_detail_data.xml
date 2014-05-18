@@ -223,6 +223,7 @@
                      android:layout_height="wrap_content"/>
 
         <TextView style="@style/DataHeader.Responsive"
+                  android:layout_marginTop="10dp"
                   android:text="@string/following_events"/>
 
         <TableLayout android:id="@+id/layout_table"

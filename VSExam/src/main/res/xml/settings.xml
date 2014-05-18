@@ -13,6 +13,12 @@
             android:entryValues="@array/preference_register_notification_values"
             android:defaultValue="@string/when_offline" />
 
+        <CheckBoxPreference
+            android:key="autoEventCreate"
+            android:defaultValue="true"
+            android:title="@string/settings_auto_calendar_title"
+            android:summary="@string/settings_auto_calendar_summary" />
+
         <Preference
             android:key="handleLogOff"
             android:title="@string/settings_log_off_title"

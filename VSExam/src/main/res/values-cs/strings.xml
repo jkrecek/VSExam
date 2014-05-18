@@ -136,4 +136,7 @@ Za způsobené komplikace se omlouváme.</string>
     <string name="registering_ends">Přihlašování končí</string>
     <string name="exam_date">Termín zkoušky</string>
 
+    <string name="settings_auto_calendar_title">Přidávat do kalendaře</string>
+    <string name="settings_auto_calendar_summary">Vaše zkoušky budou automaticky přidány do vašeho kalendáře při zapsání</string>
+
 </resources>
