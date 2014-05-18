@@ -36,44 +36,49 @@
 
         </LinearLayout>
 
-        <RelativeLayout android:layout_width="match_parent"
+        <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:paddingBottom="10dp"
                       android:orientation="horizontal">
 
             <TextView android:id="@+id/text_courseCode"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
                       android:textAppearance="?android:textAppearanceMedium"
-                      android:layout_alignParentLeft="true"
                       tools:text="PHM"/>
 
             <TextView android:id="@+id/text_type"
-                      android:layout_width="wrap_content"
+                      android:layout_width="0dp"
                       android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:paddingLeft="3dp"
                       android:textAppearance="?android:textAppearanceMedium"
-                      android:layout_alignParentRight="true"
+                      android:gravity="right"
                       tools:text="zkouška (ústní)"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                      android:layout_height="wrap_content"
+                      android:paddingTop="10dp"
+                      android:paddingBottom="5dp">
 
             <TextView android:id="@+id/text_examDate"
                       android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
                       android:layout_gravity="center_vertical"
+                      android:paddingRight="3dp"
                       android:textAppearance="?android:textAppearanceMedium"
-                      android:text="středa, 10. července 2014 14:44"/>
+                      tools:text="středa, 10.\u00A0července\u00A02014 14:44"/>
 
             <TextView android:id="@+id/text_location"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
+                      android:maxWidth="100dp"
                       android:layout_gravity="center_vertical"
                       android:textAppearance="?android:textAppearanceMedium"
-                      android:text="RB 358"/>
+                      tools:text="Likešova aula (ZI)"/>
 
         </LinearLayout>
 
