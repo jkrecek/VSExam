@@ -297,19 +297,22 @@ public abstract class Helper {
     }
 
     public static String writeToFile(String content, File file, boolean append) {
-        try {
-            if (file.exists())
-                file.createNewFile();
+        if (AppConfig.LOG_TO_EXTERNAL) {
+            try {
+                if (file.exists())
+                    file.createNewFile();
 
-            BufferedWriter buf = new BufferedWriter(new FileWriter(file, append));
-            buf.append(content);
-            buf.newLine();
-            buf.close();
+                BufferedWriter buf = new BufferedWriter(new FileWriter(file, append));
+                buf.append(content);
+                buf.newLine();
+                buf.close();
+                return null;
+            } catch (IOException e) {
+                Log.e("File Write", "Cannot write to file " + file.getPath() + "\nError: " + e.getMessage());
+                return e.getMessage();
+            }
+        } else
             return null;
-        } catch (IOException e) {
-            Log.e("File Write", "Cannot write to file " + file.getPath() + "\nError: " + e.getMessage());
-            return e.getMessage();
-        }
     }
 
     public static String readFromStream(InputStream is) {
@@ -338,7 +341,7 @@ public abstract class Helper {
     }
 
     public static File getDataDirectoryFile(String subDir, String filename, String fileType) {
-        String path = Environment.getExternalStorageDirectory().getPath() + "/VSExam/";
+        String path = Environment.getExternalStorageDirectory().getPath() + "/data/VSExam/";
         if (!TextUtils.isEmpty(subDir))
             path += subDir + "/";
 
