@@ -230,8 +230,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private boolean hasSavedLoginData() {
-        SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
-        return preferences.contains(HttpRequestBuilder.KEY_LOGIN) && preferences.contains(HttpRequestBuilder.KEY_PASSWORD);
+        return DataHolder.getInstance(this).getPreferences().contains(HttpRequestBuilder.KEY_AUTH_KEY);
     }
 
 }

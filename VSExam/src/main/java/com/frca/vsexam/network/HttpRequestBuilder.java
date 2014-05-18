@@ -20,9 +20,7 @@ import java.util.Map;
 
 public class HttpRequestBuilder {
 
-    public final static String KEY_LOGIN = "key_login";
-
-    public final static String KEY_PASSWORD = "key_password";
+    public final static String KEY_AUTH_KEY = "key_auth";
 
     public final static String AUTH_BASE_URL = "https://isis.vse.cz/auth/";
 
@@ -140,15 +138,12 @@ public class HttpRequestBuilder {
     }
 
     private String getB64Auth () throws NoAuthException {
-        String login = dataHolder.getPreferences().getString(KEY_LOGIN, null);
-        String password = dataHolder.getPreferences().getString(KEY_PASSWORD, null);
+        String authKey = dataHolder.getPreferences().getString(KEY_AUTH_KEY, null);
 
-        if (TextUtils.isEmpty(login) || TextUtils.isEmpty(password))
+        if (TextUtils.isEmpty(authKey))
             throw new NoAuthException();
 
-        String source = login + ":" + password;
-        String auth = "Basic "+ Base64.encodeToString(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-        return auth;
+        return "Basic " + authKey;
     }
 
     private String getHost() {

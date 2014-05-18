@@ -197,8 +197,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     public void handleLogOff(final Preference preference) {
         getBaseSharedPreferences()
             .edit()
-            .remove(HttpRequestBuilder.KEY_LOGIN)
-            .remove(HttpRequestBuilder.KEY_PASSWORD)
+            .remove(HttpRequestBuilder.KEY_AUTH_KEY)
             .commit();
 
         finish();

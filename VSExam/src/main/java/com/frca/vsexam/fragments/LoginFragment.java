@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +53,11 @@ public class LoginFragment extends BaseFragment {
                         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(viewPassword.getWindowToken(), 0);
 
+                        String loginPasswordKey = loginInput + ":" + loginPassword;
+                        String authKey = Base64.encodeToString(loginPasswordKey.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
                         preferences
                             .edit()
-                            .putString(HttpRequestBuilder.KEY_LOGIN, loginInput)
-                            .putString(HttpRequestBuilder.KEY_PASSWORD, loginPassword)
+                            .putString(HttpRequestBuilder.KEY_AUTH_KEY, authKey)
                             .commit();
 
                         getMainActivity().setFragment(new LoadingFragment());
