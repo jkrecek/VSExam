@@ -61,6 +61,7 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
         setViewText(R.id.text_courseName, mExam.getCourseName());
         setViewText(R.id.text_authorName, mExam.getAuthorName());
         setViewText(R.id.text_type, mExam.getType());
+        setViewText(R.id.text_location, mExam.getLocation());
 
         findViewById(R.id.layout_group).setBackgroundResource(mExam.getGroup().getColorRes());
         setViewText(R.id.text_group, mExam.getGroup().getTitleRes());
