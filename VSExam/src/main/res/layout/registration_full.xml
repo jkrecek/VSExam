@@ -11,8 +11,7 @@
 
         <FrameLayout style="@style/RegistrationBoxFrame">
 
-            <LinearLayout style="@style/RegistrationBoxContent"
-                          android:layout_gravity="left|bottom">
+            <LinearLayout style="@style/RegistrationBoxContent">
 
                 <TextView android:id="@+id/text_header_1"
                           style="@style/RegistrationBoxTextHeader"/>
@@ -26,9 +25,7 @@
 
         <FrameLayout style="@style/RegistrationBoxFrame">
 
-            <LinearLayout android:id="@+id/layout_top_last"
-                          style="@style/RegistrationBoxContent"
-                          android:layout_gravity="center_horizontal|bottom">
+            <LinearLayout style="@style/RegistrationBoxContent">
 
                 <TextView android:id="@+id/text_header_3"
                           style="@style/RegistrationBoxTextHeader"/>
@@ -76,8 +73,7 @@
 
         <FrameLayout style="@style/RegistrationBoxFrame">
 
-            <LinearLayout style="@style/RegistrationBoxContent"
-                          android:layout_gravity="center_horizontal|top">
+            <LinearLayout style="@style/RegistrationBoxContent">
 
                 <TextView android:id="@+id/text_header_2"
                           style="@style/RegistrationBoxTextHeader"/>
@@ -91,8 +87,7 @@
 
         <FrameLayout style="@style/RegistrationBoxFrame">
 
-            <LinearLayout style="@style/RegistrationBoxContent"
-                          android:layout_gravity="right|top">
+            <LinearLayout style="@style/RegistrationBoxContent">
 
                 <TextView android:id="@+id/text_header_4"
                           style="@style/RegistrationBoxTextHeader"/>
