@@ -121,7 +121,7 @@ public class BrowserPaneFragment extends BaseFragment {
     public void replaceFragment(ContentFragment fragment) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
-        if (getContentFragment() != null)
+        if (getContentFragment() != null && !isOnlyMenuOpen())
             transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -213,5 +213,9 @@ public class BrowserPaneFragment extends BaseFragment {
             return (ContentFragment) currentFragment;
 
         return null;
+    }
+
+    private boolean isOnlyMenuOpen() {
+        return mSlidingLayout.isSlideable() && mSlidingLayout.isOpen();
     }
 }
