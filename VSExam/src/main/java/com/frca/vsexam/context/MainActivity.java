@@ -118,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
                 }
                 break;
             }
-            case R.id.action_json: {
+            /*case R.id.action_json: {
                 ExamList examList = getLoadedExams();
                 if (examList == null) {
                     examList = new ExamList();
@@ -158,7 +158,7 @@ public class MainActivity extends ActionBarActivity {
                         }
                     }).create().show();
                 break;
-            }
+            }*/
             case R.id.action_refresh: {
                 setFragment(new LoadingFragment());
                 break;
