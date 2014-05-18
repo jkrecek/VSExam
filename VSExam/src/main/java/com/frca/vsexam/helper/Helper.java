@@ -28,7 +28,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -131,7 +135,10 @@ public abstract class Helper {
         TIME(new SimpleDateFormat("HH:mm")),
         DATE_TIME(new SimpleDateFormat("dd. MM. yyyy HH:mm")),
         TIME_DATE(new SimpleDateFormat("HH:mm dd. MM. yyyy")),
-        FULL(new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS"));
+        FULL(new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS")),
+        DAY(new SimpleDateFormat("dd")),
+        FULL_WITH_DAY_ONELINE(new SimpleDateFormat("EEEE, dd. LLLL yyyy HH:mm")),
+        FULL_WITH_DAY_MULTILINE(new SimpleDateFormat("EEEE\ndd. LLLL yyyy\nHH:mm"));
 
         private SimpleDateFormat mFormat;
         private DateOutputType(SimpleDateFormat format) {
@@ -368,5 +375,21 @@ public abstract class Helper {
                 }
             }
         }
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue( Map<K, V> map )
+    {
+        List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<K, V>();
+        for (Map.Entry<K, V> entry : list)
+            result.put( entry.getKey(), entry.getValue() );
+
+        return result;
     }
 }

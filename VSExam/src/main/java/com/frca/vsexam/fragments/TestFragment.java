@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.vsedata.VSEStructure;
 import com.frca.vsexam.entities.vsedata.VSEStructureParser;
+import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.google.gson.Gson;
@@ -46,7 +47,7 @@ public class TestFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.layout_test, container, false);
+        View rootView = inflater.inflate(0, container, false);
 
         textView = (TextView) rootView.findViewById(R.id.textView);
 

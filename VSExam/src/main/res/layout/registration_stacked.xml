@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout style="@style/RegistrationBoxLayout"
+                  android:weightSum="6"
+                  android:gravity="bottom">
+
+        <FrameLayout style="@style/RegistrationBoxFrame">
+
+            <LinearLayout style="@style/RegistrationBoxContent"
+                          android:layout_gravity="left">
+
+                <TextView android:id="@+id/text_header_1"
+                          style="@style/RegistrationBoxTextHeader"/>
+
+                <TextView android:id="@+id/text_content_1"
+                          style="@style/RegistrationBoxTextContent"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout style="@style/RegistrationBoxFrame">
+
+            <LinearLayout style="@style/RegistrationBoxContent"
+                          android:layout_gravity="right">
+
+                <TextView android:id="@+id/text_header_3"
+                          style="@style/RegistrationBoxTextHeader"/>
+
+                <TextView android:id="@+id/text_content_3"
+                          style="@style/RegistrationBoxTextContent"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/RegistrationTimeLineBlock">
+
+        <RelativeLayout style="@style/RegistrationTimeLineBox">
+
+            <View style="@style/RegistrationTimeLineBase"/>
+
+            <LinearLayout android:id="@+id/layout_time_line"
+                          style="@style/RegistrationTimeLineLayout">
+
+                <View style="@style/RegistrationPoint"/>
+
+                <View style="@style/RegistrationPointSpace"/>
+
+                <View style="@style/RegistrationPoint"/>
+
+                <View style="@style/RegistrationPointSpace"/>
+
+                <View style="@style/RegistrationPoint"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/RegistrationBoxLayout"
+                  android:gravity="center_horizontal|top"
+                  android:weightSum="3">
+
+        <FrameLayout style="@style/RegistrationBoxFrame">
+
+            <LinearLayout style="@style/RegistrationBoxContent"
+                          android:layout_gravity="center_horizontal|top">
+
+                <TextView android:id="@+id/text_header_2"
+                          style="@style/RegistrationBoxTextHeader"/>
+
+                <TextView android:id="@+id/text_content_2"
+                          style="@style/RegistrationBoxTextContent"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

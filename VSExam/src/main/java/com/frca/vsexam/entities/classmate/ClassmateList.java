@@ -1,15 +1,12 @@
 package com.frca.vsexam.entities.classmate;
 
+import com.frca.vsexam.entities.base.BaseEntityList;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
+public class ClassmateList extends BaseEntityList<Classmate> {
 
-public class ClassmateList extends ArrayList<Classmate> {
-
-    public ClassmateList() {
-        super();
-    }
     public ClassmateList(Elements elements) {
         super();
 

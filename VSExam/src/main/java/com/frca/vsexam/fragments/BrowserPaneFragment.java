@@ -20,6 +20,9 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.adapters.ExamAdapter;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
+import com.frca.vsexam.fragments.base.BaseFragment;
+import com.frca.vsexam.fragments.base.ContentFragment;
+import com.frca.vsexam.fragments.exam_detail.DetailFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 
 public class BrowserPaneFragment extends BaseFragment {
@@ -74,18 +77,19 @@ public class BrowserPaneFragment extends BaseFragment {
 
             @Override
             public void onPanelClosed(View view) {
-                DetailFragment child = getDetailFragment();
-                if (child != null) {
+                ContentFragment contentFragment = getContentFragment();
+                if (contentFragment != null) {
                     mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                    mActionBar.setTitle(child.getExam().getCourseCode() + " | " + child.getExam().getCourseName());
+                    mActionBar.setTitle(contentFragment.getTitle());
                     mActionBar.setDisplayShowTitleEnabled(true);
                     mActionBar.setDisplayHomeAsUpEnabled(true);
                 }
             }
         });
+
         mSlidingLayout.openPane();
         mSlidingLayout.setSliderFadeColor(0x66cccccc);
-        mSlidingLayout.setShadowResource(R.drawable.border_right);
+        mSlidingLayout.setShadowResource(R.drawable.right_shadow);
 
         setActionBarAdapter();
 
@@ -99,13 +103,9 @@ public class BrowserPaneFragment extends BaseFragment {
             if (exam == null)
                 return;
 
-            Exam previouslySelected = currentlySelected;
-            currentlySelected = exam;
+            highlightExam(exam);
 
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.container, new DetailFragment(exam));
-            transaction.addToBackStack(null);
-            transaction.commit();
+            replaceFragment(DetailFragment.newInstance(exam));
 
             if (mSlidingLayout.isSlideable()) {
                 new Handler().post(new Runnable() {
@@ -114,26 +114,38 @@ public class BrowserPaneFragment extends BaseFragment {
                         mSlidingLayout.closePane();
                     }
                 });
-            } else {
-                adapter.highlightExam(previouslySelected, mList, false);
-                adapter.highlightExam(currentlySelected, mList, true);
             }
         }
     }
 
+    public void replaceFragment(ContentFragment fragment) {
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        if (getContentFragment() != null)
+            transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void highlightExam(Exam exam) {
+        adapter.highlightExam(currentlySelected, mList, false);
+        if (exam != null)
+            adapter.highlightExam(exam, mList, true);
+
+        currentlySelected = exam;
+    }
+
     @Override
     public boolean onBackPressed() {
+        FragmentManager manager = getChildFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            manager.popBackStack();
+            return true;
+        }
+
         SlidingPaneLayout slidingPaneLayout = getSlidingLayout();
         if (!slidingPaneLayout.isOpen()) {
             slidingPaneLayout.openPane();
             return true;
-        } else if (!slidingPaneLayout.isSlideable()) {
-            FragmentManager manager = getChildFragmentManager();
-
-            if (manager.getBackStackEntryCount() > 0) {
-                manager.popBackStack();
-                return true;
-            }
         }
 
         return false;
@@ -181,9 +193,9 @@ public class BrowserPaneFragment extends BaseFragment {
     public void updateView() {
         updateActionBarAdapter();
 
-        DetailFragment fragment = getDetailFragment();
+        ContentFragment fragment = getContentFragment();
         if (fragment != null) {
-            fragment.updateView(null);
+            fragment.reload();
         }
     }
 
@@ -195,10 +207,10 @@ public class BrowserPaneFragment extends BaseFragment {
         return mSlidingLayout;
     }
 
-    public DetailFragment getDetailFragment() {
+    public ContentFragment getContentFragment() {
         Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.container);
-        if (currentFragment != null && currentFragment instanceof DetailFragment)
-            return (DetailFragment)currentFragment;
+        if (currentFragment != null && currentFragment instanceof ContentFragment)
+            return (ContentFragment) currentFragment;
 
         return null;
     }

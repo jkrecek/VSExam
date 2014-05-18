@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- untranslated -->
+    <string name="two_dash">--</string>
+
     <string name="app_name">VSExam</string>
     <string name="action_settings">Settings</string>
 
@@ -24,7 +27,6 @@
     <string name="cancel_register_asap">Cancel scheduled registration</string>
 
     <string name="nth_semester_study_plan_string">%1$d. semester, study plan %2$s</string>
-    <string name="study_type_form_string">%1$s study type, %2$s</string>
 
     <string name="form_full_time">Full-time study</string>
     <string name="form_combined">Combined study</string>
@@ -88,6 +90,9 @@ We apologize for any damage caused.</string>
     <string name="registration_in_x">Exam will be registered in %1$s</string>
 
     <string name="student_profile_title">Student profile</string>
+    <string name="faculty">Faculty</string>
+    <string name="study_type">Study type</string>
+    <string name="study_form">Study form</string>
     <string name="programme">Program</string>
     <string name="field">Field of study</string>
     <string name="specialization">Track of study</string>
@@ -118,5 +123,11 @@ We apologize for any damage caused.</string>
     <string name="settings_view_summary">Advanced. Displays school study structure in JSON format.</string>
     <string name="settings_refresh_data_title">Reload study structure</string>
     <string name="settings_refresh_data_summary">Study structure will be downloaded again from VŠE pages.</string>
+
+    <string name="event_created">Event was added to your calendar</string>
+    <string name="event_deleted">Event was removed from your calendar</string>
+
+    <string name="now">Now</string>
+    <string name="registration">Registration</string>
 
 </resources>

@@ -18,7 +18,6 @@
     </style>
 
     <style name="ResponsiveLayoutItem.Details" parent="ResponsiveLayoutItem">
-        <item name="android:background">@color/white</item>
         <item name="android:layout_margin">7dp</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:padding">@dimen/details_inner_padding</item>
@@ -27,33 +26,35 @@
     <style name="DataHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:paddingTop">3dp</item>
-        <item name="android:paddingBottom">3dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">@dimen/data_header_content_pair_margin</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:gravity">bottom</item>
     </style>
 
-    <style name="DataHeader.Classmate" parent="@style/DataHeader">
-        <item name="android:layout_width">90dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">0dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
+    <style name="DataHeader.Responsive">
+        <item name="android:textAppearance">?android:textAppearance</item>
     </style>
 
     <style name="DataContent">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginBottom">@dimen/data_header_content_pair_margin</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:gravity">top</item>
     </style>
 
-    <style name="DataContent.Classmate" parent="DataContent">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="DataContent.Responsive">
+        <item name="android:textAppearance">?android:textAppearance</item>
+    </style>
+
+    <style name="DataLayout">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">@dimen/data_layout_margin_vertical</item>
+        <item name="android:paddingBottom">@dimen/data_layout_margin_vertical</item>
+        <item name="android:paddingLeft">@dimen/data_layout_margin_horizontal</item>
+        <item name="android:paddingRight">@dimen/data_layout_margin_horizontal</item>
     </style>
 
     <style name="LogoView">
@@ -63,15 +64,109 @@
     </style>
 
     <style name="LogoView.Large" parent="LogoView">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">55dp</item>
+        <item name="android:layout_height">66dp</item>
         <item name="android:layout_margin">5dp</item>
     </style>
 
     <style name="LogoView.VeryLarge" parent="LogoView">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">96dp</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
+
+    <style name="ShadowBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/white_with_shadow</item>
+        <item name="android:paddingTop">@dimen/shadowbox_padding</item>
+        <item name="android:paddingLeft">@dimen/shadowbox_padding</item>
+        <item name="android:paddingRight">@dimen/shadowbox_padding</item>
+        <item name="android:paddingBottom">@dimen/shadowbox_padding</item>
+    </style>
+
+    <style name="LargeResponsive">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="MediumResponsive">
+        <item name="android:textAppearance">?android:textAppearance</item>
+    </style>
+
+    <style name="RegistrationBoxLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left</item>
+        <item name="android:weightSum">7</item>
+        <item name="android:baselineAligned">false</item>
+    </style>
+
+    <style name="RegistrationBoxFrame">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">3</item>
+</style>
+
+    <style name="RegistrationBoxContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="RegistrationBoxTextHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minWidth">80dp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="RegistrationBoxTextContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RegistrationPoint">
+        <item name="android:layout_width">2dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/standard_grey</item>
+    </style>
+
+    <style name="RegistrationPointSpace">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0px</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="RegistrationTimeLineBlock">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:weightSum">3</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="RegistrationTimeLineBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">2</item>
+    </style>
+
+    <style name="RegistrationTimeLineBase">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:background">@color/standard_grey</item>
+    </style>
+
+    <style name="RegistrationTimeLineLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
 </resources>

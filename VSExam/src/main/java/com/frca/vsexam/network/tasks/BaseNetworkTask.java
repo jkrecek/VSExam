@@ -52,7 +52,8 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         try {
             this.request = HttpRequestBuilder.getAuthorizedRequestBuilder(dataHolder, url).build();
         } catch (Exception e) {
-            exceptionCallback.onException(e);
+            if (exceptionCallback != null)
+                exceptionCallback.onException(e);
             cancel(true);
         }
     }

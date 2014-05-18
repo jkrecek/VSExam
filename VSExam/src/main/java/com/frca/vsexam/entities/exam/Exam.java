@@ -15,16 +15,19 @@ import java.util.Date;
 public class Exam extends ParentEntity {
 
     public enum Group {
-        IS_REGISTERED(0, R.string.group_title_is_registered),
-        TO_BE_REGISTERED(1, R.string.group_title_to_be_registered),
-        CAN_REGISTER(2, R.string.group_title_can_register),
-        CAN_NOT_REGISTER(3, R.string.group_title_can_not_register);
+        IS_REGISTERED(0, R.string.group_title_is_registered, R.color.registered),
+        TO_BE_REGISTERED(1, R.string.group_title_to_be_registered, R.color.to_be_registered),
+        CAN_REGISTER(2, R.string.group_title_can_register, R.color.can_register),
+        CAN_NOT_REGISTER(3, R.string.group_title_can_not_register, R.color.can_not_register);
 
         private int id;
         private int titleRes;
-        private Group(int id, int titleRes) {
+        private int colorRes;
+
+        private Group(int id, int titleRes, int colorRes) {
             this.id = id;
             this.titleRes = titleRes;
+            this.colorRes = colorRes;
         }
 
         public int getTitleRes() {
@@ -32,6 +35,9 @@ public class Exam extends ParentEntity {
         }
         public int toInt() {
             return id;
+        }
+        public int getColorRes() {
+            return colorRes;
         }
 
         public static Group fromInt(int id) {
@@ -246,6 +252,4 @@ public class Exam extends ParentEntity {
     public void setClassmates(ClassmateList classmates) {
         this.classmates = classmates;
     }
-
-
 }

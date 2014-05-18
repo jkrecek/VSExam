@@ -1,13 +1,23 @@
 package com.frca.vsexam.entities.exam;
 
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.util.SparseArray;
+import android.widget.Toast;
 
+import com.frca.vsexam.R;
 import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.base.BaseEntityList;
+import com.frca.vsexam.entities.base.BaseParser;
+import com.frca.vsexam.entities.calendar_exam.EventExam;
+import com.frca.vsexam.entities.calendar_exam.EventExamSet;
 import com.frca.vsexam.fragments.BrowserPaneFragment;
 import com.frca.vsexam.helper.AppSparseArray;
+import com.frca.vsexam.helper.CalendarEvent;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.helper.ObjectMap;
@@ -63,8 +73,10 @@ public class ExamList extends BaseEntityList<Exam> {
             Exam exam = createExam(context, 1000 + i);
 
             exam.setGroup(Exam.Group.CAN_REGISTER);
-            exam.setCourseName("Státní zkouška ze studijního oboru");
+            exam.setCourseName(i == 0 ? "Státnice" : "Státní zkouška ze studijního oboru");
             exam.setCourseCode("PHM");
+            exam.setCourseId(101022);
+            exam.setLocation("RB 359");
             exam.setType("zkouška (ústní)");
             long regStart = ms + (-2 + i) * day  + 2 * 60 * 1000;
             regStart /= 60000;
@@ -72,6 +84,14 @@ public class ExamList extends BaseEntityList<Exam> {
 
             exam.setRegisterStart(new Date(regStart));
             exam.setExamDate(new Date(regStart + 2 * day));
+            exam.setAuthorId(401);
+            exam.setAuthorName("I. Vostřelová");
+            exam.setCurrentCapacity(0);
+            exam.setMaxCapacity(12);
+            exam.setRegisterEnd(new Date(1404115200000L));
+            exam.setUnregisterEnd(new Date(1404115200000L + i * 60000));
+            exam.setStudyId(123456);
+            exam.setPeriodId(825);
             add(exam);
         }
 
@@ -280,5 +300,39 @@ public class ExamList extends BaseEntityList<Exam> {
 
     public int[] getGroupCounts() {
         return groupCounts;
+    }
+
+    public void putExamToCalendar(Exam exam, Context context) {
+        long calID = 1;
+
+        ContentResolver cr = context.getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(CalendarEvent.DTSTART, exam.getExamDate().getTime());
+        values.put(CalendarEvent.DTEND, exam.getExamDate().getTime() + 90 * 60 * 1000);
+        values.put(CalendarEvent.TITLE, exam.getCourseName() + " - " + exam.getType());
+        values.put(CalendarEvent.CALENDAR_ID, calID);
+        values.put(CalendarEvent.EVENT_TIMEZONE, BaseParser.TIME_ZONE.getID());
+        values.put(CalendarEvent.EVENT_LOCATION, exam.getLocation());
+
+        Uri uri = cr.insert(CalendarEvent.CONTENT_URI, values);
+
+        long eventID = Long.parseLong(uri.getLastPathSegment());
+
+        DataHolder.getInstance(context).getEventExamSet().add(context, exam.getId(), eventID);
+
+        Toast.makeText(context, R.string.event_created, Toast.LENGTH_LONG).show();
+    }
+
+    public void removeExamFromCalendar(Exam exam, Context context) {
+        EventExamSet eventExamSet = DataHolder.getInstance(context).getEventExamSet();
+        EventExam eventExam = eventExamSet.get(exam.getId());
+        if (eventExam != null) {
+            ContentResolver cr = context.getContentResolver();
+            Uri deleteUri = ContentUris.withAppendedId(CalendarEvent.CONTENT_URI, eventExam.getEventId());
+            cr.delete(deleteUri, null, null);
+        }
+
+        eventExamSet.remove(context, exam.getId());
+        Toast.makeText(context, R.string.event_deleted, Toast.LENGTH_LONG).show();
     }
 }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.classmate.Classmate;
 import com.frca.vsexam.entities.classmate.ClassmateList;
-import com.frca.vsexam.helper.Dialog;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
@@ -20,16 +19,19 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
 
     private ClassmateList classmates;
 
-    private static final int resourceLayout = R.layout.classmate_item;
+    private static final int resourceLayout = R.layout.exam_detail_classmates_item;
 
     private SparseArray<View> existingViews = new SparseArray<View>();
 
     private final LayoutInflater inflater;
 
-    public ClassmateAdapter(Context context, ClassmateList classmates) {
+    private OnClassmateClicked mClickCallback;
+
+    public ClassmateAdapter(Context context, ClassmateList classmates, OnClassmateClicked clickCallback) {
         super(context, resourceLayout);
         this.classmates = classmates;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mClickCallback = clickCallback;
     }
 
     @Override
@@ -44,30 +46,36 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
             final Classmate classmate = classmates.get(position);
 
             view = inflater.inflate(resourceLayout, null);
+            if (view != null) {
+                View imageHolder = view.findViewById(R.id.logo);
+                TextView text1 = (TextView) view.findViewById(R.id.text1);
+                TextView text2 = (TextView) view.findViewById(R.id.text2);
+                TextView text3 = (TextView) view.findViewById(R.id.text3);
 
-            View imageHolder = view.findViewById(R.id.logo);                // logo
-            TextView text1 = (TextView)view.findViewById(R.id.text1);       // name
-            TextView text2 = (TextView)view.findViewById(R.id.text2);       // date
-            TextView text3 = (TextView)view.findViewById(R.id.text3);       // time
+                BaseNetworkTask.run(new UserImageNetworkTask(getContext(), classmate.getId(), imageHolder));
 
-            BaseNetworkTask.run(new UserImageNetworkTask(getContext(), classmate.getId(), imageHolder));
+                text1.setText(classmate.getName());
+                text2.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.DATE));
+                text3.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.TIME));
 
-            text1.setText(classmate.getName());
-            text2.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.DATE));
-            text3.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.TIME));
+                view.setTag(classmate);
 
-            view.setTag(classmate);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mClickCallback != null)
+                            mClickCallback.onClick(classmate);
+                    }
+                });
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Dialog.ClassmateDetails(getContext(), classmate.getId(), classmate.getName(), classmate.getIdentification());
-                }
-            });
-
-            existingViews.put(position, view);
+                existingViews.put(position, view);
+            }
         }
 
         return view;
+    }
+
+    public interface OnClassmateClicked {
+        abstract void onClick(Classmate classmate);
     }
 }

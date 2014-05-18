@@ -2,6 +2,8 @@
 
     <style name="ResponsiveLayout">
         <item name="android:orientation">horizontal</item>
+        <item name="android:weightSum">2</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="ResponsiveLayoutItem">
@@ -13,10 +15,25 @@
 
     <style name="ResponsiveLayoutItem.Details" parent="ResponsiveLayoutItem">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/white</item>
         <item name="android:layout_margin">7dp</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:padding">@dimen/details_inner_padding</item>
+    </style>
+
+    <style name="DataHeader.Responsive">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="DataContent.Responsive">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="LargeResponsive">
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+    </style>
+
+    <style name="MediumResponsive">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
 </resources>

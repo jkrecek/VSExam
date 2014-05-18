@@ -24,7 +24,6 @@
     <string name="cancel_register_asap">Zrušit plánované přihlášení</string>
 
     <string name="nth_semester_study_plan_string">%1$d. semestr, studijní plán %2$s</string>
-    <string name="study_type_form_string">%1$s typ studia, %2$s</string>
 
     <string name="form_full_time">Prezenční studium</string>
     <string name="form_combined">Kombinované studium</string>
@@ -88,6 +87,9 @@ Za způsobené komplikace se omlouváme.</string>
     <string name="registration_in_x">Na zkoušku budete přihlášen za %1$s</string>
 
     <string name="student_profile_title">Profil studenta</string>
+    <string name="faculty">Fakulta</string>
+    <string name="study_type">Typ studia</string>
+    <string name="study_form">Forma studia</string>
     <string name="programme">Program</string>
     <string name="field">Studijní obor</string>
     <string name="specialization">Specializace</string>
@@ -101,7 +103,7 @@ Za způsobené komplikace se omlouváme.</string>
     <string name="exam_date">Datum termínu</string>
     <string name="register_start">Přihlašování od</string>
     <string name="register_end">Přihlašování do</string>
-    <string name="unregister_end">Přihlašování do</string>
+    <string name="unregister_end">Odhlašování do</string>
     <string name="classmates">Spolužáci</string>
 
     <string name="always">Vždy</string>
@@ -118,5 +120,11 @@ Za způsobené komplikace se omlouváme.</string>
     <string name="settings_view_summary">Pokročilé. Zobrazí základní informace o studiu ve formátu JSON.</string>
     <string name="settings_refresh_data_title">Znovu stáhnout základní informace o studiu</string>
     <string name="settings_refresh_data_summary">Základní informace o studiu budou znovu staženy z webu VŠE.</string>
+
+    <string name="event_created">Událost byla přidána do Vašeho kalendáře</string>
+    <string name="event_deleted">Událost byla odebrána z Vašeho kalendáře</string>
+
+    <string name="now">Nyní</string>
+    <string name="registration">Přihlašování</string>
 
 </resources>

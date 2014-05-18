@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              tools:background="@color/standard_grey">
+
+    <LinearLayout style="@style/ShadowBox"
+                  android:layout_marginBottom="7dp"
+                  android:paddingBottom="5dp"
+                  android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingTop="5dp"
+                      android:gravity="center_vertical" >
+
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:id="@+id/text_courseName"
+                      android:textAppearance="?android:textAppearanceLarge"
+                      android:textStyle="bold"
+                      tools:text="Státní zkouška ze studijního oboru"/>
+
+            <ImageButton android:id="@+id/button_syllabus"
+                         android:src="@drawable/ic_browser"
+                         android:background="?selectableItemBackground"
+                         android:layout_gravity="top"
+                         android:layout_width="40dp"
+                         android:padding="10dp"
+                         android:layout_height="40dp"/>
+
+        </LinearLayout>
+
+        <RelativeLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:paddingBottom="10dp"
+                      android:orientation="horizontal">
+
+            <TextView android:id="@+id/text_courseCode"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:textAppearanceMedium"
+                      android:layout_alignParentLeft="true"
+                      tools:text="PHM"/>
+
+            <TextView android:id="@+id/text_type"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:textAppearanceMedium"
+                      android:layout_alignParentRight="true"
+                      tools:text="zkouška (ústní)"/>
+
+        </RelativeLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+            <TextView android:id="@+id/text_examDate"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:layout_gravity="center_vertical"
+                      android:textAppearance="?android:textAppearanceMedium"
+                      android:text="středa, 10. července 2014 14:44"/>
+
+            <TextView android:id="@+id/text_location"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:textAppearance="?android:textAppearanceMedium"
+                      android:text="RB 358"/>
+
+        </LinearLayout>
+
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="45dp">
+
+            <FrameLayout android:id="@+id/layout_group"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentLeft="true"
+                         android:layout_alignParentBottom="true"
+                         android:padding="4dp"
+                         android:layout_marginBottom="0dp"
+                         android:layout_marginLeft="15dp"
+                         tools:background="@color/can_register">
+
+                <TextView android:id="@+id/text_group"
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:textAppearance="?android:textAppearanceMedium"
+                          android:textColor="@color/white"
+                          tools:text="Můžete se přihlásit"/>
+
+            </FrameLayout>
+
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_alignParentRight="true"
+                          android:layout_marginBottom="5dp"
+                          android:gravity="right">
+
+                <ImageButton android:id="@+id/button_web"
+                             android:src="@drawable/ic_browser"
+                             android:background="?selectableItemBackground"
+                             android:layout_width="wrap_content"
+                             android:padding="5dp"
+                             android:layout_marginRight="5dp"
+                             android:layout_height="wrap_content"/>
+
+                <ImageButton android:id="@+id/button_calendar"
+                             android:src="@drawable/ic_calendar_add"
+                             android:background="?selectableItemBackground"
+                             android:layout_width="wrap_content"
+                             android:padding="5dp"
+                             android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/ShadowBox"
+                  android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="5dp"
+                      android:orientation="horizontal">
+
+            <include layout="@layout/logo"
+                     android:id="@+id/logo_author"
+                     style="@style/LogoView.Large"/>
+
+            <LinearLayout android:orientation="vertical"
+                          android:layout_width="0dp"
+                          android:layout_weight="1"
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical">
+
+                <TextView style="@style/DataHeader.Responsive"
+                          android:layout_marginTop="0dp"
+                          android:text="@string/author"/>
+
+                <TextView style="@style/DataContent.Responsive"
+                          android:id="@+id/text_authorName"
+                          tools:text="Nějaká pinda"/>
+
+            </LinearLayout>
+
+
+            <ImageButton android:id="@+id/button_author"
+                         android:src="@drawable/ic_browser"
+                         android:background="?selectableItemBackground"
+                         android:layout_width="wrap_content"
+                         android:padding="10dp"
+                         android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout style="@style/DataLayout">
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/capacity"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_capacity"
+                      tools:text="12/12"/>
+
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/registration"/>
+
+        </LinearLayout>
+
+        <FrameLayout android:id="@+id/layout_registration"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

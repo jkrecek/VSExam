@@ -2,7 +2,8 @@ package com.frca.vsexam.entities.vsedata;
 
 import android.text.TextUtils;
 
-import java.text.ParseException;
+import org.apache.http.ParseException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +43,9 @@ public class VSEStringParser {
             mStudyField = mProgramme.fields.getByCode(matcher.group(4));
 
             String specializationText = matcher.group(5);
-            if (!TextUtils.isEmpty(specializationText))
-                mSpecialization = mStudyType.specializations.getByCode(specializationText);
+            if (!TextUtils.isEmpty(specializationText)) {
+                mSpecialization = mVSEStructure.getSpecialization(specializationText);
+            }
 
             mForm = VSEStructureElement.Form.fromString(matcher.group(6));
             mSemester = Integer.valueOf(matcher.group(7));

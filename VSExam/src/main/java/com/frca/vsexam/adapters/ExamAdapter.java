@@ -14,13 +14,16 @@ import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.helper.Helper;
 
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+
 public class ExamAdapter extends ArrayAdapter<String> {
 
     private ExamList exams;
     private Exam selectedExam;
 
     private static final int resourceLayout = R.layout.exam_list_item;
-    private static final int displayField = R.id.layout;
+
     private LayoutInflater inflater;
 
     private SparseArray<View> existingViews = new SparseArray<View>();
@@ -58,19 +61,29 @@ public class ExamAdapter extends ArrayAdapter<String> {
         } else if (object instanceof Exam) {
             Exam exam = (Exam) object;
             View view = inflater.inflate(resourceLayout, null);
+            if (view != null) {
+                TextView text_day = (TextView)view.findViewById(R.id.text_day);
+                TextView text_month = (TextView)view.findViewById(R.id.text_month);
+                TextView text_code = (TextView)view.findViewById(R.id.text_code);
+                TextView text_time = (TextView)view.findViewById(R.id.text_time);
+                TextView text_name = (TextView)view.findViewById(R.id.text_name);
+                TextView text_type = (TextView)view.findViewById(R.id.text_type);
+                TextView text_capacity = (TextView)view.findViewById(R.id.text_capacity);
 
-            TextView text1 = (TextView)view.findViewById(R.id.text1);       // code
-            TextView text2 = (TextView)view.findViewById(R.id.text2);       // name
-            TextView text3 = (TextView)view.findViewById(R.id.text3);       // date
-            TextView text4 = (TextView)view.findViewById(R.id.text4);       // time
+                Calendar examDate = Calendar.getInstance();
+                examDate.setTime(exam.getExamDate());
+                text_day.setText(String.valueOf(examDate.get(Calendar.DAY_OF_MONTH)));
+                text_month.setText(new DateFormatSymbols().getMonths()[examDate.get(Calendar.MONTH)]);
 
-            text1.setText(exam.getCourseCode());
-            text2.setText(exam.getCourseName());
-            text3.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE));
-            text4.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.TIME));
+                text_code.setText(exam.getCourseCode());
+                text_time.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.TIME));
+                text_name.setText(exam.getCourseName());
+                text_type.setText(exam.getType());
+                text_capacity.setText(String.valueOf(exam.getCurrentCapacity()) + "/" + String.valueOf(exam.getMaxCapacity()));
 
-            if (selectedExam == exam)
-                highlightView(view, true);
+                if (selectedExam == exam)
+                    highlightView(view, true);
+            }
 
             return view;
         }
@@ -111,7 +124,7 @@ public class ExamAdapter extends ArrayAdapter<String> {
             return;
 
         if (apply) {
-            view.setBackgroundResource(R.color.white);
+            view.setBackgroundResource(R.color.highlighted);
             /*view.findViewById(R.id.layout_datetime).setBackgroundResource(R.drawable.invert_arrow_right_pos_right);*/
         } else {
             view.setBackgroundResource(R.color.standard_grey);

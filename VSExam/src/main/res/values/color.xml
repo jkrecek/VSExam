@@ -8,4 +8,11 @@
     <color name="standard_grey">#ededed</color>
     <color name="dark_text">#585858</color>
     <color name="divider_light">#cccccc</color>
+    <color name="highlighted">#9ed8ee</color>
+    <color name="register_now">#b00006</color>
+
+    <color name="registered">#28921f</color>
+    <color name="to_be_registered">#13aaaf</color>
+    <color name="can_register">#1e51be</color>
+    <color name="can_not_register">#b00006</color>
 </resources>

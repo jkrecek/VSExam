@@ -7,59 +7,67 @@ import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
 
+import com.frca.vsexam.entities.calendar_exam.EventExamSet;
 import com.frca.vsexam.network.NetworkInterface;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 public class DataHolder {
 
-    private static DataHolder instance;
+    private static DataHolder sInstance;
 
-    private final SharedPreferences preferences;
+    private final SharedPreferences mPreferences;
 
-    private final Configuration configuration;
+    private final Configuration mConfiguration;
 
-    private final SparseArray<Bitmap> bitmapContainer = new SparseArray<Bitmap>();
+    private final NetworkInterface mNetworkInterface;
 
-    private final SparseArray<UserImageNetworkTask> downloadTaskContainer = new SparseArray<UserImageNetworkTask>();
+    private final EventExamSet mEventExamSet;
 
-    private final NetworkInterface networkInterface;
+    private final SparseArray<Bitmap> mBitmapContainer = new SparseArray<Bitmap>();
 
-    private final SparseArray<RegisteringService> registeringServiceContainer = new SparseArray<RegisteringService>();
+    private final SparseArray<UserImageNetworkTask> mDownloadTaskContainer = new SparseArray<UserImageNetworkTask>();
 
-    private DataHolder(Context context) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        configuration = context.getResources().getConfiguration();
-        networkInterface = new NetworkInterface();
-    }
+    private final SparseArray<RegisteringService> mRegisteringServiceContainer = new SparseArray<RegisteringService>();
 
     public static DataHolder getInstance(Context context) {
-        if (instance == null)
-            instance = new DataHolder(context);
+        if (sInstance == null)
+            sInstance = new DataHolder(context);
 
-        return instance;
+        return sInstance;
+    }
+
+    private DataHolder(Context context) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        mConfiguration = context.getResources().getConfiguration();
+        mNetworkInterface = new NetworkInterface();
+        mEventExamSet = EventExamSet.load(mPreferences);
     }
 
     public SharedPreferences getPreferences() {
-        return preferences;
+        return mPreferences;
     }
 
     public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    public SparseArray<Bitmap> getBitmapContainer() {
-        return bitmapContainer;
-    }
-
-    public SparseArray<UserImageNetworkTask> getDownloadTaskContainer() {
-        return downloadTaskContainer;
+        return mConfiguration;
     }
 
     public NetworkInterface getNetworkInterface() {
-        return networkInterface;
+        return mNetworkInterface;
+    }
+
+    public EventExamSet getEventExamSet() {
+        return mEventExamSet;
+    }
+
+    public SparseArray<Bitmap> getBitmapContainer() {
+        return mBitmapContainer;
+    }
+
+    public SparseArray<UserImageNetworkTask> getDownloadTaskContainer() {
+        return mDownloadTaskContainer;
     }
 
     public SparseArray<RegisteringService> getRegisteringServiceContainer() {
-        return registeringServiceContainer;
+        return mRegisteringServiceContainer;
     }
 }

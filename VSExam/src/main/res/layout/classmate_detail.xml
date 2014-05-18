@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <LinearLayout style="@style/ShadowBox"
+                  android:orientation="vertical">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:baselineAligned="false"
+                      android:orientation="horizontal"
+                      android:gravity="center_vertical">
+
+            <include android:id="@+id/logo"
+                     layout="@layout/logo"
+                     style="@style/LogoView.VeryLarge"/>
+
+            <LinearLayout android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="1"
+                          android:gravity="bottom"
+                          android:orientation="vertical" >
+
+                <TextView android:id="@+id/text_name"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="center_horizontal"
+                          android:gravity="center_horizontal"
+                          style="@style/LargeResponsive"
+                          android:textStyle="bold"
+                          tools:text="Novotná Miroslava"/>
+
+                <TextView android:id="@+id/text_semester"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          style="@style/MediumResponsive"
+                          android:layout_gravity="center_horizontal"
+                          android:gravity="center_horizontal"
+                          android:layout_marginBottom="10dp"
+                          tools:text="@string/nth_semester_study_plan_string"/>
+
+                <LinearLayout android:layout_height="wrap_content"
+                              android:layout_width="match_parent"
+                              android:orientation="horizontal"
+                              android:gravity="right">
+
+                    <ImageButton android:id="@+id/button_goto"
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:background="?selectableItemBackground"
+                                 android:layout_marginRight="15dp"
+                                 android:padding="5dp"
+                                 android:src="@drawable/ic_browser"
+                                 android:contentDescription="@string/visit_web"/>
+
+                    <ImageButton android:id="@+id/button_mail"
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:background="?selectableItemBackground"
+                                 android:padding="5dp"
+                                 android:src="@drawable/ic_send_mail"
+                                 android:contentDescription="@string/send_mail"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout style="@style/ShadowBox">
+
+        <LinearLayout style="@style/DataLayout">
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/study_type"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_type"
+                      tools:text="Bakalářský"/>
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/study_form"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_form"
+                      tools:text="Prezenční studium"/>
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/faculty"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_faculty"
+                      tools:text="Fakulta podnikohospodářská"/>
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/programme"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_programme"
+                      tools:text="Podniková ekonomika a management"/>
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/field"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_field"
+                      tools:text="Podniková ekonomika"/>
+
+            <TextView style="@style/DataHeader.Responsive"
+                      android:text="@string/specialization"/>
+
+            <TextView style="@style/DataContent.Responsive"
+                      android:id="@+id/text_spec"
+                      tools:text="Finanční manažer"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

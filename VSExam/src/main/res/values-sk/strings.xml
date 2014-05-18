@@ -24,7 +24,6 @@
     <string name="cancel_register_asap">Zrušiť plánované prihlásenie</string>
 
     <string name="nth_semester_study_plan_string">%1$d semester, študijný plán %2$s</string>
-    <string name="study_type_form_string">%1$s typ štúdia, %2$s</string>
 
     <string name="form_full_time">Prezenčné štúdium</string>
     <string name="form_combined">Kombinované štúdium</string>
@@ -88,6 +87,9 @@ Za spôsobené komplikácie sa ospravedlňujeme.</string>
     <string name="registration_in_x">Na skúšku budete prihlásený za %1$s</string>
 
     <string name="student_profile_title">Profil študenta</string>
+    <string name="faculty">Fakulta</string>
+    <string name="study_type">Typ štúdia</string>
+    <string name="study_form">Forma štúdia</string>
     <string name="programme">Program</string>
     <string name="field">Študijný odbor</string>
     <string name="specialization">Špecializácie</string>
@@ -101,7 +103,7 @@ Za spôsobené komplikácie sa ospravedlňujeme.</string>
     <string name="exam_date">Dátum termínu</string>
     <string name="register_start">Prihlasovanie od</string>
     <string name="register_end">Prihlasovanie do</string>
-    <string name="unregister_end">Prihlasovanie do</string>
+    <string name="unregister_end">Odhlasovanie do</string>
     <string name="classmates">Spolužiaci</string>
 
     <string name="always">Vždy</string>
@@ -118,5 +120,11 @@ Za spôsobené komplikácie sa ospravedlňujeme.</string>
     <string name="settings_view_summary">Pokročilé. Zobrazia základné informácie o štúdiu vo formáte JSON.</string>
     <string name="settings_refresh_data_title">Znovu stiahnuť základné informácie o štúdiu</string>
     <string name="settings_refresh_data_summary">Základné informácie o štúdiu budú znovu stiahnuté z webu VŠE.</string>
+
+    <string name="event_created">Udalosť bola pridaná do vášho kalendára</string>
+    <string name="event_deleted">Udalosť bola odstránená z vášho kalendára</string>
+
+    <string name="now">Teraz</string>
+    <string name="registration">Prihlasovanie</string>
 
 </resources>
