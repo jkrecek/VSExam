@@ -1,5 +1,7 @@
 package com.frca.vsexam.context;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,6 +23,7 @@ import com.frca.vsexam.entities.vsedata.VSEStructure;
 import com.frca.vsexam.entities.vsedata.VSEStructureParser;
 import com.frca.vsexam.helper.Dialog;
 import com.frca.vsexam.helper.MinimalMax;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 
@@ -28,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 @SuppressWarnings( "deprecation" )
+@SuppressLint("OldApi")
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
@@ -176,7 +180,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     .edit()
                     .putString(
                         preference.getKey(),
-                        getString(R.string.last_update_on_x, new SimpleDateFormat("dd. MM. yyyy HH:mm:ss").format(Calendar.getInstance().getTime()))
+                        getString(R.string.last_update_on_x, Utils.getDateOutput(Calendar.getInstance().getTime(), Utils.DateOutputType.DATE_TIME))
                     )
                     .commit();
 
@@ -203,6 +207,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         finish();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private class ActionBarUpdater {
         void update() {
             final ActionBar actionBar = getActionBar();
@@ -212,6 +217,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private class ProgressNumberUpdater {
         void update(ProgressDialog dialog) {
             dialog.setProgressNumberFormat(getString(R.string.progress_structure_number_format));

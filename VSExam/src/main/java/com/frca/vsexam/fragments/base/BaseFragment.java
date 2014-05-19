@@ -32,27 +32,7 @@ public abstract class BaseFragment extends Fragment {
         return (MainActivity)getActivity();
     }
 
-    public void onNavigationItemSelected(int id) {
-        long calID = 3;
-        long startMillis = 0;
-        long endMillis = 0;
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2012, 9, 14, 7, 30);
-        startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2012, 9, 14, 8, 45);
-        endMillis = endTime.getTimeInMillis();
+    public void onNavigationItemSelected(final int id) {
 
-        ContentResolver cr = getActivity().getContentResolver();
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, startMillis);
-        values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "Jazzercise");
-        values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
-        values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
-        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
-        long eventID = Long.parseLong(uri.getLastPathSegment());
     }
 }

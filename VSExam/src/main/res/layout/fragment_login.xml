@@ -41,7 +41,6 @@
             android:maxWidth="300dp"
             android:fontFamily="sans-serif"
             android:hint="@string/input_password"
-            android:password="true"
             android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true"/>

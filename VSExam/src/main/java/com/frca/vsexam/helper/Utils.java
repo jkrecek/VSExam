@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -111,7 +112,7 @@ public abstract class Utils {
             String valueName = valueNames[i];
             String[] values = new String[] {
                 valueName,
-                "get" + valueName.substring(0, 1).toUpperCase() + valueName.substring(1)
+                "get" + valueName.substring(0, 1).toUpperCase(Locale.getDefault()) + valueName.substring(1)
             };
 
             for (String value : values) {
@@ -136,14 +137,14 @@ public abstract class Utils {
     }
 
     public enum DateOutputType {
-        DATE(new SimpleDateFormat("dd.MM.yyyy")),
-        TIME(new SimpleDateFormat("HH:mm")),
-        DATE_TIME(new SimpleDateFormat("dd. MM. yyyy HH:mm")),
-        TIME_DATE(new SimpleDateFormat("HH:mm dd. MM. yyyy")),
-        FULL(new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS")),
-        DAY(new SimpleDateFormat("dd")),
-        FULL_WITH_DAY_ONELINE(new SimpleDateFormat("EEEE, d.\u00A0LLLL\u00A0yyyy H:mm")),
-        FULL_WITH_DAY_MULTILINE(new SimpleDateFormat("EEEE\nd. LLLL yyyy\nH:mm"));
+        DATE(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())),
+        TIME(new SimpleDateFormat("HH:mm", Locale.getDefault())),
+        DATE_TIME(new SimpleDateFormat("dd. MM. yyyy HH:mm", Locale.getDefault())),
+        TIME_DATE(new SimpleDateFormat("HH:mm dd. MM. yyyy", Locale.getDefault())),
+        FULL(new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSS", Locale.getDefault())),
+        DAY(new SimpleDateFormat("dd", Locale.getDefault())),
+        FULL_WITH_DAY_ONELINE(new SimpleDateFormat("EEEE, d.\u00A0MMMM\u00A0yyyy H:mm", Locale.getDefault())),
+        FULL_WITH_DAY_MULTILINE(new SimpleDateFormat("EEEE\nd. MMMM yyyy\nH:mm", Locale.getDefault()));
 
         private SimpleDateFormat mFormat;
         private DateOutputType(SimpleDateFormat format) {
@@ -179,7 +180,7 @@ public abstract class Utils {
         String fieldName = "";
         if (prefix != null)
             fieldName += prefix;
-        fieldName += value.toString().toLowerCase();
+        fieldName += value.toString().toLowerCase(Locale.getDefault());
 
         try {
             return R.string.class.getField(fieldName).getInt(null);

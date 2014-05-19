@@ -1,5 +1,6 @@
 package com.frca.vsexam.network.tasks;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -112,11 +113,20 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    task.executeOnExecutor(executor);
+                    executeHoneycomb(task);
                 else
-                    task.execute();
+                    executeLegacy(task);
             }
         });
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private static void executeHoneycomb(final BaseNetworkTask task) {
+        task.executeOnExecutor(executor);
+    }
+
+    private static void executeLegacy(final BaseNetworkTask task) {
+        task.execute();
     }
 
     public void setResponseCallback(ResponseCallback responseCallback) {

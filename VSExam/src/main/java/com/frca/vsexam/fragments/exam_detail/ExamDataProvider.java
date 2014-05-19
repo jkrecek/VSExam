@@ -1,5 +1,6 @@
 package com.frca.vsexam.fragments.exam_detail;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +130,7 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
         }
     };
 
+    @SuppressLint("UseSparseArrays")
     private void setUpRegistrationLayout(FrameLayout parent) {
         long now = System.currentTimeMillis();
         Map<Integer, Long> headerTimeValues = new HashMap<Integer, Long>();

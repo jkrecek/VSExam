@@ -74,7 +74,7 @@ Chcete to skúsiť znova?</string>
     <string name="notification_register_start_message">Prihlasovanie na skúšku %1$s začne v priebehu niekoľkých sekúnd.
 Berte na vedomie, že udržanie Vášho zariadenia v pokoji zvýši šanca na úspešné prihlásenie.</string>
     <string name="notification_register_progress_title">Prebieha prihlasovanie</string>
-    <string name="notification_register_progress_message">Prihlasovanie na skúšku %1$ s práve prebieha.
+    <string name="notification_register_progress_message">Prihlasovanie na skúšku %1$s práve prebieha.
 Berte na vedomie, že udržanie Vášho zariadenia v pokoji zvýši šanca na úspešné prihlásenie.</string>
     <string name="notification_register_success_title">Prihlásenie bolo úspešné!</string>
     <string name="notification_register_success_message">Bol ste úspešne prihlásený na skúšku %1$s dňa %2$s.</string>
