@@ -27,7 +27,6 @@ import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 @SuppressWarnings( "deprecation" )

@@ -7,8 +7,8 @@ import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.base.ParentEntity;
 import com.frca.vsexam.entities.classmate.ClassmateList;
 import com.frca.vsexam.fragments.MainFragment;
-import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.helper.RegisteringService;
+import com.frca.vsexam.helper.Utils;
 
 import java.util.Date;
 

@@ -20,9 +20,9 @@ import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.CalendarEvent;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.helper.ObjectMap;
 import com.frca.vsexam.helper.RegisteringService;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.Response;
 
 import org.jsoup.nodes.Element;

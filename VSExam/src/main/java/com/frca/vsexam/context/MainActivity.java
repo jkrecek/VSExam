@@ -16,13 +16,12 @@ import android.widget.ArrayAdapter;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.ExamList;
-import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
+import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.helper.AppConfig;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
 import java.util.List;
