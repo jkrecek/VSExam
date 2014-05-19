@@ -140,7 +140,7 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
 
         private void runUnregistering() {
             HttpRequestBase requestBase = HttpRequest.getRegisterRequest(DataHolder.getInstance(getContext()), mExam, false);
-            final ProgressDialog dialog = ProgressDialog.show(getContext(), getContext().getString(R.string.register), getContext().getString(R.string.in_progress));
+            final ProgressDialog dialog = ProgressDialog.show(getContext(), getContext().getString(R.string.unregister), getContext().getString(R.string.in_progress));
             BaseNetworkTask.run(new TextNetworkTask(getContext(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
