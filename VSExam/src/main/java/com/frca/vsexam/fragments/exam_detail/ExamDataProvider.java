@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
@@ -74,26 +74,26 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
         setViewText(R.id.text_capacity_occupied, String.valueOf(mExam.getCurrentCapacity()));
         setViewText(R.id.text_capacity_total, String.valueOf(mExam.getMaxCapacity()));
 
-        setViewText(R.id.text_examDate, Helper.getDateOutput(mExam.getExamDate(), Helper.DateOutputType.FULL_WITH_DAY_ONELINE));
+        setViewText(R.id.text_examDate, Utils.getDateOutput(mExam.getExamDate(), Utils.DateOutputType.FULL_WITH_DAY_ONELINE));
 
         setOnClickListener(R.id.button_author, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Helper.openPartialUrl(getContext(), "lide/clovek.pl?id=" + String.valueOf(mExam.getAuthorId()));
+                Utils.openPartialUrl(getContext(), "lide/clovek.pl?id=" + String.valueOf(mExam.getAuthorId()));
             }
         });
 
         setOnClickListener(R.id.button_syllabus, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Helper.openPartialUrl(getContext(), "katalog/syllabus.pl?predmet=" + String.valueOf(mExam.getCourseId()));
+                Utils.openPartialUrl(getContext(), "katalog/syllabus.pl?predmet=" + String.valueOf(mExam.getCourseId()));
             }
         });
 
         setOnClickListener(R.id.button_web, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Helper.openPartialUrl(getContext(), "student/terminy_info.pl?termin=" + mExam.getId() + ";studium=" + mExam.getStudyId() + ";obdobi=" + mExam.getPeriodId());
+                Utils.openPartialUrl(getContext(), "student/terminy_info.pl?termin=" + mExam.getId() + ";studium=" + mExam.getStudyId() + ";obdobi=" + mExam.getPeriodId());
             }
         });
 
@@ -138,7 +138,7 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
             headerTimeValues.put(R.string.register_end, mExam.getRegisterEnd().getTime());
         headerTimeValues.put(R.string.now, now);
 
-        headerTimeValues = Helper.sortByValue(headerTimeValues);
+        headerTimeValues = Utils.sortByValue(headerTimeValues);
 
         boolean isStacked = headerTimeValues.size() == 3;
         int requiredResource = isStacked ? R.layout.registration_stacked : R.layout.registration_full;
@@ -164,7 +164,7 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
                 textContent.setVisibility(View.GONE);
                 textHeader.setTextColor(getContext().getResources().getColor(R.color.register_now));
             } else {
-                textContent.setText(Helper.getDateOutput(entry.getValue(), Helper.DateOutputType.FULL_WITH_DAY_MULTILINE));
+                textContent.setText(Utils.getDateOutput(entry.getValue(), Utils.DateOutputType.FULL_WITH_DAY_MULTILINE));
             }
 
             ++loopCounter;
@@ -192,7 +192,7 @@ public class ExamDataProvider extends DetailFragment.BaseExamProvider {
                 else {
                     TextView textView = (TextView) row.getChildAt(1);
                     if (textView != null)
-                        textView.setText(Helper.secondsCountdown(getContext(), timeDiff, false));
+                        textView.setText(Utils.secondsCountdown(getContext(), timeDiff, false));
                 }
             }
 

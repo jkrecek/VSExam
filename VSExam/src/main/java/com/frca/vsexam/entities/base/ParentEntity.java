@@ -3,7 +3,7 @@ package com.frca.vsexam.entities.base;
 import android.content.Context;
 import android.util.Log;
 
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -45,8 +45,8 @@ public class ParentEntity implements Serializable, Cloneable {
             Log.e(getClass().getName(), "Error in saveToFile()");
             e.printStackTrace();
         } finally {
-            Helper.close(oos);
-            Helper.close(fos);
+            Utils.close(oos);
+            Utils.close(fos);
             if (!keep)
                 context.deleteFile(filename);
         }

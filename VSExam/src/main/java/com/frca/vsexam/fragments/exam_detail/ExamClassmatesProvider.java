@@ -11,7 +11,7 @@ import com.frca.vsexam.adapters.ClassmateAdapter;
 import com.frca.vsexam.entities.classmate.Classmate;
 import com.frca.vsexam.entities.classmate.ClassmateList;
 import com.frca.vsexam.fragments.classmate_detail.ClassmateFragment;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.frca.vsexam.network.tasks.TextNetworkTask;
@@ -30,7 +30,7 @@ public class ExamClassmatesProvider extends DetailFragment.BaseExamProvider {
     public Result doLoad() {
         if (mExam.getCurrentCapacity() == 0) {
             return Result.HIDE;
-        } else if (Helper.isValid(mExam.getClassmates())) {
+        } else if (Utils.isValid(mExam.getClassmates())) {
             setUpView();
             return Result.DONE;
         } else {
@@ -89,7 +89,7 @@ public class ExamClassmatesProvider extends DetailFragment.BaseExamProvider {
             classmateLayout.addView(view);
 
             if (i != classmateAdapter.getCount() - 1)
-                classmateLayout.addView(Helper.getDivider(getInflater(), Helper.Orientation.VERTICAL));
+                classmateLayout.addView(Utils.getDivider(getInflater(), Utils.Orientation.VERTICAL));
 
             classmateLayout.setVisibility(View.VISIBLE);
         }

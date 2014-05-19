@@ -15,7 +15,7 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.entities.vsedata.VSEStructure;
 import com.frca.vsexam.entities.vsedata.VSEStructureParser;
 import com.frca.vsexam.fragments.base.BaseFragment;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.google.gson.Gson;
 
@@ -66,7 +66,7 @@ public class TestFragment extends BaseFragment {
             @Override
             public void loaded(VSEStructure vseStructure) {
                 String str = new Gson().toJson(vseStructure);
-                Helper.appendLog(str);
+                Utils.appendLog(str);
                 setMessage(str, Type.CURRENT);
                 vseStructure.save(getActivity());
             }

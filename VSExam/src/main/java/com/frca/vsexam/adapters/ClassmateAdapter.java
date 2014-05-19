@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.classmate.Classmate;
 import com.frca.vsexam.entities.classmate.ClassmateList;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
@@ -55,8 +55,8 @@ public class ClassmateAdapter extends ArrayAdapter<String> {
                 BaseNetworkTask.run(new UserImageNetworkTask(getContext(), classmate.getId(), imageHolder));
 
                 text1.setText(classmate.getName());
-                text2.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.DATE));
-                text3.setText(Helper.getDateOutput(classmate.getRegistered(), Helper.DateOutputType.TIME));
+                text2.setText(Utils.getDateOutput(classmate.getRegistered(), Utils.DateOutputType.DATE));
+                text3.setText(Utils.getDateOutput(classmate.getRegistered(), Utils.DateOutputType.TIME));
 
                 view.setTag(classmate);
 

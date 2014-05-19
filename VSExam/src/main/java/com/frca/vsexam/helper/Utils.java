@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public abstract class Helper {
+public abstract class Utils {
     public static <T> List<T> getValue(List<?> list, String valueName, boolean exclusive) {
         if (list.isEmpty())
             return null;
@@ -187,7 +187,7 @@ public abstract class Helper {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
             if (reportErrors)
-                Log.e(Helper.class.getName(), "Missing resource for enum `" + value.toString() + "` (" + fieldName + ")");
+                Log.e(Utils.class.getName(), "Missing resource for enum `" + value.toString() + "` (" + fieldName + ")");
         }
 
         return 0;
@@ -319,7 +319,7 @@ public abstract class Helper {
         try {
             return readFromScanner(new Scanner(is));
         } finally {
-            Helper.close(is);
+            Utils.close(is);
         }
     }
 

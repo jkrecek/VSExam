@@ -56,7 +56,7 @@ public class RegisteringService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int examId = intent.getIntExtra(EXTRA_ID, 0);
-        Helper.appendLog("Registering process starting");
+        Utils.appendLog("Registering process starting");
         examList = MainActivity.getLoadedExams();
         if (examList == null)
             examList = new ExamList();
@@ -65,10 +65,10 @@ public class RegisteringService extends Service {
             exam = examList.load(this, examId);
 
         if (exam == null) {
-            Helper.appendLog("ERROR: Exam data could not be found nor loaded from file!");
+            Utils.appendLog("ERROR: Exam data could not be found nor loaded from file!");
             stopSelf();
         } else if (exam.isRegistered()) {
-            Helper.appendLog("ERROR: Exam is already registered!");
+            Utils.appendLog("ERROR: Exam is already registered!");
             stopSelf();
         } else {
             dataHolder = DataHolder.getInstance(this);
@@ -76,7 +76,7 @@ public class RegisteringService extends Service {
             synchronized (container) {
                 RegisteringService runningService = container.get(exam.getId());
                 if (runningService != null) {
-                    Helper.appendLog("ERROR: Registering service is already running!");
+                    Utils.appendLog("ERROR: Registering service is already running!");
                     stopSelf();
                     return START_STICKY;
                 } else {
@@ -105,8 +105,8 @@ public class RegisteringService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        Helper.appendLog("Registering service stopped, canceling all concurrent tasks");
-        Helper.appendLog("Totally cancelled tasks: " + String.valueOf(tasks.size()));
+        Utils.appendLog("Registering service stopped, canceling all concurrent tasks");
+        Utils.appendLog("Totally cancelled tasks: " + String.valueOf(tasks.size()));
 
         for (TextNetworkTask task : tasks) {
             if (task != null && task.getStatus() != AsyncTask.Status.FINISHED)
@@ -119,39 +119,39 @@ public class RegisteringService extends Service {
     }
 
     private void runRegistering() throws InterruptedException {
-        Helper.appendLog("Preparing premature request");
+        Utils.appendLog("Preparing premature request");
         Response response = dataHolder.getNetworkInterface().execute(getRegisterRequest(), Response.Type.TEXT);
         if (examList.onRegistrationResponse(this, exam, response)) {
             notifyUserOnSuccess();
-            Helper.appendLog("Register success!");
+            Utils.appendLog("Register success!");
             stopSelf();
             return;
         }
 
         long msUntilRegistration = exam.getRegisterStart().getTime() - response.getServerTime().getTime() - response.getDuration();
-        Helper.appendLog("Proper registration should occur in: " + String.valueOf(msUntilRegistration / 1000L) + "sec (" + String.valueOf(msUntilRegistration) + "ms).");
+        Utils.appendLog("Proper registration should occur in: " + String.valueOf(msUntilRegistration / 1000L) + "sec (" + String.valueOf(msUntilRegistration) + "ms).");
         long timerReduction = response.getDuration() * 2 + REQUEST_TIME_SPAM_SPREAD;
-        Helper.appendLog("Registering process advance: " + String.valueOf(timerReduction / 1000L) + "sec (" + String.valueOf(timerReduction) + "ms).");
+        Utils.appendLog("Registering process advance: " + String.valueOf(timerReduction / 1000L) + "sec (" + String.valueOf(timerReduction) + "ms).");
         long timeToSleep = msUntilRegistration - timerReduction;
         if (timeToSleep > 0) {
-            Helper.appendLog("Registration process will start in: " + String.valueOf(timeToSleep / 1000L) + "sec (" + String.valueOf(timeToSleep) + "ms).");
-            Helper.sleepThread(timeToSleep);
+            Utils.appendLog("Registration process will start in: " + String.valueOf(timeToSleep / 1000L) + "sec (" + String.valueOf(timeToSleep) + "ms).");
+            Utils.sleepThread(timeToSleep);
         } else
-            Helper.appendLog("Request starting should start ASAP");
+            Utils.appendLog("Request starting should start ASAP");
 
-        Helper.appendLog("-- REGISTRATION PROCESS STARTING");
+        Utils.appendLog("-- REGISTRATION PROCESS STARTING");
 
         final long endTime = exam.getRegisterStart().getTime() + response.getDuration() * 2;
         long duration = endTime - System.currentTimeMillis();
-        Helper.appendLog("Registration process duration: " + String.valueOf(duration / 1000L) + "sec (" + String.valueOf(duration) + "ms).");
-        Helper.appendLog("Registration process end: " + Helper.getDateOutput(endTime, Helper.DateOutputType.FULL));
+        Utils.appendLog("Registration process duration: " + String.valueOf(duration / 1000L) + "sec (" + String.valueOf(duration) + "ms).");
+        Utils.appendLog("Registration process end: " + Utils.getDateOutput(endTime, Utils.DateOutputType.FULL));
 
         notifyUserOnStart();
         final long sleepTimer = Math.max(REQUEST_TIME_MIN_DIFF_MS, Math.min(REQUEST_TIME_MAX_DIFF_MS, response.getDuration() / 10));
         int loopCounter = 0;
         do {
             if (loopCounter > 0)
-                Helper.sleepThread(sleepTimer);
+                Utils.sleepThread(sleepTimer);
 
             final TextNetworkTask task = new TextNetworkTask(this, getRegisterRequest());
             task.setResponseCallback(new BaseNetworkTask.ResponseCallback() {
@@ -159,11 +159,11 @@ public class RegisteringService extends Service {
                 public void onSuccess(Response response) {
                     tasks.remove(task);
                     if (examList.onRegistrationResponse(RegisteringService.this, exam, response)) {
-                        Helper.appendLog("Register success!");
+                        Utils.appendLog("Register success!");
                         notifyUserOnSuccess();
                         stopSelf();
                     } else {
-                        Helper.appendLog("Register unsuccessful");
+                        Utils.appendLog("Register unsuccessful");
                         if (!thread.isAlive() && tasks.isEmpty()) {
                             notifyUserOnFailure();
                             stopSelf();
@@ -173,7 +173,7 @@ public class RegisteringService extends Service {
                 }
             });
 
-            Helper.appendLog("Starting new task");
+            Utils.appendLog("Starting new task");
 
             tasks.add(task);
             BaseNetworkTask.run(task);
@@ -197,7 +197,7 @@ public class RegisteringService extends Service {
     private void notifyUserOnSuccess() {
         setNotification(
             getString(R.string.notification_register_success_title),
-            getString(R.string.notification_register_success_message, exam.getCourseName(), Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.DATE_TIME))
+            getString(R.string.notification_register_success_message, exam.getCourseName(), Utils.getDateOutput(exam.getExamDate(), Utils.DateOutputType.DATE_TIME))
         );
     }
 
@@ -262,19 +262,19 @@ public class RegisteringService extends Service {
         targetInMillis -= 45 * 1000;
         long startInMillis = targetInMillis - System.currentTimeMillis();
 
-        Helper.appendLog("Exam name: " + exam.getCourseName());
-        Helper.appendLog("Registration start: " + Helper.getDateOutput(exam.getRegisterStart().getTime(), Helper.DateOutputType.FULL));
-        Helper.appendLog("Current server time diff: " + String.valueOf(networkInterface.getLastServerLocalTimeDiff()) + " ms");
-        Helper.appendLog("Registering process start: " + Helper.getDateOutput(targetInMillis, Helper.DateOutputType.FULL));
-        Helper.appendLog("Registering process start delay: " + String.valueOf(startInMillis / 1000L) + " seconds");
+        Utils.appendLog("Exam name: " + exam.getCourseName());
+        Utils.appendLog("Registration start: " + Utils.getDateOutput(exam.getRegisterStart().getTime(), Utils.DateOutputType.FULL));
+        Utils.appendLog("Current server time diff: " + String.valueOf(networkInterface.getLastServerLocalTimeDiff()) + " ms");
+        Utils.appendLog("Registering process start: " + Utils.getDateOutput(targetInMillis, Utils.DateOutputType.FULL));
+        Utils.appendLog("Registering process start delay: " + String.valueOf(startInMillis / 1000L) + " seconds");
 
         if (startInMillis < 0) {
             Toast.makeText(context, R.string.registration_soon_message, Toast.LENGTH_LONG).show();
-            Helper.appendLog("Exam register time is too soon, registering should start right away.");
+            Utils.appendLog("Exam register time is too soon, registering should start right away.");
             sendPendingIntent(getApproxRegisterPI(context, exam, false));
         } else {
-            Toast.makeText(context, context.getString(R.string.registration_in_x, Helper.secondsCountdown(context, startInMillis, true)), Toast.LENGTH_LONG).show();
-            Helper.appendLog("Exam registering will start in " + Helper.secondsCountdown(context, startInMillis, true));
+            Toast.makeText(context, context.getString(R.string.registration_in_x, Utils.secondsCountdown(context, startInMillis, true)), Toast.LENGTH_LONG).show();
+            Utils.appendLog("Exam registering will start in " + Utils.secondsCountdown(context, startInMillis, true));
             getAlarmManager(context).set(AlarmManager.RTC_WAKEUP, targetInMillis, getApproxRegisterPI(context, exam, false));
         }
     }

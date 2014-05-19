@@ -3,7 +3,7 @@ package com.frca.vsexam.entities.base;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -69,7 +69,7 @@ public abstract class BaseParser {
         if (element != null)
             return element;
         else
-            Helper.appendLog("No such element `" + select + "`" );
+            Utils.appendLog("No such element `" + select + "`");
 
         return null;
     }
@@ -83,9 +83,9 @@ public abstract class BaseParser {
             if (matcher.find())
                 return Integer.parseInt(matcher.group(1));
             else
-                Helper.appendLog("Href doesn't contain such parameter");
+                Utils.appendLog("Href doesn't contain such parameter");
         } else
-            Helper.appendLog("Element does not contain href");
+            Utils.appendLog("Element does not contain href");
 
         return 0;
     }
@@ -95,7 +95,7 @@ public abstract class BaseParser {
             if (!text.equals("--"))
                 return PARSING_FORMAT.parse(text);
         } catch (ParseException e) {
-            Helper.appendLog("Error while parsing time string: `"+ text + "`");
+            Utils.appendLog("Error while parsing time string: `" + text + "`");
         }
 
         return new Date(0L);

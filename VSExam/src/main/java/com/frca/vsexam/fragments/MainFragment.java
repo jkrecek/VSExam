@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ import com.frca.vsexam.fragments.base.ContentFragment;
 import com.frca.vsexam.fragments.exam_detail.DetailFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 
 public class MainFragment extends BaseFragment {
 
@@ -183,7 +182,7 @@ public class MainFragment extends BaseFragment {
                 if (lastExamId != 0)
                     currentlySelected = exams.find(lastExamId);
 
-                if (currentlySelected == null && Helper.isValid(exams))
+                if (currentlySelected == null && Utils.isValid(exams))
                     currentlySelected = exams.get(0);
 
                 if (currentlySelected != null)

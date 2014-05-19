@@ -2,7 +2,7 @@ package com.frca.vsexam.network;
 
 import android.graphics.Bitmap;
 
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -55,7 +55,7 @@ public class Response {
                 outputStream.write(buffer, 0, length);
             }
         } finally {
-            Helper.close(is);
+            Utils.close(is);
         }
 
         return outputStream.toByteArray();
@@ -64,10 +64,10 @@ public class Response {
     public void logToFile() {
         StringBuilder builder = new StringBuilder();
         builder.append("-- REQUEST\n");
-        builder.append(Helper.outputRequest(request));
+        builder.append(Utils.outputRequest(request));
 
         builder.append("\n\n-- RESPONSE HEADERS\n");
-        builder.append(Helper.outputResponseHeaders(getResponseHeaders()));
+        builder.append(Utils.outputResponseHeaders(getResponseHeaders()));
 
         builder.append("\n\n-- RESPONSE CONTENT\n");
         if (text != null)
@@ -79,9 +79,9 @@ public class Response {
 
         String filename = request.getURI().getPath().substring(1).replaceAll("/|\\.", "-");
         filename += "_" + String.valueOf(System.currentTimeMillis() / 1000L);
-        Helper.writeToFile(
+        Utils.writeToFile(
             builder.toString(),
-            Helper.getDataDirectoryFile("http", filename, "log"),
+            Utils.getDataDirectoryFile("http", filename, "log"),
             false
         );
     }

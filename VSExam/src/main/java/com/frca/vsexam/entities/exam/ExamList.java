@@ -20,7 +20,7 @@ import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.CalendarEvent;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.helper.ObjectMap;
 import com.frca.vsexam.helper.RegisteringService;
 import com.frca.vsexam.network.Response;
@@ -134,12 +134,12 @@ public class ExamList extends BaseEntityList<Exam> {
     }
 
     public List<String> getCourseNames() {
-        return Helper.getValue(this, "courseName", true);
+        return Utils.getValue(this, "courseName", true);
     }
 
     public AppSparseArray<String> getCourses() {
         AppSparseArray<String> sparseArray = new AppSparseArray<String>();
-        List<ObjectMap> maps = Helper.getValuesMap(this, new String[] { "courseId", "courseName" }, true);
+        List<ObjectMap> maps = Utils.getValuesMap(this, new String[]{"courseId", "courseName"}, true);
         if (maps != null) {
             for (ObjectMap map : maps) {
                 int id = (Integer)map.get("courseId");

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.HttpRequest;
 import com.frca.vsexam.network.Response;
 import com.frca.vsexam.network.tasks.BaseNetworkTask;
@@ -98,10 +98,10 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
                         Toast.makeText(getContext(), R.string.register_success, Toast.LENGTH_LONG).show();
                         getMainFragment().updateView();
                         dialog.dismiss();
-                        Helper.appendLog("Register successful.");
+                        Utils.appendLog("Register successful.");
                     } else {
                         Toast.makeText(getContext(), R.string.register_failure, Toast.LENGTH_LONG).show();
-                        Helper.appendLog("Register unsuccessful.");
+                        Utils.appendLog("Register unsuccessful.");
                     }
 
                 }
@@ -148,10 +148,10 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
                         Toast.makeText(getContext(), R.string.unregister_success, Toast.LENGTH_LONG).show();
                         getMainFragment().updateView();
                         dialog.dismiss();
-                        Helper.appendLog("Unregister successful.");
+                        Utils.appendLog("Unregister successful.");
                     } else {
                         Toast.makeText(getContext(), R.string.unregister_failure, Toast.LENGTH_LONG).show();
-                        Helper.appendLog("Unregister unsuccessful.");
+                        Utils.appendLog("Unregister unsuccessful.");
                     }
                 }
             }));
@@ -167,7 +167,7 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
 
         @Override
         public void onClick() {
-            Helper.appendLog("User clicked onto register on time");
+            Utils.appendLog("User clicked onto register on time");
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
             builder.setTitle(getTextResource())
@@ -199,7 +199,7 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
 
         @Override
         public void onClick() {
-            Helper.appendLog("User clicked onto cancel register on time");
+            Utils.appendLog("User clicked onto cancel register on time");
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
             builder.setTitle(getTextResource())

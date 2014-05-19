@@ -13,7 +13,7 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.fragments.exam_detail.ExamDataProvider;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -77,7 +77,7 @@ public class ExamAdapter extends ArrayAdapter<String> {
                 text_month.setText(new DateFormatSymbols().getMonths()[examDate.get(Calendar.MONTH)]);
 
                 text_code.setText(exam.getCourseCode());
-                text_time.setText(Helper.getDateOutput(exam.getExamDate(), Helper.DateOutputType.TIME));
+                text_time.setText(Utils.getDateOutput(exam.getExamDate(), Utils.DateOutputType.TIME));
                 text_name.setText(exam.getCourseName());
                 text_type.setText(exam.getType());
                 text_capacity.setText(String.valueOf(exam.getCurrentCapacity()) + "/" + String.valueOf(exam.getMaxCapacity()));

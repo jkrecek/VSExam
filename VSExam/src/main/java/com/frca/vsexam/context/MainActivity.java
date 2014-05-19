@@ -22,7 +22,7 @@ import com.frca.vsexam.fragments.LoginFragment;
 import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.helper.AppConfig;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
 import java.util.List;
@@ -217,7 +217,7 @@ public class MainActivity extends ActionBarActivity {
 
     public static ExamList getLoadedExams() {
         MainFragment fragment = getMainFragment();
-        if (fragment != null && Helper.isValid(fragment.getExams()))
+        if (fragment != null && Utils.isValid(fragment.getExams()))
             return fragment.getExams();
 
         return null;

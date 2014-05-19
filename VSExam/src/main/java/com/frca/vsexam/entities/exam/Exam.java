@@ -7,7 +7,7 @@ import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.base.ParentEntity;
 import com.frca.vsexam.entities.classmate.ClassmateList;
 import com.frca.vsexam.fragments.MainFragment;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.helper.RegisteringService;
 
 import java.util.Date;
@@ -95,7 +95,7 @@ public class Exam extends ParentEntity {
         Group newGroup = toBeRegistered ? Group.TO_BE_REGISTERED : Group.CAN_REGISTER;
         if (this.group != newGroup) {
             this.group = newGroup;
-            Helper.appendLog("Exam registration on time is set to " + String.valueOf(toBeRegistered));
+            Utils.appendLog("Exam registration on time is set to " + String.valueOf(toBeRegistered));
             if (toBeRegistered) {
                 saveToFile(context);
                 RegisteringService.setExamRegister(context, this);

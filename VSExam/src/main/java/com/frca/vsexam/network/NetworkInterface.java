@@ -3,7 +3,7 @@ package com.frca.vsexam.network;
 import android.util.Log;
 
 import com.frca.vsexam.helper.AppConfig;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
@@ -38,7 +38,7 @@ public class NetworkInterface {
                     }
                 }
 
-                Helper.sleepThread(50);
+                Utils.sleepThread(50);
             }
         }
     }

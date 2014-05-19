@@ -47,7 +47,7 @@ public abstract class ViewProvider {
                 mView = null;
             }
 
-            Helper.runOnUiThread(
+            Utils.runOnUiThread(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -95,9 +95,9 @@ public abstract class ViewProvider {
             view.setOnClickListener(onClickListener);
     }
 
-    protected void loopThoughChildren(Helper.ViewCallback callback) {
+    protected void loopThoughChildren(Utils.ViewCallback callback) {
         if (mView instanceof ViewGroup)
-            Helper.loopThoughLayout((ViewGroup) mView, callback);
+            Utils.loopThoughLayout((ViewGroup) mView, callback);
     }
 
     protected View findViewById(int id) {

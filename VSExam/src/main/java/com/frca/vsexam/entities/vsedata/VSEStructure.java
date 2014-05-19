@@ -5,7 +5,7 @@ import android.content.res.AssetManager;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.helper.Helper;
+import com.frca.vsexam.helper.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,17 +27,17 @@ public class VSEStructure extends VSEStructureElement.List<VSEStructureElement.F
 
     public void save(Context context) {
         File file = getFilePath(context);
-        Helper.writeToFile(toJsonString(), file, false);
+        Utils.writeToFile(toJsonString(), file, false);
     }
 
     public static VSEStructure load(Context context) {
         File file = getFilePath(context);
-        String content = Helper.readFromFile(file);
+        String content = Utils.readFromFile(file);
         if (content == null) {
             AssetManager assets = context.getAssets();
             try {
                 InputStream is = assets.open(getFileName(context));
-                content = Helper.readFromStream(is);
+                content = Utils.readFromStream(is);
             } catch (IOException e) {
                 Toast.makeText(context, R.string.no_vse_structure_found, Toast.LENGTH_LONG).show();
                 return null;
