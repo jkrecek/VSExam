@@ -30,14 +30,14 @@ public class DetailFragment extends ContentFragment {
         super.onCreate(savedInstanceState);
 
         int id = getArguments().getInt(EXTRA_ID);
-        mExam = getBrowserPaneFragment().getExams().find(id);
+        mExam = getMainFragment().getExams().find(id);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        getBrowserPaneFragment().highlightExam(mExam);
+        getMainFragment().highlightExam(mExam);
     }
 
     @Override

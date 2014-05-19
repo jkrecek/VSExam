@@ -16,7 +16,7 @@ import com.frca.vsexam.entities.base.BaseEntityList;
 import com.frca.vsexam.entities.base.BaseParser;
 import com.frca.vsexam.entities.calendar_exam.EventExam;
 import com.frca.vsexam.entities.calendar_exam.EventExamSet;
-import com.frca.vsexam.fragments.BrowserPaneFragment;
+import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.CalendarEvent;
 import com.frca.vsexam.helper.DataHolder;
@@ -269,9 +269,9 @@ public class ExamList extends BaseEntityList<Exam> {
             putExamToCalendar(exam, context);
         }
 
-        BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
-        if (browserPaneFragment != null)
-            browserPaneFragment.updateView();
+        MainFragment mainFragment = MainActivity.getMainFragment();
+        if (mainFragment != null)
+            mainFragment.updateView();
 
         if (!(context instanceof RegisteringService)) {
             SparseArray<RegisteringService> container = DataHolder.getInstance(context).getRegisteringServiceContainer();
@@ -302,9 +302,9 @@ public class ExamList extends BaseEntityList<Exam> {
             removeExamFromCalendar(exam, context);
         }
 
-        BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
-        if (browserPaneFragment != null)
-            browserPaneFragment.updateView();
+        MainFragment mainFragment = MainActivity.getMainFragment();
+        if (mainFragment != null)
+            mainFragment.updateView();
 
         return true;
     }

@@ -16,7 +16,7 @@ import android.widget.ArrayAdapter;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.ExamList;
-import com.frca.vsexam.fragments.BrowserPaneFragment;
+import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.fragments.LoadingFragment;
 import com.frca.vsexam.fragments.LoginFragment;
 import com.frca.vsexam.fragments.base.BaseFragment;
@@ -103,8 +103,8 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                if (currentFragment instanceof BrowserPaneFragment) {
-                    SlidingPaneLayout slidingPaneLayout = ((BrowserPaneFragment) currentFragment).getSlidingLayout();
+                if (currentFragment instanceof MainFragment) {
+                    SlidingPaneLayout slidingPaneLayout = ((MainFragment) currentFragment).getSlidingLayout();
                     if (slidingPaneLayout.isSlideable()) {
                         onBackPressed();
                         return true;
@@ -208,15 +208,15 @@ public class MainActivity extends ActionBarActivity {
         return instance;
     }
 
-    public static BrowserPaneFragment getBrowserPaneFragment() {
-        if (instance != null && instance.currentFragment != null && instance.currentFragment instanceof BrowserPaneFragment)
-            return (BrowserPaneFragment) instance.currentFragment;
+    public static MainFragment getMainFragment() {
+        if (instance != null && instance.currentFragment != null && instance.currentFragment instanceof MainFragment)
+            return (MainFragment) instance.currentFragment;
 
         return null;
     }
 
     public static ExamList getLoadedExams() {
-        BrowserPaneFragment fragment = getBrowserPaneFragment();
+        MainFragment fragment = getMainFragment();
         if (fragment != null && Helper.isValid(fragment.getExams()))
             return fragment.getExams();
 

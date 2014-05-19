@@ -31,7 +31,7 @@ public class ClassmateFragment extends ContentFragment {
 
         int examId = getArguments().getInt(EXTRA_EXAM_ID);
         int id = getArguments().getInt(EXTRA_ID);
-        Exam exam = getBrowserPaneFragment().getExams().find(examId);
+        Exam exam = getMainFragment().getExams().find(examId);
         mClassmate = exam.getClassmates().find(id);
     }
 
@@ -39,7 +39,7 @@ public class ClassmateFragment extends ContentFragment {
     public void onResume() {
         super.onResume();
 
-        getBrowserPaneFragment().highlightExam(null);
+        getMainFragment().highlightExam(null);
     }
 
     @Override

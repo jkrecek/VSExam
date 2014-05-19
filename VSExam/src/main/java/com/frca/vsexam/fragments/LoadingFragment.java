@@ -121,7 +121,7 @@ public class LoadingFragment extends BaseFragment {
                             else
                                 exams.parseAndAdd(getActivity(), elements);
 
-                            getMainActivity().setFragment(new BrowserPaneFragment(exams));
+                            getMainActivity().setFragment(new MainFragment(exams));
                         }
                     }
 

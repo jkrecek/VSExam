@@ -6,7 +6,7 @@ import com.frca.vsexam.R;
 import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.base.ParentEntity;
 import com.frca.vsexam.entities.classmate.ClassmateList;
-import com.frca.vsexam.fragments.BrowserPaneFragment;
+import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.Helper;
 import com.frca.vsexam.helper.RegisteringService;
 
@@ -102,9 +102,9 @@ public class Exam extends ParentEntity {
             } else
                 removeToBeRegistered(context, false);
 
-            BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
-            if (browserPaneFragment != null)
-                browserPaneFragment.updateView();
+            MainFragment mainFragment = MainActivity.getMainFragment();
+            if (mainFragment != null)
+                mainFragment.updateView();
         }
     }
 

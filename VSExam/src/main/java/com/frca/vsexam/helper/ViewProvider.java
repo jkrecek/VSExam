@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.frca.vsexam.entities.exam.ExamList;
-import com.frca.vsexam.fragments.BrowserPaneFragment;
+import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.fragments.base.ContentFragment;
 
 public abstract class ViewProvider {
@@ -108,8 +108,8 @@ public abstract class ViewProvider {
         return mBaseFragment.getActivity();
     }
 
-    protected BrowserPaneFragment getMainFragment() {
-        return mBaseFragment.getBrowserPaneFragment();
+    protected MainFragment getMainFragment() {
+        return mBaseFragment.getMainFragment();
     }
 
     protected ExamList getExams() {

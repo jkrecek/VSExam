@@ -10,12 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.fragments.BrowserPaneFragment;
+import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.ViewProvider;
 
 public abstract class ContentFragment extends BaseFragment {
 
-    private ViewProvider[] mViewProviders = new ViewProvider[3];
     private Class<? extends ViewProvider> mProviderClasses[] = null;
 
     protected static final String EXTRA_ID = "id";
@@ -31,7 +30,7 @@ public abstract class ContentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
 
-        if (!(getParentFragment() instanceof BrowserPaneFragment)) {
+        if (!(getParentFragment() instanceof MainFragment)) {
             Log.e(getClass().getName(), "This class must be child of BrowserPaneFragment");
             getActivity().finish();
         }
@@ -111,8 +110,8 @@ public abstract class ContentFragment extends BaseFragment {
         }
     }
 
-    public BrowserPaneFragment getBrowserPaneFragment() {
-        return (BrowserPaneFragment) getParentFragment();
+    public MainFragment getMainFragment() {
+        return (MainFragment) getParentFragment();
     }
 
     public abstract String getTitle();

@@ -27,7 +27,7 @@ import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Helper;
 
-public class BrowserPaneFragment extends BaseFragment {
+public class MainFragment extends BaseFragment {
 
     public static final String KEY_LAST_EXAM = "key_last_exam";
 
@@ -49,7 +49,7 @@ public class BrowserPaneFragment extends BaseFragment {
 
     private int currentCourseId = -1;
 
-    public BrowserPaneFragment(ExamList exams) {
+    public MainFragment(ExamList exams) {
         this.exams = exams;
     }
 
