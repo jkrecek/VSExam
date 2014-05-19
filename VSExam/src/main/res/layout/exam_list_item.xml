@@ -13,7 +13,7 @@
               android:paddingRight="10dp"
               tools:background="@color/standard_grey" >
 
-    <LinearLayout android:layout_width="wrap_content"
+    <LinearLayout android:layout_width="60dp"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center_vertical"
                   android:paddingRight="8dp"
@@ -27,11 +27,13 @@
                   android:layout_gravity="center_horizontal"
                   tools:text="31" />
 
-        <TextView android:id="@+id/text_month"
-                  android:layout_width="wrap_content"
+        <com.frca.vsexam.helper.AutoResizeTextView
+                  android:id="@+id/text_month"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_gravity="center_horizontal"
-                  tools:text="listopad"/>
+                  android:gravity="center_horizontal"
+                  android:maxLines="1"
+                  tools:text="červenec"/>
 
     </LinearLayout>
 

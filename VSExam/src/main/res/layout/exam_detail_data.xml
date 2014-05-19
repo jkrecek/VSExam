@@ -73,11 +73,12 @@
             <TextView android:id="@+id/text_location"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:maxWidth="100dp"
+                      android:maxWidth="120dp"
                       android:layout_gravity="center_vertical"
                       android:gravity="right"
+                      android:maxLines="2"
                       android:textAppearance="?android:textAppearanceMedium"
-                      tools:text="Likešova aula (ZI)"/>
+                      tools:text="Vencovského aula (ZI)"/>
 
         </LinearLayout>
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +49,12 @@ public abstract class ContentFragment extends BaseFragment {
             }
         }, 50);
 
+        SlidingPaneLayout slidingPaneLayout = getMainFragment().getSlidingLayout();
+        if (slidingPaneLayout.isSlideable() && !slidingPaneLayout.isOpen()) {
+            ActionBar actionBar = getMainActivity().getSupportActionBar();
+            if (actionBar != null)
+                actionBar.setTitle(getTitle());
+        }
     }
 
     @Override
