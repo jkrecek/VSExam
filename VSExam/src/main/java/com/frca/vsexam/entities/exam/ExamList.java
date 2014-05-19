@@ -32,17 +32,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 public class ExamList extends BaseEntityList<Exam> {
 
     private int[] groupCounts;
-
-    public ExamList() {
-
-    }
 
     public void parseAndAdd(Context context, Elements elements) {
         ExamParser parser = new ExamParser(context, this);
@@ -66,39 +61,6 @@ public class ExamList extends BaseEntityList<Exam> {
         finalizeInit();
     }
 
-    public void addTestExams(Context context) {
-        long day = 86400000;
-        int times[] = new int[5];
-        long ms = System.currentTimeMillis();
-        for (int i = 0; i < times.length; ++i) {
-            Exam exam = createExam(context, 1000 + i);
-
-            exam.setGroup(Exam.Group.CAN_REGISTER);
-            exam.setCourseName(i == 0 ? "Státnice" : "Státní zkouška ze studijního oboru");
-            exam.setCourseCode("PHM");
-            exam.setCourseId(101022);
-            exam.setLocation("RB 359");
-            exam.setType("zkouška (ústní)");
-            long regStart = ms + (-2 + i) * day  + 2 * 60 * 1000;
-            regStart /= 60000;
-            regStart *= 60000;
-
-            exam.setRegisterStart(new Date(regStart));
-            exam.setExamDate(new Date(regStart + 2 * day));
-            exam.setAuthorId(401);
-            exam.setAuthorName("I. Vostřelová");
-            exam.setCurrentCapacity(0);
-            exam.setMaxCapacity(12);
-            exam.setRegisterEnd(new Date(1404115200000L));
-            exam.setUnregisterEnd(new Date(1404115200000L + i * 60000));
-            exam.setStudyId(123456);
-            exam.setPeriodId(825);
-            add(exam);
-        }
-
-        finalizeInit();
-    }
-
     public ExamList filter(MatchChecker checker) {
         ExamList examList = new ExamList();
         for (Exam exam : this) {
@@ -111,7 +73,7 @@ public class ExamList extends BaseEntityList<Exam> {
         return examList;
     }
 
-    private void finalizeInit() {
+    protected void finalizeInit() {
         setGroupCounts();
 
         if (groupCounts[Exam.Group.IS_REGISTERED.toInt()] != 0 &&

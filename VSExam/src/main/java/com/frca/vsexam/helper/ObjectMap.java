@@ -1,7 +1,5 @@
 package com.frca.vsexam.helper;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -10,7 +10,7 @@ public class Classmate extends ParentEntity {
     private Date registered;
     private String identification;
 
-    protected Classmate(int id) {
+    public Classmate(int id) {
         super(id);
     }
 

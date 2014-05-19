@@ -7,8 +7,7 @@ import org.jsoup.select.Elements;
 
 public class ClassmateList extends BaseEntityList<Classmate> {
 
-    public ClassmateList(Elements elements) {
-        super();
+    public void parseAndAdd(Elements elements) {
 
         for (Element element : elements) {
             Elements columns = element.select("td");

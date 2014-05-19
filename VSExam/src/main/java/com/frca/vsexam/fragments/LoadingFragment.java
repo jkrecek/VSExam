@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.ExamList;
+import com.frca.vsexam.entities.exam.ExamTester;
 import com.frca.vsexam.exceptions.NoAuthException;
 import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.helper.AppConfig;
@@ -117,7 +118,7 @@ public class LoadingFragment extends BaseFragment {
 
                             ExamList exams = new ExamList();
                             if (AppConfig.USE_TEST_EXAMS)
-                                exams.addTestExams(getActivity());
+                                ExamTester.fill(exams, getActivity());
                             else
                                 exams.parseAndAdd(getActivity(), elements);
 
