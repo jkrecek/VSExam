@@ -31,6 +31,8 @@ public class MainActivity extends ActionBarActivity {
 
     private BaseFragment currentFragment;
 
+    private ExamList mExams;
+
     private static MainActivity instance = null;
 
     @Override
@@ -48,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
             } else if (BaseFragment.class.isAssignableFrom(AppConfig.LAUNCH_ON_START)) {
                 try {
                     setFragment((BaseFragment) AppConfig.LAUNCH_ON_START.newInstance());
-                } catch (Exception e) { }
+                } catch (Exception e) { /* just ignore */ }
 
             }
         } else if (hasSavedLoginData()) {
@@ -215,16 +217,15 @@ public class MainActivity extends ActionBarActivity {
         return null;
     }
 
-    public static ExamList getLoadedExams() {
-        MainFragment fragment = getMainFragment();
-        if (fragment != null && Utils.isValid(fragment.getExams()))
-            return fragment.getExams();
-
-        return null;
-    }
-
     private boolean hasSavedLoginData() {
         return DataHolder.getInstance(this).getPreferences().contains(HttpRequestBuilder.KEY_AUTH_KEY);
     }
 
+    public ExamList getExams() {
+        return mExams;
+    }
+
+    public void setExams(ExamList exams) {
+        mExams = exams;
+    }
 }

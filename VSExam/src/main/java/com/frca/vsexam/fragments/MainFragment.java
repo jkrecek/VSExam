@@ -48,14 +48,17 @@ public class MainFragment extends BaseFragment {
 
     private int currentCourseId = -1;
 
-    public MainFragment(ExamList exams) {
-        this.exams = exams;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        exams = getMainActivity().getExams();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
         mSlidingLayout = (SlidingPaneLayout) rootView.findViewById(R.id.sliding_pane);
         mList = (ListView) rootView.findViewById(R.id.left_pane);
         mListEmptyText = (TextView) rootView.findViewById(R.id.left_pane_empty_text);

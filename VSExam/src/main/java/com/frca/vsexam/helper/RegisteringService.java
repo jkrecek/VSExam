@@ -57,7 +57,11 @@ public class RegisteringService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int examId = intent.getIntExtra(EXTRA_ID, 0);
         Utils.appendLog("Registering process starting");
-        examList = MainActivity.getLoadedExams();
+
+        MainActivity runningInstance = MainActivity.getInstance();
+        if (runningInstance != null)
+            examList = runningInstance.getExams();
+
         if (examList == null)
             examList = new ExamList();
 
