@@ -139,4 +139,6 @@ Za způsobené komplikace se omlouváme.</string>
     <string name="settings_auto_calendar_title">Přidávat do kalendaře</string>
     <string name="settings_auto_calendar_summary">Vaše zkoušky budou automaticky přidány do vašeho kalendáře při zapsání</string>
 
+    <string name="in_progress">Probíhá&#8230;</string>
+
 </resources>

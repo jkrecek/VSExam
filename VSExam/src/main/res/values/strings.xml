@@ -140,4 +140,6 @@ We apologize for any damage caused.</string>
 
     <string name="settings_auto_calendar_title">Add to calendar</string>
     <string name="settings_auto_calendar_summary">All exams will be automatically added to your calendar when registered</string>
+
+    <string name="in_progress">In progress&#8230;</string>
 </resources>

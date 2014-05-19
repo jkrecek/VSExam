@@ -1,6 +1,7 @@
 package com.frca.vsexam.fragments.exam_detail;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -88,12 +89,15 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
         @Override
         public void onClick() {
             HttpRequestBase requestBase = HttpRequest.getRegisterRequest(DataHolder.getInstance(getContext()), mExam, true);
+            final ProgressDialog dialog = ProgressDialog.show(getContext(), getContext().getString(R.string.register), getContext().getString(R.string.in_progress));
+
             BaseNetworkTask.run(new TextNetworkTask(getContext(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
                     if (getMainFragment().getExams().onRegistrationResponse(getContext(), mExam, response)) {
                         Toast.makeText(getContext(), R.string.register_success, Toast.LENGTH_LONG).show();
                         getMainFragment().updateView();
+                        dialog.dismiss();
                         Helper.appendLog("Register successful.");
                     } else {
                         Toast.makeText(getContext(), R.string.register_failure, Toast.LENGTH_LONG).show();
@@ -136,12 +140,14 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
 
         private void runUnregistering() {
             HttpRequestBase requestBase = HttpRequest.getRegisterRequest(DataHolder.getInstance(getContext()), mExam, false);
+            final ProgressDialog dialog = ProgressDialog.show(getContext(), getContext().getString(R.string.register), getContext().getString(R.string.in_progress));
             BaseNetworkTask.run(new TextNetworkTask(getContext(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
                     if (getMainFragment().getExams().onUnregistrationResponse(getContext(), mExam, response)) {
                         Toast.makeText(getContext(), R.string.unregister_success, Toast.LENGTH_LONG).show();
                         getMainFragment().updateView();
+                        dialog.dismiss();
                         Helper.appendLog("Unregister successful.");
                     } else {
                         Toast.makeText(getContext(), R.string.unregister_failure, Toast.LENGTH_LONG).show();
