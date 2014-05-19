@@ -76,10 +76,15 @@ public class Exam extends ParentEntity {
     }
 
     public void setRegistered(boolean apply) {
-        if (apply)
-            group = Group.IS_REGISTERED;
-        else
-            group = Group.CAN_REGISTER;
+        Group targetGroup = apply ? Group.IS_REGISTERED : Group.CAN_REGISTER;
+        if (group != targetGroup) {
+            group = targetGroup;
+            if (apply)
+                ++currentCapacity;
+            else
+                --currentCapacity;
+        }
+
     }
 
     public boolean isRegistered() {
@@ -94,14 +99,21 @@ public class Exam extends ParentEntity {
             if (toBeRegistered) {
                 saveToFile(context);
                 RegisteringService.setExamRegister(context, this);
-            } else {
-                deleteFile(context);
-                RegisteringService.cancelExamRegister(context, this);
-            }
+            } else
+                removeToBeRegistered(context, false);
+
             BrowserPaneFragment browserPaneFragment = MainActivity.getBrowserPaneFragment();
             if (browserPaneFragment != null)
                 browserPaneFragment.updateView();
         }
+    }
+
+    public void removeToBeRegistered(Context context, boolean checkGroup) {
+        if (checkGroup && this.group != Group.TO_BE_REGISTERED)
+            return;
+
+        deleteFile(context);
+        RegisteringService.cancelExamRegister(context, this);
     }
 
     @Override

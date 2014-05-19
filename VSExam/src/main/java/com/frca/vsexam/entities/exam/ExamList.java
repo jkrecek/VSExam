@@ -123,7 +123,6 @@ public class ExamList extends BaseEntityList<Exam> {
             }
         }
 
-
         sort();
     }
 
@@ -249,14 +248,15 @@ public class ExamList extends BaseEntityList<Exam> {
         if (response == null || response.getStatusCode() != 302)
             return false;
 
-        exam.setRegistered(true);
-        exam.setToBeRegistered(context, false);
-
         if (exam.getRegisteredOnId() != 0) {
             Exam currentlyRegistered = find(exam.getRegisteredOnId());
             if (currentlyRegistered != null)
                 currentlyRegistered.setRegistered(false);
         }
+
+        exam.setRegistered(true);
+
+        exam.removeToBeRegistered(context, true);
 
         notifyRegisteredExamChange(exam, true);
 
