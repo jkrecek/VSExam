@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- untranslated -->
-    <string name="two_dash">--</string>
+    <string name="two_dash" translatable="false">--</string>
 
     <string name="app_name">VSExam</string>
     <string name="action_settings">Settings</string>

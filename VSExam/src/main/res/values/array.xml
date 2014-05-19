@@ -7,7 +7,7 @@
         <item>@string/never</item>
     </string-array>
 
-    <string-array name="preference_register_notification_values" >
+    <string-array name="preference_register_notification_values" translatable="false">
         <item>all_time</item>
         <item>not_active</item>
         <item>never</item>
