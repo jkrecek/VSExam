@@ -3,10 +3,10 @@ package com.frca.vsexam.entities.exam;
 import android.content.Context;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.context.BaseActivity;
 import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.base.ParentEntity;
 import com.frca.vsexam.entities.classmate.ClassmateList;
-import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.RegisteringService;
 import com.frca.vsexam.helper.Utils;
 
@@ -102,9 +102,9 @@ public class Exam extends ParentEntity {
             } else
                 removeToBeRegistered(context, false);
 
-            MainFragment mainFragment = MainActivity.getMainFragment();
-            if (mainFragment != null)
-                mainFragment.updateView();
+            MainActivity mainActivity = BaseActivity.getInstance(MainActivity.class);
+            if (mainActivity != null)
+                mainActivity.updateView();
         }
     }
 

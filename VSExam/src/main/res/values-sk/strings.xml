@@ -35,7 +35,7 @@
     <string name="unknown_action">Neznáma akcia</string>
     <string name="loading_with_ellipsis">Načítanie&#8230;</string>
 
-    <string name="progress_structure_number_format">%1$d položiek z približne %2$d skontrolované</string>
+    <string name="progress_structure_number_format">%1$d z %2$d skontrolované</string>
 
     <string name="data_downloaded">Dáta načítaná</string>
     <string name="structure_downloaded_saved">Základné údaje o štúdiu bola znovu stiahnutá .</string>
@@ -140,5 +140,6 @@ Za spôsobené komplikácie sa ospravedlňujeme.</string>
     <string name="settings_auto_calendar_summary">Vaše skúšky budú automaticky pridané do vášho kalendára pri zapísaní</string>
 
     <string name="in_progress">Prebieha&#8230;</string>
+    <string name="update_in_progress">Updating ...</string>
 
 </resources>

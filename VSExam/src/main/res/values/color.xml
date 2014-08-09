@@ -14,12 +14,16 @@
     <color name="green">#28921f</color>
     <color name="red">#b00006</color>
     <color name="orange">#cc823f</color>
+    <color name="app_blue">#0064ff</color>
+
+    <color name="transparent">#00ffffff</color>
+    <color name="transparent_partial">#40ffffff</color>
 
     <color name="register_now">@color/red</color>
 
     <color name="registered">@color/green</color>
     <color name="to_be_registered">#13aaaf</color>
-    <color name="can_register">#1e51be</color>
+    <color name="can_register">@color/app_blue</color>
     <color name="can_not_register">@color/register_now</color>
 
 </resources>

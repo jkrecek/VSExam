@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.exam.ExamList;
-import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.fragments.base.ContentFragment;
 
 public abstract class ViewProvider {
@@ -108,12 +108,12 @@ public abstract class ViewProvider {
         return mBaseFragment.getActivity();
     }
 
-    protected MainFragment getMainFragment() {
-        return mBaseFragment.getMainFragment();
+    protected MainActivity getMainActivity() {
+        return mBaseFragment.getMainActivity();
     }
 
     protected ExamList getExams() {
-        return getMainFragment().getExams();
+        return getMainActivity().getExams();
     }
 
     public LayoutInflater getInflater() {

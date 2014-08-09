@@ -18,7 +18,7 @@ public class ClassmateButtonProvider extends ViewProvider {
         findViewById(R.id.button_left).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getMainFragment().onBackPressed();
+                getMainActivity().onBackPressed();
             }
         });
 

@@ -3,71 +3,84 @@ package com.frca.vsexam.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.context.BaseActivity;
 import com.frca.vsexam.context.MainActivity;
-import com.frca.vsexam.fragments.base.BaseFragment;
+import com.frca.vsexam.context.StartingActivity;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
-public class LoginFragment extends BaseFragment {
+public class LoginFragment extends DialogFragment implements View.OnClickListener {
+
+    private TextView mViewLogin;
+
+    private TextView mViewPassword;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+        //getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().setTitle("Vítejte v aplikace VŠExam");
 
-        final TextView viewLogin = (TextView) rootView.findViewById(R.id.text_login);
-        final TextView viewPassword = (TextView) rootView.findViewById(R.id.text_password);
+        mViewLogin = (TextView) rootView.findViewById(R.id.text_login);
+        mViewPassword = (TextView) rootView.findViewById(R.id.text_password);
+        rootView.findViewById(R.id.image_logo).setVisibility(View.GONE);
 
         Button button = (Button)rootView.findViewById(R.id.sign_in_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String loginInput = viewLogin.getText().toString();
-                String loginPassword = viewPassword.getText().toString();
-
-                if (TextUtils.isEmpty(loginInput))
-                    viewLogin.setError(getString(R.string.login_condition_xname));
-
-                if (TextUtils.isEmpty(loginPassword))
-                    viewPassword.setError(getString(R.string.login_condition_password));
-
-                if (viewLogin.getError() != null)
-                    viewLogin.requestFocus();
-                else if (viewPassword.getError() != null)
-                    viewPassword.requestFocus();
-                else {
-                    if (getActivity() instanceof MainActivity) {
-                        SharedPreferences preferences = DataHolder.getInstance(getActivity()).getPreferences();
-
-                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(viewPassword.getWindowToken(), 0);
-
-                        String loginPasswordKey = loginInput + ":" + loginPassword;
-                        String authKey = Base64.encodeToString(loginPasswordKey.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
-                        preferences
-                            .edit()
-                            .putString(HttpRequestBuilder.KEY_AUTH_KEY, authKey)
-                            .commit();
-
-                        getMainActivity().setFragment(new LoadingFragment());
-                    }
-                }
-            }
-        });
-
-        getMainActivity().setActionBarAdapter(null);
+        button.setOnClickListener(this);
 
         return rootView;
+    }
+
+    @Override
+    public void onClick(View view) {
+        String loginInput = mViewLogin.getText().toString();
+        String loginPassword = mViewPassword.getText().toString();
+
+        if (TextUtils.isEmpty(loginInput))
+            mViewLogin.setError(getString(R.string.login_condition_xname));
+
+        if (TextUtils.isEmpty(loginPassword))
+            mViewPassword.setError(getString(R.string.login_condition_password));
+
+        if (mViewLogin.getError() != null)
+            mViewLogin.requestFocus();
+        else if (mViewPassword.getError() != null)
+            mViewPassword.requestFocus();
+        else {
+            if (getActivity() instanceof BaseActivity) {
+                SharedPreferences preferences = DataHolder.getInstance(getActivity()).getPreferences();
+
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mViewPassword.getWindowToken(), 0);
+
+                String loginPasswordKey = loginInput + ":" + loginPassword;
+                String authKey = Base64.encodeToString(loginPasswordKey.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
+                preferences
+                    .edit()
+                    .putString(HttpRequestBuilder.KEY_AUTH_KEY, authKey)
+                    .commit();
+
+                getStartingActivity().startExamLoading();
+                dismiss();
+            }
+        }
+    }
+
+    private StartingActivity getStartingActivity() {
+        return (StartingActivity) getActivity();
     }
 }

@@ -11,12 +11,12 @@ import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.context.BaseActivity;
 import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.base.BaseEntityList;
 import com.frca.vsexam.entities.base.BaseParser;
 import com.frca.vsexam.entities.calendar_exam.EventExam;
 import com.frca.vsexam.entities.calendar_exam.EventExamSet;
-import com.frca.vsexam.fragments.MainFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.CalendarEvent;
 import com.frca.vsexam.helper.DataHolder;
@@ -59,6 +59,13 @@ public class ExamList extends BaseEntityList<Exam> {
         }
 
         finalizeInit();
+    }
+
+    public static ExamList fromArrayList(ArrayList<Exam> list) {
+        ExamList examList = new ExamList();
+        examList.addAll(list);
+        examList.finalizeInit();
+        return examList;
     }
 
     public ExamList filter(MatchChecker checker) {
@@ -231,9 +238,9 @@ public class ExamList extends BaseEntityList<Exam> {
             putExamToCalendar(exam, context);
         }
 
-        MainFragment mainFragment = MainActivity.getMainFragment();
-        if (mainFragment != null)
-            mainFragment.updateView();
+        MainActivity mainActivity = BaseActivity.getInstance(MainActivity.class);
+        if (mainActivity != null)
+            mainActivity.updateView();
 
         if (!(context instanceof RegisteringService)) {
             SparseArray<RegisteringService> container = DataHolder.getInstance(context).getRegisteringServiceContainer();
@@ -264,9 +271,9 @@ public class ExamList extends BaseEntityList<Exam> {
             removeExamFromCalendar(exam, context);
         }
 
-        MainFragment mainFragment = MainActivity.getMainFragment();
-        if (mainFragment != null)
-            mainFragment.updateView();
+        MainActivity mainActivity = BaseActivity.getInstance(MainActivity.class);
+        if (mainActivity != null)
+            mainActivity.updateView();
 
         return true;
     }

@@ -29,7 +29,7 @@ public class TestFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
 
-        if (!getMainActivity().isOnline()) {
+        if (!getParentActivity().isOnline()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(R.string.no_network_connection_title)
@@ -37,7 +37,7 @@ public class TestFragment extends BaseFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        getMainActivity().finish();
+                        getActivity().finish();
                     }
                 });
 
@@ -49,11 +49,9 @@ public class TestFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(0, container, false);
 
-        textView = (TextView) rootView.findViewById(R.id.textView);
+        //textView = (TextView) rootView.findViewById(R.id.textView);
 
-        textView.setMovementMethod(new ScrollingMovementMethod());
-
-        getMainActivity().setActionBarAdapter(null);
+        //textView.setMovementMethod(new ScrollingMovementMethod());
 
         return rootView;
     }

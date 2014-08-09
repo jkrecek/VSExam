@@ -16,6 +16,7 @@ import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.context.BaseActivity;
 import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
@@ -58,7 +59,7 @@ public class RegisteringService extends Service {
         int examId = intent.getIntExtra(EXTRA_ID, 0);
         Utils.appendLog("Registering process starting");
 
-        MainActivity runningInstance = MainActivity.getInstance();
+        MainActivity runningInstance = BaseActivity.getInstance(MainActivity.class);
         if (runningInstance != null)
             examList = runningInstance.getExams();
 
@@ -218,14 +219,15 @@ public class RegisteringService extends Service {
     }
 
     private void setNotification(String title, String message, int iconResource) {
-        if (MainActivity.getInstance() != null) {
+        boolean isActivityActive = BaseActivity.getInstance(MainActivity.class) != null;
+        if (isActivityActive) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
 
         SharedPreferences preferences = DataHolder.getInstance(this).getPreferences();
         String notificationDisplay = preferences.getString("registerNotification", null);
         if (notificationDisplay.equals(getString(R.string.always)) ||
-            (notificationDisplay.equals(getString(R.string.when_offline)) && MainActivity.getInstance() == null)) {
+            (notificationDisplay.equals(getString(R.string.when_offline)) && !isActivityActive)) {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setSmallIcon(iconResource != 0 ? iconResource : R.drawable.ic_launcher);

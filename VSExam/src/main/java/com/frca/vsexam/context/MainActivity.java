@@ -1,91 +1,117 @@
 package com.frca.vsexam.context;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.frca.vsexam.R;
+import com.frca.vsexam.adapters.ExamAdapter;
+import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
-import com.frca.vsexam.fragments.LoadingFragment;
-import com.frca.vsexam.fragments.LoginFragment;
-import com.frca.vsexam.fragments.MainFragment;
-import com.frca.vsexam.fragments.base.BaseFragment;
-import com.frca.vsexam.helper.AppConfig;
+import com.frca.vsexam.fragments.base.ContentFragment;
+import com.frca.vsexam.fragments.exam_detail.DetailFragment;
+import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.DataHolder;
-import com.frca.vsexam.network.HttpRequestBuilder;
+import com.frca.vsexam.helper.Utils;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
-    private BaseFragment currentFragment;
+    public static final String KEY_LAST_EXAM = "key_last_exam";
 
     private ExamList mExams;
 
-    private static MainActivity instance = null;
+    private SlidingPaneLayout mSlidingLayout;
+
+    private ListView mList;
+
+    private TextView mListEmptyText;
+
+    private ActionBar mActionBar;
+
+    private Exam currentlySelected;
+
+    private ExamAdapter adapter;
+
+    private AppSparseArray<String> actionBarAdapterData;
+
+    private int currentCourseId = -1;
+
+    private ContentFragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        instance = this;
+        Serializable serializable = getIntent().getSerializableExtra(StartingActivity.KEY_EXAMS);
+        mExams = ExamList.fromArrayList((ArrayList<Exam>) serializable);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.action_main);
 
-        if (AppConfig.LAUNCH_ON_START != null) {
-            if (Activity.class.isAssignableFrom(AppConfig.LAUNCH_ON_START)) {
-                startActivity(new Intent(this, AppConfig.LAUNCH_ON_START));
+        mSlidingLayout = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
+        mList = (ListView) findViewById(R.id.left_pane);
+        mListEmptyText = (TextView) findViewById(R.id.left_pane_empty_text);
+        mActionBar = getSupportActionBar();
+        mSlidingLayout.setPanelSlideListener(new SlidingPaneLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) { }
 
-            } else if (BaseFragment.class.isAssignableFrom(AppConfig.LAUNCH_ON_START)) {
-                try {
-                    setFragment((BaseFragment) AppConfig.LAUNCH_ON_START.newInstance());
-                } catch (Exception e) { /* just ignore */ }
-
+            @Override
+            public void onPanelOpened(View view) {
+                mActionBar.setDisplayShowTitleEnabled(false);
+                mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                mActionBar.setDisplayHomeAsUpEnabled(false);
             }
-        } else if (hasSavedLoginData()) {
-            setFragment(new LoadingFragment());
-        } else {
-            setFragment(new LoginFragment());
-        }
+
+            @Override
+            public void onPanelClosed(View view) {
+                ContentFragment contentFragment = getContentFragment();
+                if (contentFragment != null) {
+                    mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    mActionBar.setTitle(contentFragment.getTitle());
+                    mActionBar.setDisplayShowTitleEnabled(true);
+                    mActionBar.setDisplayHomeAsUpEnabled(true);
+                }
+            }
+        });
+
+        mSlidingLayout.openPane();
+        mSlidingLayout.setSliderFadeColor(0x66cccccc);
+        mSlidingLayout.setShadowResource(R.drawable.right_shadow);
+
+        setActionBarAdapter();
     }
 
-    @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
-        instance = this;
-
-        if (!hasSavedLoginData() && (currentFragment == null || !(currentFragment instanceof LoginFragment))) {
-            setFragment(new LoginFragment());
-        } else {
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_base);
-            if (fragment != null && !fragment.equals(currentFragment))
-                setFragment(currentFragment);
+        if (!hasSavedLoginData()) {
+            Intent intent = new Intent(this, StartingActivity.class);
+            startActivity(intent);
+            finish();
+            return;
         }
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        instance = null;
-    }
-
-    public void setFragment(BaseFragment fragment) {
-        currentFragment = fragment;
-        if (instance != null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.container_base, fragment).commit();
-
+        Fragment fragment = getContentFragment();
+        if (mCurrentFragment != null && !mCurrentFragment.equals(fragment))
+            replaceFragment(mCurrentFragment);
     }
 
     @Override
@@ -104,58 +130,36 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                if (currentFragment instanceof MainFragment) {
-                    SlidingPaneLayout slidingPaneLayout = ((MainFragment) currentFragment).getSlidingLayout();
-                    if (slidingPaneLayout.isSlideable()) {
-                        onBackPressed();
-                        return true;
-                    }
+                SlidingPaneLayout slidingPaneLayout = getSlidingLayout();
+                if (slidingPaneLayout.isSlideable()) {
+                    onBackPressed();
+                    return true;
                 }
                 break;
             }
-            /*case R.id.action_json: {
-                ExamList examList = getLoadedExams();
-                if (examList == null) {
-                    examList = new ExamList();
-                    examList.loadSaved(this);
-                }
-
-                Gson gson = new Gson();
-                StringBuilder sb = new StringBuilder();
-                for (Exam exam : examList) {
-                    sb.append(gson.toJson(exam));
-                    sb.append("\n\n");
-                }
-
-                final String exam_json = sb.toString();
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.exam_output)
-                    .setMessage(exam_json)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }).setNegativeButton(R.string.into_file, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-
-                            String result = Helper.writeToFile(exam_json,
-                                Helper.getDataDirectoryFile("data", "output_" + String.valueOf(System.currentTimeMillis() / 1000L), "json"),
-                                false);
-
-                            if (result == null)
-                                result = getString(R.string.successfully_saved_into_file);
-
-                            Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-                        }
-                    }).create().show();
-                break;
-            }*/
             case R.id.action_refresh: {
-                setFragment(new LoadingFragment());
+                final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+                dialog.setMessage(getString(R.string.update_in_progress));
+                dialog.show();
+                loadExams(new LoadingExamResult() {
+                    @Override
+                    public void onExamLoadingSuccess(ExamList exams) {
+                        mExams = exams;
+                        dialog.hide();
+                        updateView();
+                    }
+
+                    @Override
+                    public void onExamLoadingDenied() {
+                        Toast.makeText(MainActivity.this, R.string.network_error_exams_title, Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onExamLoadingError() {
+                        Toast.makeText(MainActivity.this, R.string.network_error_exams_title, Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 break;
             }
             case R.id.action_settings: {
@@ -169,17 +173,25 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentFragment != null)
-            if (currentFragment.onBackPressed())
-                return;
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            manager.popBackStack();
+            return;
+        }
+
+        SlidingPaneLayout slidingPaneLayout = getSlidingLayout();
+        if (!slidingPaneLayout.isOpen()) {
+            slidingPaneLayout.openPane();
+            return;
+        }
 
         super.onBackPressed();
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+    private void setActionBarAdapter() {
+        actionBarAdapterData = mExams.getCourses();
+        actionBarAdapterData.put(-1, getString(R.string.display_all));
+        setActionBarAdapter(actionBarAdapterData.getValues());
     }
 
     public void setActionBarAdapter(List<String> values) {
@@ -190,41 +202,135 @@ public class MainActivity extends ActionBarActivity {
         } else {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.actionbar_list_item, android.R.id.text1, values);
             actionBar.setListNavigationCallbacks(adapter, new ActionBarAdapterClickListener());
         }
-
     }
 
-    private class ActionBarAdapterClickListener implements ActionBar.OnNavigationListener {
+    private void updateActionBarAdapter() {
+        if (!mExams.isEmpty()) {
+            adapter = new ExamAdapter(this, mExams.filter(new ExamList.MatchChecker() {
+                @Override
+                public boolean isMatch(Exam exam) {
+                    return currentCourseId == -1 || exam.getCourseId() == currentCourseId;
+                }
+            }), currentlySelected);
 
-        @Override
-        public boolean onNavigationItemSelected(int i, long l) {
-            currentFragment.onNavigationItemSelected(i);
-            return false;
+            mList.setAdapter(adapter);
+            mList.setVisibility(View.VISIBLE);
+            mListEmptyText.setVisibility(View.GONE);
+
+            if (currentlySelected == null) {
+                int lastExamId = DataHolder.getInstance(this).getPreferences().getInt(KEY_LAST_EXAM, 0);
+                if (lastExamId != 0)
+                    currentlySelected = mExams.find(lastExamId);
+
+                if (currentlySelected == null && Utils.isValid(mExams))
+                    currentlySelected = mExams.get(0);
+
+                if (currentlySelected != null)
+                    openExam(currentlySelected);
+            }
+        } else {
+            mList.setVisibility(View.GONE);
+            mListEmptyText.setVisibility(View.VISIBLE);
+            if (currentCourseId == -1)
+                mListEmptyText.setText(R.string.no_exams_in_this_period);
+            else
+                mListEmptyText.setText(R.string.no_exams_with_filter);
         }
-   }
 
-    public static MainActivity getInstance() {
-        return instance;
+        if (mList.getOnItemClickListener() == null) {
+            mList.setOnItemClickListener(new ListItemClickListener());
+        }
     }
 
-    public static MainFragment getMainFragment() {
-        if (instance != null && instance.currentFragment != null && instance.currentFragment instanceof MainFragment)
-            return (MainFragment) instance.currentFragment;
+    public void updateView() {
+        updateActionBarAdapter();
 
-        return null;
-    }
-
-    private boolean hasSavedLoginData() {
-        return DataHolder.getInstance(this).getPreferences().contains(HttpRequestBuilder.KEY_AUTH_KEY);
+        ContentFragment fragment = getContentFragment();
+        if (fragment != null) {
+            fragment.reload();
+        }
     }
 
     public ExamList getExams() {
         return mExams;
     }
 
-    public void setExams(ExamList exams) {
-        mExams = exams;
+    public SlidingPaneLayout getSlidingLayout() {
+        return mSlidingLayout;
     }
+
+    public ContentFragment getContentFragment() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (currentFragment != null && currentFragment instanceof ContentFragment)
+            return (ContentFragment) currentFragment;
+
+        return null;
+    }
+
+    private boolean isOnlyMenuOpen() {
+        return mSlidingLayout.isSlideable() && mSlidingLayout.isOpen();
+    }
+
+    public void openExam(Exam exam) {
+        highlightExam(exam);
+        replaceFragment(DetailFragment.newInstance(exam));
+        DataHolder.getInstance(this).getPreferences().edit().putInt(KEY_LAST_EXAM, exam.getId()).commit();
+    }
+
+    public void replaceFragment(ContentFragment fragment) {
+        mCurrentFragment = fragment;
+
+        if (isActive()) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            transaction.replace(R.id.container, fragment);
+            if (getContentFragment() != null && !isOnlyMenuOpen())
+                transaction.addToBackStack(null);
+
+            transaction.commit();
+        }
+    }
+
+    public void highlightExam(Exam exam) {
+        adapter.highlightExam(currentlySelected, mList, false);
+        if (exam != null)
+            adapter.highlightExam(exam, mList, true);
+
+        currentlySelected = exam;
+    }
+
+    private class ListItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Exam exam = adapter.getExam(position);
+            if (exam == null)
+                return;
+
+            openExam(exam);
+
+            if (mSlidingLayout.isSlideable()) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSlidingLayout.closePane();
+                    }
+                });
+            }
+        }
+    }
+
+    private class ActionBarAdapterClickListener implements ActionBar.OnNavigationListener {
+
+        @Override
+        public boolean onNavigationItemSelected(int id, long l) {
+            currentCourseId = actionBarAdapterData.keyAt(id);
+
+            updateActionBarAdapter();
+            return false;
+        }
+    }
+
 }

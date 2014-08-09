@@ -94,7 +94,7 @@ public class ClassmateDataProvider extends ViewProvider {
             e.printStackTrace();
         }
 
-        getMainFragment().onBackPressed();
+        getMainActivity().onBackPressed();
         return null;
     }
 }

@@ -1,11 +1,18 @@
 <resources>
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:textColor">@color/dark_text</item>
     </style>
 
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="android:textColor">@color/dark_text</item>
+
     </style>
+
+    <style name="StartingTheme" parent="AppBaseTheme">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 
     <style name="ResponsiveLayout">
         <item name="android:orientation">vertical</item>

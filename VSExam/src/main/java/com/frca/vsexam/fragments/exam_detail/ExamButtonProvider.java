@@ -94,15 +94,15 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
             BaseNetworkTask.run(new TextNetworkTask(getContext(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
-                    if (getMainFragment().getExams().onRegistrationResponse(getContext(), mExam, response)) {
+                    if (getMainActivity().getExams().onRegistrationResponse(getContext(), mExam, response)) {
                         Toast.makeText(getContext(), R.string.register_success, Toast.LENGTH_LONG).show();
-                        getMainFragment().updateView();
-                        dialog.dismiss();
+                        getMainActivity().updateView();
                         Utils.appendLog("Register successful.");
                     } else {
                         Toast.makeText(getContext(), R.string.register_failure, Toast.LENGTH_LONG).show();
                         Utils.appendLog("Register unsuccessful.");
                     }
+                    dialog.dismiss();
 
                 }
             }));
@@ -144,15 +144,15 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
             BaseNetworkTask.run(new TextNetworkTask(getContext(), requestBase, new BaseNetworkTask.ResponseCallback() {
                 @Override
                 public void onSuccess(Response response) {
-                    if (getMainFragment().getExams().onUnregistrationResponse(getContext(), mExam, response)) {
+                    if (getMainActivity().getExams().onUnregistrationResponse(getContext(), mExam, response)) {
                         Toast.makeText(getContext(), R.string.unregister_success, Toast.LENGTH_LONG).show();
-                        getMainFragment().updateView();
-                        dialog.dismiss();
+                        getMainActivity().updateView();
                         Utils.appendLog("Unregister successful.");
                     } else {
                         Toast.makeText(getContext(), R.string.unregister_failure, Toast.LENGTH_LONG).show();
                         Utils.appendLog("Unregister unsuccessful.");
                     }
+                    dialog.dismiss();
                 }
             }));
         }

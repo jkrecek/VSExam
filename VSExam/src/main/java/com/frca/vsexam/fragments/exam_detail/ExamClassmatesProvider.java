@@ -88,7 +88,7 @@ public class ExamClassmatesProvider extends DetailFragment.BaseExamProvider {
         ClassmateAdapter classmateAdapter = new ClassmateAdapter(getContext(), mExam.getClassmates(), new ClassmateAdapter.OnClassmateClicked() {
             @Override
             public void onClick(Classmate classmate) {
-                getMainFragment().replaceFragment(ClassmateFragment.newInstance(mExam, classmate));
+                getMainActivity().replaceFragment(ClassmateFragment.newInstance(mExam, classmate));
             }
         });
 

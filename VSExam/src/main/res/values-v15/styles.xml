@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:textColor">@color/dark_text</item>
+        <item name="android:actionBarStyle">@style/BlueActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/actionbar_background</item>
+    </style>
+
+    <style name="BlueActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/app_blue</item>
+        <item name="android:titleTextStyle">@style/BlueActionBar.TitleTextStyle</item>
+        <item name="android:dropDownSelector">@color/white</item>
+    </style>
+
+    <style name="BlueActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

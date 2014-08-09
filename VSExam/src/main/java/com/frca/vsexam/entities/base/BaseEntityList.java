@@ -31,12 +31,11 @@ public class BaseEntityList<T extends ParentEntity> extends ArrayList<T> {
             return null;
         } catch(Exception e) {
             e.printStackTrace();
+            return null;
         } finally {
             Utils.close(fis);
             Utils.close(is);
         }
-
-        return object;
     }
 
 

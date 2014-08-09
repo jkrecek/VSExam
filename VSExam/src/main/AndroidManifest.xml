@@ -15,8 +15,8 @@
                  android:label="@string/app_name"
                  android:theme="@style/AppTheme" >
 
-        <activity android:name=".context.MainActivity"
-                  android:label="@string/app_name" >
+        <activity android:name=".context.StartingActivity"
+                  android:theme="@style/StartingTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +25,13 @@
 
         </activity>
 
+        <activity android:name=".context.MainActivity"
+                  android:icon="@drawable/ic_logo_white" />
+
+        <activity android:name="com.frca.vsexam.context.SettingsActivity"
+                  android:icon="@drawable/ic_menu_manage"
+                  android:label="@string/action_settings" />
+
         <receiver android:name="com.frca.vsexam.context.OnStartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -32,10 +39,6 @@
         </receiver>
 
         <service android:name="com.frca.vsexam.helper.RegisteringService" />
-
-        <activity android:name="com.frca.vsexam.context.SettingsActivity"
-                  android:icon="@drawable/ic_menu_manage"
-                  android:label="@string/action_settings" />
 
     </application>
 

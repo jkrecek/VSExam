@@ -37,7 +37,7 @@
     <string name="unknown_action">Unknown action</string>
     <string name="loading_with_ellipsis">Loading&#8230;</string>
 
-    <string name="progress_structure_number_format">%1$d items from approx. %2$d checked</string>
+    <string name="progress_structure_number_format">%1$d out of %2$d checked</string>
 
     <string name="data_downloaded">Data loaded</string>
     <string name="structure_downloaded_saved">New structure was successfully downloaded and saved.</string>
@@ -142,4 +142,5 @@ We apologize for any damage caused.</string>
     <string name="settings_auto_calendar_summary">All exams will be automatically added to your calendar when registered</string>
 
     <string name="in_progress">In progress&#8230;</string>
+    <string name="update_in_progress">Aktualizácia prebieha &#8230;</string>
 </resources>

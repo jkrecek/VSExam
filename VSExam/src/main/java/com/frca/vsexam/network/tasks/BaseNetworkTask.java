@@ -108,7 +108,7 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
         this.request = request;
     }
 
-    public static void run(final BaseNetworkTask task) {
+    public static BaseNetworkTask run(final BaseNetworkTask task) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -118,6 +118,7 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
                     executeLegacy(task);
             }
         });
+        return task;
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

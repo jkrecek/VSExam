@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.fragments.MainFragment;
+import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.helper.ViewProvider;
 
 public abstract class ContentFragment extends BaseFragment {
@@ -20,6 +20,8 @@ public abstract class ContentFragment extends BaseFragment {
     private Class<? extends ViewProvider> mProviderClasses[] = null;
 
     protected static final String EXTRA_ID = "id";
+
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @SuppressWarnings("unchecked")
     public ContentFragment(Class<? extends ViewProvider> firstProvider, Class<? extends ViewProvider> secondProvider, Class<? extends ViewProvider> buttonProvider) {
@@ -32,8 +34,8 @@ public abstract class ContentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
 
-        if (!(getParentFragment() instanceof MainFragment)) {
-            Log.e(getClass().getName(), "This class must be child of BrowserPaneFragment");
+        if (!(getParentActivity() instanceof MainActivity)) {
+            Log.e(getClass().getName(), "This class must be child of MainActivity");
             getActivity().finish();
         }
     }
@@ -42,14 +44,14 @@ public abstract class ContentFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        /*mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 loadToView();
             }
-        }, 50);
+        }, 100);*/
 
-        SlidingPaneLayout slidingPaneLayout = getMainFragment().getSlidingLayout();
+        SlidingPaneLayout slidingPaneLayout = getMainActivity().getSlidingLayout();
         if (slidingPaneLayout.isSlideable() && !slidingPaneLayout.isOpen()) {
             ActionBar actionBar = getMainActivity().getSupportActionBar();
             if (actionBar != null)
@@ -62,10 +64,16 @@ public abstract class ContentFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_content, container, false);
     }
 
-    /*@Override
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    @Override
     public final void onViewCreated(View view, Bundle savedInstanceBundle) {
         loadToView();
-    }*/
+    }
 
     private void loadToView() {
         final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -118,8 +126,8 @@ public abstract class ContentFragment extends BaseFragment {
         }
     }
 
-    public MainFragment getMainFragment() {
-        return (MainFragment) getParentFragment();
+    public MainActivity getMainActivity() {
+        return (MainActivity) getParentActivity();
     }
 
     public abstract String getTitle();
