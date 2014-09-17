@@ -3,10 +3,9 @@ package com.frca.vsexam.network.tasks;
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.frca.vsexam.helper.DataHolder;
+import com.frca.vsexam.helper.Utils;
 import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.Response;
 
@@ -109,15 +108,18 @@ public abstract class BaseNetworkTask extends AsyncTask<Void, Void, Response> {
     }
 
     public static BaseNetworkTask run(final BaseNetworkTask task) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    executeHoneycomb(task);
-                else
-                    executeLegacy(task);
-            }
-        });
+        if (!task.isCancelled()) {
+            Utils.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                        executeHoneycomb(task);
+                    else
+                        executeLegacy(task);
+                }
+            });
+        }
+
         return task;
     }
 

@@ -1,42 +1,44 @@
 package com.frca.vsexam.adapters;
 
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.annotation.LayoutRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class BasePagerAdapter extends PagerAdapter {
+import com.frca.vsexam.R;
+import com.frca.vsexam.fragments.starting.LoadingFragment;
+import com.frca.vsexam.fragments.starting.LoginFragment;
+import com.frca.vsexam.fragments.starting.StartingPromoFragment;
 
-    private ViewPager mPager;
+public class BasePagerAdapter extends FragmentStatePagerAdapter {
 
-    private BasePagerAdapter(ViewPager pager) {
-        mPager = pager;
-    }
+    public static final int PAGE_COUNT = 4;
 
-    public static BasePagerAdapter appendToPager(ViewPager pager) {
-        BasePagerAdapter pagerAdapter = new BasePagerAdapter(pager);
-        pager.setAdapter(pagerAdapter);
-        return pagerAdapter;
+    @LayoutRes
+    private static int[] sSimpleLayouts = new int[] { R.layout.fragment_starting_promo_1, R.layout.fragment_starting_promo_2};
+
+    public BasePagerAdapter(FragmentManager fm) {
+        super(fm);
     }
 
     @Override
-    public Object instantiateItem(ViewGroup collection, int position) {
-        return mPager.getChildAt(position);
+    public Fragment getItem(int position) {
+        switch (position) {
+            case 0:
+            case 1:
+                return StartingPromoFragment.newInstance(sSimpleLayouts[position]);
+            case 2:
+                return new LoginFragment();
+            case 3:
+                return new LoadingFragment();
+            default:
+                return null;
+        }
     }
 
     @Override
     public int getCount() {
-        return mPager.getChildCount();
-    }
-
-    @Override
-    public boolean isViewFromObject(View view, Object o) {
-        return view == o;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-
+        return PAGE_COUNT;
     }
 
 }

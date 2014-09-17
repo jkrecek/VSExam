@@ -27,6 +27,8 @@ import com.frca.vsexam.fragments.exam_detail.DetailFragment;
 import com.frca.vsexam.helper.AppSparseArray;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.helper.Utils;
+import com.frca.vsexam.network.tasks.BaseNetworkTask;
+import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -63,7 +65,7 @@ public class MainActivity extends BaseActivity {
         Serializable serializable = getIntent().getSerializableExtra(StartingActivity.KEY_EXAMS);
         mExams = ExamList.fromArrayList((ArrayList<Exam>) serializable);
 
-        setContentView(R.layout.action_main);
+        setContentView(R.layout.activity_main);
 
         mSlidingLayout = (SlidingPaneLayout) findViewById(R.id.sliding_pane);
         mList = (ListView) findViewById(R.id.left_pane);
@@ -94,7 +96,18 @@ public class MainActivity extends BaseActivity {
 
         mSlidingLayout.openPane();
         mSlidingLayout.setSliderFadeColor(0x66cccccc);
-        mSlidingLayout.setShadowResource(R.drawable.right_shadow);
+        mSlidingLayout.setShadowResource(R.drawable.shadow_right);
+
+        String realName = DataHolder.getInstance(this).getPreferences().getString(KEY_REAL_NAME, null);
+        if (realName != null) {
+            View imageHolder = findViewById(R.id.logo);
+            BaseNetworkTask.run(new UserImageNetworkTask(this, 0, imageHolder));
+            TextView view = (TextView) findViewById(R.id.text_real_name);
+            view.setText(realName);
+        } else {
+            View view = findViewById(R.id.layout_user);
+            view.setVisibility(View.GONE);
+        }
 
         setActionBarAdapter();
     }
@@ -202,7 +215,8 @@ public class MainActivity extends BaseActivity {
         } else {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.actionbar_list_item, android.R.id.text1, values);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, values);
+            adapter.setDropDownViewResource(R.layout.actionbar_dropdown_item);
             actionBar.setListNavigationCallbacks(adapter, new ActionBarAdapterClickListener());
         }
     }

@@ -1,67 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:background="@color/app_blue"
-                android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/app_blue"
+              android:orientation="vertical" >
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentTop="true"
-              android:layout_alignParentLeft="true"
-              android:gravity="center_vertical"
-              android:textColor="@color/white"
-              android:padding="10dp"
-              android:textAppearance="?android:textAppearanceMedium"
-              android:drawableLeft="@drawable/ic_logo_white"
-              android:drawablePadding="5dp"
-              android:text=""/>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="60dp">
 
-    <LinearLayout
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:padding="10dp"
+                   android:src="@drawable/ic_logo_white"
+                   android:contentDescription="@string/logo"/>
+
+        <com.frca.vsexam.views.ViewPagerIndicator
+                  android:id="@+id/page_indicator"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerInParent="true"
+                  android:gravity="center_vertical" />
+
+    </RelativeLayout>
+
+    <com.frca.vsexam.views.StartingViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent"/>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/page_one"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-                <TextView
-                    android:text="PAGE ONE IN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="#fff"
-                    android:textSize="24dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/page_two"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-                <TextView
-                    android:text="PAGE TWO IN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="#fff"
-                    android:textSize="24dp"/>
-            </LinearLayout>
-
-            <ProgressBar android:id="@+id/progressBar"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_centerVertical="true"
-                         android:layout_centerHorizontal="true"/>
-
-        </android.support.v4.view.ViewPager>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

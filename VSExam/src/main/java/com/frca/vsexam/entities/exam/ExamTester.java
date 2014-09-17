@@ -181,7 +181,7 @@ public abstract class ExamTester {
             exam.setMaxCapacity(totalCapacity[((int) (Math.random() * totalCapacity.length))]);
             exam.setCurrentCapacity((int) (exam.getMaxCapacity() * occupancy[((int) (Math.random() * occupancy.length))]));
 
-            exam.setStudyId(123456);
+            exam.setStudyId(1);
             exam.setPeriodId(825);
 
             ClassmateList classmateList = new ClassmateList();

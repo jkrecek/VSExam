@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:orientation="vertical"
+              android:padding="20dp"
+              tools:context=".context.StartingActivity"
+              tools:background="@color/app_blue">
+
+    <ScrollView style="@style/ResponsiveExpendingWidth600"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:gravity="center_vertical"
+                      android:orientation="vertical">
+
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_horizontal"
+                      android:textAppearance="?android:textAppearanceLarge"
+                      android:text="Vítá vás VŠExam"/>
+
+            <ImageView android:id="@+id/image_logo"
+                       android:layout_width="180dp"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:padding="10dp"
+                       android:layout_margin="20dp"
+                       android:adjustViewBounds="true"
+                       android:src="@drawable/logo_huge_white"
+                       android:contentDescription="@string/logo"/>
+
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"
+                      android:lineSpacingMultiplier="1.25"
+                      android:text="Tato aplikace slouží k jednoduché správě vašich zkoušek na Vysoké škole ekonomické v Praze. Přihlašování na zkoušky nikdy nebylo jednodušší! Nyní vám k tomu stačí pouze pár kliknutí. Zpříjeměte si tu méně nepříjemnou část vaší zkoušky!"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/transparent_button"
+            android:text="Pokračovat"/>
+
+</LinearLayout>
+

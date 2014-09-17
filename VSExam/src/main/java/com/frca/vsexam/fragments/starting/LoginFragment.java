@@ -1,28 +1,25 @@
-package com.frca.vsexam.fragments;
+package com.frca.vsexam.fragments.starting;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.context.BaseActivity;
-import com.frca.vsexam.context.MainActivity;
 import com.frca.vsexam.context.StartingActivity;
+import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.helper.DataHolder;
 import com.frca.vsexam.network.HttpRequestBuilder;
 
-public class LoginFragment extends DialogFragment implements View.OnClickListener {
+public class LoginFragment extends BaseFragment implements View.OnClickListener {
 
     private TextView mViewLogin;
 
@@ -31,15 +28,13 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        //getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getDialog().setTitle("Vítejte v aplikace VŠExam");
+        final View rootView = inflater.inflate(R.layout.fragment_starting_login, container, false);
 
         mViewLogin = (TextView) rootView.findViewById(R.id.text_login);
         mViewPassword = (TextView) rootView.findViewById(R.id.text_password);
-        rootView.findViewById(R.id.image_logo).setVisibility(View.GONE);
+        //rootView.findViewById(R.id.image_logo).setVisibility(View.GONE);
 
-        Button button = (Button)rootView.findViewById(R.id.sign_in_button);
+        Button button = (Button)rootView.findViewById(R.id.button);
         button.setOnClickListener(this);
 
         return rootView;
@@ -75,7 +70,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                     .commit();
 
                 getStartingActivity().startExamLoading();
-                dismiss();
+                //dismiss();
             }
         }
     }
