@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.context.MainActivity;
+import com.frca.vsexam.context.ExamActivity;
 import com.frca.vsexam.helper.ViewProvider;
 
 public abstract class ContentFragment extends BaseFragment {
@@ -34,8 +34,8 @@ public abstract class ContentFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
 
-        if (!(getParentActivity() instanceof MainActivity)) {
-            Log.e(getClass().getName(), "This class must be child of MainActivity");
+        if (!(getParentActivity() instanceof ExamActivity)) {
+            Log.e(((Object)this).getClass().getName(), "This class must be child of ExamActivity");
             getActivity().finish();
         }
     }
@@ -103,7 +103,7 @@ public abstract class ContentFragment extends BaseFragment {
         try {
             if (providerClass != null) {
                 return providerClass
-                    .getDeclaredConstructor(getClass(), ViewGroup.class, LayoutInflater.class)
+                    .getDeclaredConstructor(((Object)this).getClass(), ViewGroup.class, LayoutInflater.class)
                     .newInstance(this, parent, inflater);
             }
         } catch (Exception e) {
@@ -126,8 +126,8 @@ public abstract class ContentFragment extends BaseFragment {
         }
     }
 
-    public MainActivity getMainActivity() {
-        return (MainActivity) getParentActivity();
+    public ExamActivity getMainActivity() {
+        return (ExamActivity) getParentActivity();
     }
 
     public abstract String getTitle();

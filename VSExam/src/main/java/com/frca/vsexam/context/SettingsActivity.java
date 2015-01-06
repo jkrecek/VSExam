@@ -203,6 +203,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             .remove(HttpRequestBuilder.KEY_AUTH_KEY)
             .commit();
 
+        setResult(1);
         finish();
     }
 

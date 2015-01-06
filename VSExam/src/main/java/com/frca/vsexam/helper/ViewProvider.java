@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.frca.vsexam.context.MainActivity;
+import com.frca.vsexam.context.ExamActivity;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.fragments.base.ContentFragment;
 
@@ -108,7 +108,7 @@ public abstract class ViewProvider {
         return mBaseFragment.getActivity();
     }
 
-    protected MainActivity getMainActivity() {
+    protected ExamActivity getMainActivity() {
         return mBaseFragment.getMainActivity();
     }
 

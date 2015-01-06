@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.context.BaseActivity;
+import com.frca.vsexam.context.base.BaseActivity;
 import com.frca.vsexam.context.StartingActivity;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.fragments.base.PagerFragment;
@@ -37,7 +37,7 @@ public class LoadingFragment extends PagerFragment {
         mNetworkTask = getParentActivity().loadExams(new BaseActivity.LoadingExamResult() {
             @Override
             public void onExamLoadingSuccess(ExamList exams) {
-                getStartingActivity().startMainActivity(exams);
+                getStartingActivity().startNextActivity(exams);
                 mNetworkTask = null;
             }
 

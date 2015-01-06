@@ -16,6 +16,9 @@
     <color name="red">#b00006</color>
     <color name="orange">#cc823f</color>
     <color name="app_blue">#0064ff</color>
+    <color name="app_blue_light">#4285f4</color>
+    <color name="app_blue_lighter">#800064ff</color>
+    <!--<color name="app_blue_dark">#3367d6</color>-->
 
     <color name="transparent">#00ffffff</color>
     <color name="transparent_partial">#40ffffff</color>
@@ -26,5 +29,13 @@
     <color name="to_be_registered">#13aaaf</color>
     <color name="can_register">@color/app_blue</color>
     <color name="can_not_register">@color/register_now</color>
+
+    <color name="theme_accent_2">#e91e63</color>
+    <color name="body_text_1">#de000000</color>
+    <color name="theme_accent_1">#00b0ff</color>
+    <color name="gray_background">#e5e5e5</color>
+
+    <color name="list_dropdown_foreground_normal">#ff333333</color>
+    <color name="list_dropdown_divider_color">#92a3a3a3</color>
 
 </resources>

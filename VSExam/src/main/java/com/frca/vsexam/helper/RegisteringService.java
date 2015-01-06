@@ -16,8 +16,8 @@ import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.context.BaseActivity;
-import com.frca.vsexam.context.MainActivity;
+import com.frca.vsexam.context.base.BaseActivity;
+import com.frca.vsexam.context.ExamActivity;
 import com.frca.vsexam.entities.exam.Exam;
 import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.network.HttpRequest;
@@ -59,7 +59,7 @@ public class RegisteringService extends Service {
         int examId = intent.getIntExtra(EXTRA_ID, 0);
         Utils.appendLog("Registering process starting");
 
-        MainActivity runningInstance = BaseActivity.getInstance(MainActivity.class);
+        ExamActivity runningInstance = BaseActivity.getInstance(ExamActivity.class);
         if (runningInstance != null)
             examList = runningInstance.getExams();
 
@@ -219,7 +219,7 @@ public class RegisteringService extends Service {
     }
 
     private void setNotification(String title, String message, int iconResource) {
-        boolean isActivityActive = BaseActivity.getInstance(MainActivity.class) != null;
+        boolean isActivityActive = BaseActivity.getInstance(ExamActivity.class) != null;
         if (isActivityActive) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
@@ -236,10 +236,10 @@ public class RegisteringService extends Service {
             builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            Intent resultIntent = new Intent(this, MainActivity.class);
+            Intent resultIntent = new Intent(this, ExamActivity.class);
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addParentStack(ExamActivity.class);
             stackBuilder.addNextIntent(resultIntent);
 
             PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

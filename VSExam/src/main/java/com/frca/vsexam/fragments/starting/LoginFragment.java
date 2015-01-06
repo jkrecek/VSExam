@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.context.BaseActivity;
+import com.frca.vsexam.context.base.BaseActivity;
 import com.frca.vsexam.context.StartingActivity;
 import com.frca.vsexam.fragments.base.BaseFragment;
 import com.frca.vsexam.helper.DataHolder;

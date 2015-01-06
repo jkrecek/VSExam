@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.App">
+        <item name="android:colorPrimary">@color/app_blue</item>
+        <item name="android:colorPrimaryDark">@color/app_blue_light</item>
+    </style>
+
+    <style name="StartingTheme" parent="StartingThemeBase">
+        <item name="android:editTextColor">@color/white</item>
+    </style>
+</resources>

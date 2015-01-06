@@ -63,14 +63,19 @@ public class ExamButtonProvider extends DetailFragment.BaseExamProvider {
         return Result.DONE;
     }
 
-    private void setButton(Button button, BaseOnClick onClick, boolean enabled) {
-        button.setText(onClick.getTextResource());
-        if (enabled)
-            button.setOnClickListener(onClick);
-        else
-            button.setOnClickListener(null);
+    private void setButton(final Button button, final BaseOnClick onClick, final boolean enabled) {
+        Utils.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                button.setText(onClick.getTextResource());
+                if (enabled)
+                    button.setOnClickListener(onClick);
+                else
+                    button.setOnClickListener(null);
 
-        button.setEnabled(enabled);
+                button.setEnabled(enabled);
+            }
+        });
     }
 
     private abstract class BaseOnClick implements View.OnClickListener {

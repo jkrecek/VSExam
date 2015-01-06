@@ -11,8 +11,8 @@ import android.util.SparseArray;
 import android.widget.Toast;
 
 import com.frca.vsexam.R;
-import com.frca.vsexam.context.BaseActivity;
-import com.frca.vsexam.context.MainActivity;
+import com.frca.vsexam.context.base.BaseActivity;
+import com.frca.vsexam.context.ExamActivity;
 import com.frca.vsexam.entities.base.BaseEntityList;
 import com.frca.vsexam.entities.base.BaseParser;
 import com.frca.vsexam.entities.calendar_exam.EventExam;
@@ -238,9 +238,9 @@ public class ExamList extends BaseEntityList<Exam> {
             putExamToCalendar(exam, context);
         }
 
-        MainActivity mainActivity = BaseActivity.getInstance(MainActivity.class);
-        if (mainActivity != null)
-            mainActivity.updateView();
+        ExamActivity examActivity = BaseActivity.getInstance(ExamActivity.class);
+        if (examActivity != null)
+            examActivity.updateView();
 
         if (!(context instanceof RegisteringService)) {
             SparseArray<RegisteringService> container = DataHolder.getInstance(context).getRegisteringServiceContainer();
@@ -271,9 +271,9 @@ public class ExamList extends BaseEntityList<Exam> {
             removeExamFromCalendar(exam, context);
         }
 
-        MainActivity mainActivity = BaseActivity.getInstance(MainActivity.class);
-        if (mainActivity != null)
-            mainActivity.updateView();
+        ExamActivity examActivity = BaseActivity.getInstance(ExamActivity.class);
+        if (examActivity != null)
+            examActivity.updateView();
 
         return true;
     }

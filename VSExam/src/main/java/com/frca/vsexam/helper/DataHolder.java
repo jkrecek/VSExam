@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
 
+import com.frca.vsexam.context.base.BaseActivity;
 import com.frca.vsexam.entities.calendar_exam.EventExamSet;
+import com.frca.vsexam.network.HttpRequestBuilder;
 import com.frca.vsexam.network.NetworkInterface;
 import com.frca.vsexam.network.tasks.UserImageNetworkTask;
 

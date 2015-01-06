@@ -1,6 +1,7 @@
 package com.frca.vsexam.fragments.exam_detail;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -37,7 +38,7 @@ public class DetailFragment extends ContentFragment {
     public void onResume() {
         super.onResume();
 
-        getMainActivity().highlightExam(mExam);
+        getMainActivity().setSelectedExam(mExam);
     }
 
     @Override

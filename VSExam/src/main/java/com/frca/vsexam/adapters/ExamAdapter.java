@@ -6,61 +6,82 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.frca.vsexam.R;
 import com.frca.vsexam.entities.exam.Exam;
-import com.frca.vsexam.entities.exam.ExamList;
 import com.frca.vsexam.fragments.exam_detail.ExamDataProvider;
 import com.frca.vsexam.helper.Utils;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class ExamAdapter extends ArrayAdapter<String> {
 
-    private ExamList exams;
+    private List<Item> mItems = new ArrayList<Item>();
     private Exam selectedExam;
 
     private static final int resourceLayout = R.layout.exam_list_item;
 
     private LayoutInflater inflater;
 
-    private SparseArray<View> existingViews = new SparseArray<View>();
+    private SparseArray<View> mExistingViews = new SparseArray<View>();
 
-    public ExamAdapter(Context context, ExamList exams, Exam selectedExam) {
+    public static class Item {
+        boolean mIsHeader;
+        Exam mExam;
+        Exam.Group mGroup;
+
+        private Item(boolean isHeader, Exam exam, Exam.Group group) {
+            mIsHeader = isHeader;
+            mExam = exam;
+            mGroup = group;
+        }
+    }
+
+    public ExamAdapter(Context context) {
         super(context, resourceLayout);
-        this.exams = exams;
+
         inflater = (LayoutInflater) getContext().getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-        this.selectedExam = selectedExam;
+    }
+
+    public void clear() {
+        mItems.clear();
+    }
+
+    public void addHeader(Exam.Group group) {
+        mItems.add(new Item(true, null, group));
+    }
+
+    public void addItem(Exam exam) {
+        mItems.add(new Item(false, exam, null));
     }
 
     @Override
     public int getCount() {
-        return exams.getAdapterSize();
+        return mItems.size();
     }
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-        View view = existingViews.get(position);
+        View view = mExistingViews.get(position);
         if (view == null)
-            view = createCustomView(position);
+            view = createNewView(position);
 
         return view;
     }
 
-    private View createCustomView(int position) {
-        Object object = exams.getFromAdapter(position);
-        if (object == null) {
+    private View createNewView(int position) {
+        Item item = getArrayItem(position);
+        if (item == null) {
             return inflater.inflate(R.layout.list_header, null);
-        } else if (object instanceof Exam.Group) {
-            Exam.Group group = (Exam.Group) object;
-            View view = inflater.inflate(R.layout.list_header, null);
-            ((TextView)view).setText(group.getTitleRes());
+        } else if (item.mIsHeader) {
+            TextView view = (TextView) inflater.inflate(R.layout.list_header, null);
+            view.setText(item.mGroup.getTitleRes());
             return view;
-        } else if (object instanceof Exam) {
-            Exam exam = (Exam) object;
+        } else {
             View view = inflater.inflate(resourceLayout, null);
             if (view != null) {
                 TextView text_day = (TextView)view.findViewById(R.id.text_day);
@@ -72,66 +93,55 @@ public class ExamAdapter extends ArrayAdapter<String> {
                 TextView text_capacity = (TextView)view.findViewById(R.id.text_capacity);
 
                 Calendar examDate = Calendar.getInstance();
-                examDate.setTime(exam.getExamDate());
+                examDate.setTime(item.mExam.getExamDate());
                 text_day.setText(String.valueOf(examDate.get(Calendar.DAY_OF_MONTH)));
                 text_month.setText(new DateFormatSymbols().getMonths()[examDate.get(Calendar.MONTH)]);
 
-                text_code.setText(exam.getCourseCode());
-                text_time.setText(Utils.getDateOutput(exam.getExamDate(), Utils.DateOutputType.TIME));
-                text_name.setText(exam.getCourseName());
-                text_type.setText(exam.getType());
-                text_capacity.setText(String.valueOf(exam.getCurrentCapacity()) + "/" + String.valueOf(exam.getMaxCapacity()));
+                text_code.setText(item.mExam.getCourseCode());
+                text_time.setText(Utils.getDateOutput(item.mExam.getExamDate(), Utils.DateOutputType.TIME));
+                text_name.setText(item.mExam.getCourseName());
+                text_type.setText(item.mExam.getType());
+                text_capacity.setText(String.valueOf(item.mExam.getCurrentCapacity()) + "/" + String.valueOf(item.mExam.getMaxCapacity()));
                 text_capacity.setTextColor(getContext().getResources().getColor(
-                    ExamDataProvider.getColorForCapacity(exam.getCurrentCapacity(), exam.getMaxCapacity())
+                    ExamDataProvider.getColorForCapacity(item.mExam.getCurrentCapacity(), item.mExam.getMaxCapacity())
                 ));
 
-                if (selectedExam == exam)
-                    highlightView(view, true);
+                view.setTag(item.mExam.getId());
+                if (item.mExam == selectedExam)
+                    view.setBackgroundResource(R.color.highlighted);
             }
 
             return view;
         }
+    }
 
-        return null;
+    private Item getArrayItem(int position) {
+        return position >= 0 && position < mItems.size() ? mItems.get(position) : null;
     }
 
     public Exam getExam(final int position) {
-        Object obj = exams.getFromAdapter(position);
-        if (obj instanceof Exam)
-            return (Exam)obj;
+        Item item = getArrayItem(position);
+        if (item != null)
+            return item.mExam;
         else
             return null;
     }
 
     @Override
     public boolean isEnabled(int position) {
-        return exams.getFromAdapter(position) instanceof Exam;
+        return getExam(position) != null;
     }
 
-    public View getViewForExam(Exam exam, ListView listView) {
-        if (exam == null)
-            return null;
+    public void setHighlightedExam(Exam exam) {
+        selectedExam = exam;
 
-        int position = exams.getAdapterPosition(exam);
-        return listView.getChildAt(position);
+        if (!mItems.isEmpty())
+            notifyDataSetChanged();
     }
 
-    public void highlightExam(Exam exam, ListView listView, boolean apply) {
-        if (apply)
-            selectedExam = exam;
-
-        highlightView(getViewForExam(exam, listView), apply);
+    @Override
+    public void notifyDataSetChanged() {
+        mExistingViews.clear();
+        super.notifyDataSetChanged();
     }
-
-    private void highlightView(View view, boolean apply) {
-        if (view == null)
-            return;
-
-        if (apply) {
-            view.setBackgroundResource(R.color.highlighted);
-        } else {
-            view.setBackgroundResource(R.color.standard_grey);
-        }
-    }
-
 }

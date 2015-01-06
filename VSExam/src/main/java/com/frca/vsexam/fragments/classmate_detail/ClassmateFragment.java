@@ -39,7 +39,7 @@ public class ClassmateFragment extends ContentFragment {
     public void onResume() {
         super.onResume();
 
-        getMainActivity().highlightExam(null);
+        getMainActivity().setSelectedExam(null);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.frca.vsexam.context;
+package com.frca.vsexam.context.base;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -35,7 +35,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     private static BaseActivity instance = null;
 
-    public static <T extends BaseActivity> T  getInstance(Class<T> instanceClass) {
+    public static <T extends BaseActivity> T getInstance(Class<T> instanceClass) {
         if (instance.getClass() == instanceClass)
             return (T) instance;
 
@@ -129,19 +129,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         return (TextNetworkTask) BaseNetworkTask.run(examLoadingTask);
     }
 
-    protected boolean hasSavedLoginData() {
-        return DataHolder.getInstance(this).getPreferences().contains(HttpRequestBuilder.KEY_AUTH_KEY);
-    }
-
-    protected boolean wasAlreadyStarted() {
-        SharedPreferences pref = DataHolder.getInstance(this).getPreferences();
-        boolean alreadyRun = pref.getBoolean(KEY_ALREADY_RAN, false);
-        if (!alreadyRun)
-            pref.edit().putBoolean(KEY_ALREADY_RAN, true).commit();
-
-        return alreadyRun;
-    }
-
     private void saveRealName(Elements elements) {
         if (!Utils.isValid(elements))
             return;
@@ -150,6 +137,22 @@ public abstract class BaseActivity extends ActionBarActivity {
         element.children().remove();
         String realName = element.text();
         DataHolder.getInstance(this).getPreferences().edit().putString(KEY_REAL_NAME, realName).commit();
+    }
+    public boolean hasSavedLoginData() {
+        return DataHolder.getInstance(this).getPreferences().contains(HttpRequestBuilder.KEY_AUTH_KEY);
+    }
+
+    public boolean wasAlreadyStarted() {
+        SharedPreferences pref = DataHolder.getInstance(this).getPreferences();
+        boolean alreadyRun = pref.getBoolean(BaseActivity.KEY_ALREADY_RAN, false);
+        if (!alreadyRun)
+            pref.edit().putBoolean(BaseActivity.KEY_ALREADY_RAN, true).commit();
+
+        return alreadyRun;
+    }
+
+    public DataHolder getDataHolder() {
+        return DataHolder.getInstance(this);
     }
 
     public static interface LoadingExamResult {

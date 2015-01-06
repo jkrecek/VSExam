@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.frca.vsexam.context.BaseActivity;
+import com.frca.vsexam.context.base.BaseActivity;
 
 public abstract class BaseFragment extends Fragment {
 

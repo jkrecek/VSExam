@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="font_style_mid">0</integer>
+    <string name="font_family_mid">sans-serif-medium</string>
+</resources>
